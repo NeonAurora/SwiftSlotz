@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SwiftSlotz</string>
+    <string name="add_appointment">Add Appointment</string>
+
 </resources>
