@@ -1,13 +1,30 @@
 package com.example.swiftslotz;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        createNotificationChannel();
         // Initialize the RecyclerView
         RecyclerView appointmentsRecyclerView = findViewById(R.id.appointmentsRecyclerView);
 
@@ -32,5 +50,59 @@ public class MainActivity extends AppCompatActivity {
         // Set the layout manager and adapter for the RecyclerView
         appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         appointmentsRecyclerView.setAdapter(appointmentsAdapter);
+
+        FloatingActionButton appointmentButton = findViewById(R.id.addAppointmentButton);
+
+        appointmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                writeToDatabase();
+                showNotification();
+            }
+        });
     }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "AppointmentChannel";
+            String description = "Channel for appointment notifications";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("appointmentChannel", name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void showNotification() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Notification notification = new Notification.Builder(this, "appointmentChannel")
+                .setContentTitle("Appointment Button")
+                .setContentText("Button added")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .build();
+
+        notificationManager.notify(1, notification);
+    }
+    private void writeToDatabase() {
+        // Get a reference to the Firebase Realtime Database
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://swiftslotz-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference myRef = database.getReference("test");
+
+        // Write a simple test object to the database
+        myRef.setValue("Hello, World!").addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(MainActivity.this, "Data Written Successfully", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this, "Failed To Write Data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
