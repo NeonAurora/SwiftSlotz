@@ -9,6 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -33,4 +38,13 @@ public class MainActivity extends AppCompatActivity {
         appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         appointmentsRecyclerView.setAdapter(appointmentsAdapter);
     }
+    private void writeToDatabase() {
+        // Get a reference to the Firebase Realtime Database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("test");
+
+        // Write a simple test object to the database
+        myRef.setValue("Hello, World!");
+    }
+
 }
