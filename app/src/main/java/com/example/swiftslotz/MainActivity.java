@@ -14,20 +14,26 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-
 public class MainActivity extends AppCompatActivity {
+
+    private DatabaseReference db;
+    private List<Appointment> appointments;
+    private AppointmentsAdapter appointmentsAdapter;
+    private RecyclerView appointmentsRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,31 +41,46 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         createNotificationChannel();
-        // Initialize the RecyclerView
-        RecyclerView appointmentsRecyclerView = findViewById(R.id.appointmentsRecyclerView);
-
-        // Create a list of dummy appointments
-        List<Appointment> appointments = new ArrayList<>();
-        appointments.add(new Appointment("Appointment 1", "2023-06-05", "10:00 AM"));
-        appointments.add(new Appointment("Appointment 2", "2023-06-07", "02:00 PM"));
-        appointments.add(new Appointment("Appointment 3", "2023-06-12", "11:00 AM"));
-        appointments.add(new Appointment("Appointment 4", "2023-06-15", "04:00 PM"));
-
-        // Create an instance of AppointmentsAdapter
-        AppointmentsAdapter appointmentsAdapter = new AppointmentsAdapter(appointments);
-
-        // Set the layout manager and adapter for the RecyclerView
+        appointmentsRecyclerView = findViewById(R.id.appointmentsRecyclerView);
+        appointments = new ArrayList<>();
+        appointmentsAdapter = new AppointmentsAdapter(appointments);
         appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         appointmentsRecyclerView.setAdapter(appointmentsAdapter);
 
-        FloatingActionButton appointmentButton = findViewById(R.id.addAppointmentButton);
+        db = FirebaseDatabase.getInstance("https://swiftslotz-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("appointments");
 
+        FloatingActionButton appointmentButton = findViewById(R.id.addAppointmentButton);
         appointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent =  new Intent(MainActivity.this, AddAppointmentActivity.class);
+                Intent intent = new Intent(MainActivity.this, AddAppointmentActivity.class);
                 startActivity(intent);
                 showNotification();
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        fetchDataFromDatabase();
+    }
+
+    private void fetchDataFromDatabase() {
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                appointments.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Appointment appointment = snapshot.getValue(Appointment.class);
+                    appointments.add(appointment);
+                }
+                appointmentsAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this, "Failed to fetch data: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -88,23 +109,4 @@ public class MainActivity extends AppCompatActivity {
 
         notificationManager.notify(1, notification);
     }
-    private void writeToDatabase() {
-        // Get a reference to the Firebase Realtime Database
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://swiftslotz-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference myRef = database.getReference("test");
-
-        // Write a simple test object to the database
-        myRef.setValue("Hello, World!").addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(MainActivity.this, "Data Written Successfully", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(MainActivity.this, "Failed To Write Data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
 }
