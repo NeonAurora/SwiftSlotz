@@ -4,7 +4,8 @@ public class Appointment {
     private String title;
     private String date;
     private String time;
-
+    public Appointment() {
+    }
     public Appointment(String title, String date, String time) {
         this.title = title;
         this.date = date;
