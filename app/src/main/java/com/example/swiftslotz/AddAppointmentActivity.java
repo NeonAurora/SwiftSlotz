@@ -8,7 +8,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -22,7 +23,7 @@ public class AddAppointmentActivity extends AppCompatActivity {
     CompactCalendarView calendarView;
     EditText appointmentEditText;
     Button addAppointmentButton;
-    FirebaseFirestore db;
+    DatabaseReference db;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     @Override
@@ -34,7 +35,7 @@ public class AddAppointmentActivity extends AppCompatActivity {
         appointmentEditText = findViewById(R.id.appointmentEditText);
         addAppointmentButton = findViewById(R.id.addAppointmentButton);
 
-        db = FirebaseFirestore.getInstance();
+        db = FirebaseDatabase.getInstance("https://swiftslotz-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("appointments");
 
         final Calendar selectedDate = Calendar.getInstance();
 
@@ -65,8 +66,7 @@ public class AddAppointmentActivity extends AppCompatActivity {
                 appointmentData.put("date", selectedDateString);
                 appointmentData.put("details", appointmentText);
 
-                db.collection("appointments").document()
-                        .set(appointmentData)
+                db.push().setValue(appointmentData)
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(AddAppointmentActivity.this, "Appointment added successfully", Toast.LENGTH_SHORT).show();
                             appointmentEditText.setText("");
