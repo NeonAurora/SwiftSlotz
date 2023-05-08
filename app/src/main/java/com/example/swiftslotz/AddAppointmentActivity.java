@@ -22,6 +22,7 @@ import java.util.Map;
 public class AddAppointmentActivity extends AppCompatActivity {
 
     CompactCalendarView calendarView;
+    EditText appointmentTitleEditText;
     EditText appointmentEditText;
     Button addAppointmentButton;
     DatabaseReference db;
@@ -31,8 +32,8 @@ public class AddAppointmentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_appointment);
-
         calendarView = findViewById(R.id.calendarView);
+        appointmentTitleEditText = findViewById(R.id.appointmentTitleEditText);
         appointmentEditText = findViewById(R.id.appointmentEditText);
         addAppointmentButton = findViewById(R.id.addAppointmentButton);
 
@@ -55,21 +56,24 @@ public class AddAppointmentActivity extends AppCompatActivity {
         addAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String appointmentTitle = appointmentTitleEditText.getText().toString();
                 String appointmentText = appointmentEditText.getText().toString();
                 String selectedDateString = sdf.format(selectedDate.getTime());
 
-                if (appointmentText.isEmpty()) {
-                    Toast.makeText(AddAppointmentActivity.this, "Please enter appointment details", Toast.LENGTH_SHORT).show();
+                if (appointmentTitle.isEmpty() || appointmentText.isEmpty()) {
+                    Toast.makeText(AddAppointmentActivity.this, "Please enter appointment title and details", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 Map<String, Object> appointmentData = new HashMap<>();
+                appointmentData.put("title", appointmentTitle);
                 appointmentData.put("date", selectedDateString);
                 appointmentData.put("details", appointmentText);
 
                 db.push().setValue(appointmentData)
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(AddAppointmentActivity.this, "Appointment added successfully", Toast.LENGTH_SHORT).show();
+                            appointmentTitleEditText.setText("");
                             appointmentEditText.setText("");
                         })
                         .addOnFailureListener(e -> Toast.makeText(AddAppointmentActivity.this, "Failed to add appointment", Toast.LENGTH_SHORT).show());
