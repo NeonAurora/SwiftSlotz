@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+
 public class AddAppointmentActivity extends AppCompatActivity {
 
     CompactCalendarView calendarView;
