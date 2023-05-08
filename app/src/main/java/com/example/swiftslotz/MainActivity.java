@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -56,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
         appointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                writeToDatabase();
+                Intent intent =  new Intent(MainActivity.this, AddAppointmentActivity.class);
+                startActivity(intent);
                 showNotification();
             }
         });

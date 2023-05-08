@@ -9,7 +9,7 @@
     <com.github.sundeepk.compactcalendarview.CompactCalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         app:compactCalendarTextSize="12sp"
         app:compactCalendarBackgroundColor="@color/white"
         app:compactCalendarTextColor="@color/black"
@@ -26,16 +26,25 @@
         android:hint="Enter appointment details"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarView"  />
+        app:layout_constraintTop_toBottomOf="@+id/calendarView" />
 
     <Button
         android:id="@+id/addAppointmentButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:backgroundTint="@color/black"
         android:text="Add Appointment"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:elevation="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appointmentEditText" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
