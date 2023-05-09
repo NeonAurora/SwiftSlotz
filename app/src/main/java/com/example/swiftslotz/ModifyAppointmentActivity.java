@@ -17,6 +17,8 @@ public class ModifyAppointmentActivity extends AppCompatActivity {
     private AppointmentManager appointmentManager;
     private int appointmentId;
 
+    private String  appointmentKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +33,7 @@ public class ModifyAppointmentActivity extends AppCompatActivity {
         appointmentManager = new AppointmentManager(this);
 
         Intent intent = getIntent();
-        appointmentId = intent.getIntExtra("appointment_id", -1);
+        appointmentKey = intent.getStringExtra("appointment_key");
         String title = intent.getStringExtra("appointment_title");
         String date = intent.getStringExtra("appointment_date");
         String time = intent.getStringExtra("appointment_time");
@@ -49,7 +51,8 @@ public class ModifyAppointmentActivity extends AppCompatActivity {
                 String newDate = appointmentDateEditText.getText().toString();
                 String newTime = appointmentTimeEditText.getText().toString();
                 String newDetails = appointmentDetailsEditText.getText().toString();
-                Appointment updatedAppointment = new Appointment(appointmentId, newTitle, newDate, newTime, details);
+                Appointment updatedAppointment = new Appointment( newTitle, newDate, newTime, newDetails);
+                updatedAppointment.setKey(appointmentKey); // Add this line
                 appointmentManager.updateAppointment(updatedAppointment);
                 finish();
             }

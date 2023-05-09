@@ -51,20 +51,25 @@ public class AppointmentsActivity extends AppCompatActivity implements Appointme
 
     @Override
     public void onEditAppointment(Appointment appointment) {
-        startModifyAppointmentActivity(appointment.getId(), appointment.getTitle(), appointment.getDate(), appointment.getTime());
+        startModifyAppointmentActivity(appointment.getId(), appointment.getTitle(), appointment.getDate(), appointment.getTime(), appointment.getDetails(), appointment.getKey()); // Add the details and the key here
     }
+
 
     @Override
     public void onDeleteAppointment(Appointment appointment) {
-        //appointmentManager.deleteAppointment(appointment);
+        appointmentManager.deleteAppointment(appointment);
     }
 
-    public void startModifyAppointmentActivity(int appointmentId, String title, String date, String time) {
+
+    public void startModifyAppointmentActivity(int appointmentId, String title, String date, String time, String details, String key) {
         Intent intent = new Intent(this, ModifyAppointmentActivity.class);
         intent.putExtra("appointment_id", appointmentId);
         intent.putExtra("appointment_title", title);
         intent.putExtra("appointment_date", date);
         intent.putExtra("appointment_time", time);
+        intent.putExtra("appointment_details", details); // Add this line
+        intent.putExtra("appointment_key", key); // Add this line
         startActivity(intent);
     }
+
 }
