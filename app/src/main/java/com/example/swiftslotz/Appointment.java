@@ -7,12 +7,13 @@ public class Appointment {
     private String time;
 
     private String details;
+    private String key;
     public Appointment() {
     }
 
 
-    public Appointment(int id, String title, String date, String time, String details) {
-        this.id = id;
+    public Appointment( String title, String date, String time, String details) {
+
 
         this.title = title;
         this.date = date;
@@ -52,4 +53,8 @@ public class Appointment {
     public void setDetails(String details) {
         this.details = details;
     }
+
+    public String getKey() { return key; }
+
+    public void setKey(String key) { this.key = key; }
 }

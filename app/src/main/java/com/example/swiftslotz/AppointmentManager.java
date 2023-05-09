@@ -38,7 +38,10 @@ public class AppointmentManager {
                 appointments.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Appointment appointment = snapshot.getValue(Appointment.class);
-                    appointments.add(appointment);
+                    if (appointment != null) {
+                        appointment.setKey(snapshot.getKey());
+                        appointments.add(appointment);
+                    }
                 }
                 appointmentsAdapter.notifyDataSetChanged();
             }
@@ -50,6 +53,7 @@ public class AppointmentManager {
         });
     }
 
+
     public void addAppointment(Appointment appointment) {
         String key = db.push().getKey();
         if (key != null) {
@@ -58,14 +62,22 @@ public class AppointmentManager {
     }
 
     public void updateAppointment(Appointment appointment) {
-        db.child(String.valueOf(appointment.getId())).setValue(appointment)
-                .addOnSuccessListener(aVoid -> Toast.makeText(context, "Appointment updated successfully", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(context, "Failed to update appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        if (appointment.getKey() != null) {
+            db.child(appointment.getKey()).setValue(appointment)
+                    .addOnSuccessListener(aVoid -> Toast.makeText(context, "Appointment updated successfully", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to update appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        } else {
+            Toast.makeText(context, "Failed to update appointment: Appointment key not found", Toast.LENGTH_SHORT).show();
+        }
     }
 
+
     public void deleteAppointment(Appointment appointment) {
-        db.child(String.valueOf(appointment.getId())).removeValue()
-                .addOnSuccessListener(aVoid -> Toast.makeText(context, "Appointment deleted successfully", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        if (appointment.getKey() != null) { // Update this line
+            db.child(appointment.getKey()).removeValue() // Update this line
+                    .addOnSuccessListener(aVoid -> Toast.makeText(context, "Appointment deleted successfully", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        }
     }
+
 }
