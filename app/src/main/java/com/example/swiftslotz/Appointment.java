@@ -4,12 +4,14 @@ public class Appointment {
     private String title;
     private String date;
     private String time;
+    private String details;
     public Appointment() {
     }
-    public Appointment(String title, String date, String time) {
+    public Appointment(String title, String date, String time, String details) {
         this.title = title;
         this.date = date;
         this.time = time;
+        this.details = details;
     }
 
     public String getTitle() {
@@ -34,6 +36,11 @@ public class Appointment {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getDetails() {return details;}
+    public void setDetails(String details) {
+        this.details = details;
     }
 }
 

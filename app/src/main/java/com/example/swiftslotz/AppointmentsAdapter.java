@@ -31,6 +31,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         holder.appointmentTitle.setText(appointment.getTitle());
         holder.appointmentDate.setText(appointment.getDate());
         holder.appointmentTime.setText(appointment.getTime());
+        holder.appointmentDetails.setText(appointment.getDetails());
     }
 
     @Override
@@ -42,13 +43,14 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         TextView appointmentTitle;
         TextView appointmentDate;
         TextView appointmentTime;
+        TextView appointmentDetails;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             appointmentTitle = itemView.findViewById(R.id.appointmentTitle);
             appointmentDate = itemView.findViewById(R.id.appointmentDate);
             appointmentTime = itemView.findViewById(R.id.appointmentTime);
+            appointmentDetails = itemView.findViewById(R.id.appointmentDetails);
         }
     }
 }
-
