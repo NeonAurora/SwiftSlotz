@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">SwiftSlotz</string>
     <string name="add_appointment">Add Appointment</string>
-
+    <string name="edit_appointment">Edit</string>
+    <string name="delete_appointment">Delete</string>
+    <string name="appointment_options">Appointment Options</string>
 </resources>
