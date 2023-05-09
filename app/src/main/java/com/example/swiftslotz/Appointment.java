@@ -1,17 +1,27 @@
 package com.example.swiftslotz;
 
 public class Appointment {
+    private int id;
     private String title;
     private String date;
     private String time;
+
     private String details;
     public Appointment() {
     }
-    public Appointment(String title, String date, String time, String details) {
+
+
+    public Appointment(int id, String title, String date, String time, String details) {
+        this.id = id;
+
         this.title = title;
         this.date = date;
         this.time = time;
         this.details = details;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -43,4 +53,3 @@ public class Appointment {
         this.details = details;
     }
 }
-

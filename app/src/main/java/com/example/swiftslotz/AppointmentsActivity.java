@@ -3,14 +3,17 @@ package com.example.swiftslotz;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppointmentsActivity extends AppCompatActivity {
+public class AppointmentsActivity extends AppCompatActivity implements AppointmentsAdapter.OnAppointmentInteractionListener {
 
     private List<Appointment> appointments;
     private AppointmentsAdapter appointmentsAdapter;
@@ -24,7 +27,7 @@ public class AppointmentsActivity extends AppCompatActivity {
 
         appointmentsRecyclerView = findViewById(R.id.appointmentsRecyclerView);
         appointments = new ArrayList<>();
-        appointmentsAdapter = new AppointmentsAdapter(appointments);
+        appointmentsAdapter = new AppointmentsAdapter(appointments, this);
         appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         appointmentsRecyclerView.setAdapter(appointmentsAdapter);
 
@@ -44,5 +47,24 @@ public class AppointmentsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         appointmentManager.fetchDataFromDatabase();
+    }
+
+    @Override
+    public void onEditAppointment(Appointment appointment) {
+        startModifyAppointmentActivity(appointment.getId(), appointment.getTitle(), appointment.getDate(), appointment.getTime());
+    }
+
+    @Override
+    public void onDeleteAppointment(Appointment appointment) {
+        //appointmentManager.deleteAppointment(appointment);
+    }
+
+    public void startModifyAppointmentActivity(int appointmentId, String title, String date, String time) {
+        Intent intent = new Intent(this, ModifyAppointmentActivity.class);
+        intent.putExtra("appointment_id", appointmentId);
+        intent.putExtra("appointment_title", title);
+        intent.putExtra("appointment_date", date);
+        intent.putExtra("appointment_time", time);
+        startActivity(intent);
     }
 }
