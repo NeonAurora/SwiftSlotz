@@ -4,4 +4,8 @@
     <string name="edit_appointment">Edit</string>
     <string name="delete_appointment">Delete</string>
     <string name="appointment_options">Appointment Options</string>
+    <string name="appointment_title">Enter New Title Here</string>
+    <string name="appointment_date">Enter New Date Here</string>
+    <string name="appointment_time">Enter New Item Here</string>
+    <string name="update_appointment">Update Appointment</string>
 </resources>

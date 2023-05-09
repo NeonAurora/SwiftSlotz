@@ -9,7 +9,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.PopupMenu;
 
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,9 +17,16 @@ import java.util.List;
 public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.ViewHolder> {
 
     private List<Appointment> appointments;
+    private OnAppointmentInteractionListener listener;
 
-    public AppointmentsAdapter(List<Appointment> appointments) {
+    public AppointmentsAdapter(List<Appointment> appointments, OnAppointmentInteractionListener listener) {
         this.appointments = appointments;
+        this.listener = listener;
+    }
+
+    public interface OnAppointmentInteractionListener {
+        void onEditAppointment(Appointment appointment);
+        void onDeleteAppointment(Appointment appointment);
     }
 
     @NonNull
@@ -29,18 +35,24 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.appointment_item, parent, false);
         return new ViewHolder(view);
     }
+
     private void showPopupMenu(View view, int position) {
         PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
         popupMenu.inflate(R.menu.appointment_options);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                Appointment appointment = appointments.get(position);
                 switch (item.getItemId()) {
                     case R.id.action_edit:
-                        // Handle edit action
+                        if (listener != null) {
+                            listener.onEditAppointment(appointment);
+                        }
                         return true;
                     case R.id.action_delete:
-                        // Handle delete action
+                        if (listener != null) {
+                            listener.onDeleteAppointment(appointment);
+                        }
                         return true;
                     default:
                         return false;
@@ -49,7 +61,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         });
         popupMenu.show();
     }
-
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -65,7 +76,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             }
         });
     }
-
 
     @Override
     public int getItemCount() {
@@ -87,4 +97,3 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         }
     }
 }
-
