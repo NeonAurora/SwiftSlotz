@@ -63,5 +63,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appointmentEditText" />
 
+    <TextView
+        android:id="@+id/selectedTimeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Selected Time: "
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/appointmentEditText"
+        app:layout_constraintTop_toBottomOf="@+id/appointmentEditText" />
+
+    <Button
+        android:id="@+id/selectTimeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:elevation="6dp"
+        android:paddingStart="24dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="12dp"
+        android:text="Select Time"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/appointmentEditText"
+        app:layout_constraintTop_toBottomOf="@+id/appointmentEditText" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

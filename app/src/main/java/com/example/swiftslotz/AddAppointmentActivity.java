@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -18,13 +21,14 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-
 public class AddAppointmentActivity extends AppCompatActivity {
 
     CompactCalendarView calendarView;
     EditText appointmentTitleEditText;
     EditText appointmentEditText;
     Button addAppointmentButton;
+    Button selectTimeButton;
+    TextView selectedTimeTextView;
     DatabaseReference db;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
@@ -36,6 +40,8 @@ public class AddAppointmentActivity extends AppCompatActivity {
         appointmentTitleEditText = findViewById(R.id.appointmentTitleEditText);
         appointmentEditText = findViewById(R.id.appointmentEditText);
         addAppointmentButton = findViewById(R.id.addAppointmentButton);
+        selectTimeButton = findViewById(R.id.selectTimeButton);
+        selectedTimeTextView = findViewById(R.id.selectedTimeTextView);
 
         db = FirebaseDatabase.getInstance("https://swiftslotz-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("appointments");
 
@@ -58,16 +64,18 @@ public class AddAppointmentActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String appointmentTitle = appointmentTitleEditText.getText().toString();
                 String appointmentText = appointmentEditText.getText().toString();
+                String selectedTimeString = selectedTimeTextView.getText().toString().replace("Selected Time: ", "");
                 String selectedDateString = sdf.format(selectedDate.getTime());
 
-                if (appointmentTitle.isEmpty() || appointmentText.isEmpty()) {
-                    Toast.makeText(AddAppointmentActivity.this, "Please enter appointment title and details", Toast.LENGTH_SHORT).show();
+                if (appointmentTitle.isEmpty() || appointmentText.isEmpty() || selectedTimeString.isEmpty()) {
+                    Toast.makeText(AddAppointmentActivity.this, "Please enter appointment title, details, and time", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 Map<String, Object> appointmentData = new HashMap<>();
                 appointmentData.put("title", appointmentTitle);
                 appointmentData.put("date", selectedDateString);
+                appointmentData.put("time", selectedTimeString);
                 appointmentData.put("details", appointmentText);
 
                 db.push().setValue(appointmentData)
@@ -75,9 +83,38 @@ public class AddAppointmentActivity extends AppCompatActivity {
                             Toast.makeText(AddAppointmentActivity.this, "Appointment added successfully", Toast.LENGTH_SHORT).show();
                             appointmentTitleEditText.setText("");
                             appointmentEditText.setText("");
+                            selectedTimeTextView.setText("Selected Time: ");
                         })
                         .addOnFailureListener(e -> Toast.makeText(AddAppointmentActivity.this, "Failed to add appointment", Toast.LENGTH_SHORT).show());
             }
         });
+
+        selectTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimePicker();
+            }
+        });
+    }
+
+    private void showTimePicker() {
+        MaterialTimePicker materialTimePicker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(12)
+                .setMinute(0)
+                .setTitleText("Select Appointment Time")
+                .build();
+
+        materialTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int hour = materialTimePicker.getHour();
+                int minute = materialTimePicker.getMinute();
+                String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+                selectedTimeTextView.setText("Selected Time: " + formattedTime);
+            }
+        });
+
+        materialTimePicker.show(getSupportFragmentManager(), "MATERIAL_TIME_PICKER");
     }
 }
