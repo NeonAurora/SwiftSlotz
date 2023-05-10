@@ -11,14 +11,15 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText emailEditText;
-    private EditText passwordEditText;
-    private EditText confirmPasswordEditText;
+    private EditText firstNameEditText, lastNameEditText, usernameEditText, emailEditText, phoneEditText, companyEditText, addressEditText, passwordEditText, confirmPasswordEditText;
     private Button signUpButton;
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +27,15 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference();
 
+        firstNameEditText = findViewById(R.id.firstNameEditText);
+        lastNameEditText = findViewById(R.id.lastNameEditText);
+        usernameEditText = findViewById(R.id.usernameEditText);
         emailEditText = findViewById(R.id.emailEditText);
+        phoneEditText = findViewById(R.id.phoneEditText);
+        companyEditText = findViewById(R.id.companyEditText);
+        addressEditText = findViewById(R.id.addressEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
         signUpButton = findViewById(R.id.signUpButton);
@@ -41,17 +49,18 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void userSignUp() {
-        String email = emailEditText.getText().toString().trim();
-        String password = passwordEditText.getText().toString().trim();
+        final String firstName = firstNameEditText.getText().toString().trim();
+        final String lastName = lastNameEditText.getText().toString().trim();
+        final String username = usernameEditText.getText().toString().trim();
+        final String email = emailEditText.getText().toString().trim();
+        final String phone = phoneEditText.getText().toString().trim();
+        final String company = companyEditText.getText().toString().trim();
+        final String address = addressEditText.getText().toString().trim();
+        final String password = passwordEditText.getText().toString().trim();
         String confirmPassword = confirmPasswordEditText.getText().toString().trim();
 
-        if(TextUtils.isEmpty(email)){
-            Toast.makeText(getApplicationContext(),"Enter email address!",Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if(TextUtils.isEmpty(password)){
-            Toast.makeText(getApplicationContext(),"Enter password!",Toast.LENGTH_SHORT).show();
+        if(TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName) || TextUtils.isEmpty(username) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){
+            Toast.makeText(getApplicationContext(),"Please fill in all the required fields!",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -73,6 +82,8 @@ public class SignUpActivity extends AppCompatActivity {
                     } else {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if(user != null){
+                            User userObj = new User(firstName, lastName, username, email, phone, company, address);
+                            mDatabase.child("users").child(user.getUid()).setValue(userObj);
                             Toast.makeText(SignUpActivity.this,"Created Account with UID: "+ user.getUid(),Toast.LENGTH_SHORT).show();
                             finish();
                         }
