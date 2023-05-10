@@ -3,6 +3,7 @@ package com.example.swiftslotz;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ public class AppointmentsActivity extends AppCompatActivity implements Appointme
     private AppointmentsAdapter appointmentsAdapter;
     private RecyclerView appointmentsRecyclerView;
     private AppointmentManager appointmentManager;
+    private Button logoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,14 @@ public class AppointmentsActivity extends AppCompatActivity implements Appointme
         appointmentManager = new AppointmentManager(this, appointments, appointmentsAdapter);
 
         FloatingActionButton appointmentButton = findViewById(R.id.addAppointmentButton);
+        logoutButton = findViewById(R.id.logoutButton);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AppointmentsActivity.this, LogoutActivity.class);
+                startActivity(intent);
+            }
+        });
         appointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

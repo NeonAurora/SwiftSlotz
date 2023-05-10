@@ -23,12 +23,13 @@ public class AppointmentManager {
         this.context = context;
         this.appointments = appointments;
         this.appointmentsAdapter = appointmentsAdapter;
-        db = FirebaseDatabase.getInstance("https://swiftslotz-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("appointments");
+        db = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("appointments");
+
     }
 
     public AppointmentManager(Context context) {
         this.context = context;
-        db = FirebaseDatabase.getInstance("https://swiftslotz-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("appointments");
+        db = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("appointments");
     }
 
     public void fetchDataFromDatabase() {

@@ -43,7 +43,7 @@ public class AddAppointmentActivity extends AppCompatActivity {
         selectTimeButton = findViewById(R.id.selectTimeButton);
         selectedTimeTextView = findViewById(R.id.selectedTimeTextView);
 
-        db = FirebaseDatabase.getInstance("https://swiftslotz-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("appointments");
+        db = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("appointments");
 
         final Calendar selectedDate = Calendar.getInstance();
 
