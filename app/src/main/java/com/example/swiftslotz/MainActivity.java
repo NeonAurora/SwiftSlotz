@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent = new Intent(MainActivity.this, AppointmentsActivity.class);
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
     }
 }
