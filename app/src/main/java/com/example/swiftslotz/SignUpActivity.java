@@ -11,6 +11,10 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -74,20 +78,37 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(SignUpActivity.this, task -> {
-                    if (!task.isSuccessful()) {
-                        Toast.makeText(SignUpActivity.this,"Authentication failed." + task.getException(),
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if(user != null){
-                            User userObj = new User(firstName, lastName, username, email, phone, company, address);
-                            mDatabase.child("users").child(user.getUid()).setValue(userObj);
-                            Toast.makeText(SignUpActivity.this,"Created Account with UID: "+ user.getUid(),Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    }
-                });
+        mDatabase.child("users").orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    //username already exists
+                    Toast.makeText(SignUpActivity.this, "Username already exists!", Toast.LENGTH_SHORT).show();
+                } else {
+                    //username does not exist, so create new user
+                    mAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(SignUpActivity.this, task -> {
+                                if (!task.isSuccessful()) {
+                                    Toast.makeText(SignUpActivity.this,"Authentication failed." + task.getException(),
+                                            Toast.LENGTH_SHORT).show();
+                                } else {
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    if(user != null){
+                                        User userObj = new User(firstName, lastName, username, email, phone, company, address);
+                                        mDatabase.child("users").child(user.getUid()).setValue(userObj);
+                                        Toast.makeText(SignUpActivity.this,"Created Account with UID: "+ user.getUid(),Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //handle databaseError
+            }
+        });
     }
+
 }
