@@ -43,7 +43,7 @@ public class AddAppointmentActivity extends AppCompatActivity {
         selectTimeButton = findViewById(R.id.selectTimeButton);
         selectedTimeTextView = findViewById(R.id.selectedTimeTextView);
 
-        db = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("appointments");
+        //db = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("appointments");
 
         final Calendar selectedDate = Calendar.getInstance();
 
@@ -72,22 +72,20 @@ public class AddAppointmentActivity extends AppCompatActivity {
                     return;
                 }
 
-                Map<String, Object> appointmentData = new HashMap<>();
-                appointmentData.put("title", appointmentTitle);
-                appointmentData.put("date", selectedDateString);
-                appointmentData.put("time", selectedTimeString);
-                appointmentData.put("details", appointmentText);
+                Appointment appointment = new Appointment();
+                appointment.setTitle(appointmentTitle);
+                appointment.setDate(selectedDateString);
+                appointment.setTime(selectedTimeString);
+                appointment.setDetails(appointmentText);
 
-                db.push().setValue(appointmentData)
-                        .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(AddAppointmentActivity.this, "Appointment added successfully", Toast.LENGTH_SHORT).show();
-                            appointmentTitleEditText.setText("");
-                            appointmentEditText.setText("");
-                            selectedTimeTextView.setText("Selected Time: ");
-                        })
-                        .addOnFailureListener(e -> Toast.makeText(AddAppointmentActivity.this, "Failed to add appointment", Toast.LENGTH_SHORT).show());
+                // Initialize the AppointmentManager
+                AppointmentManager appointmentManager = new AppointmentManager(AddAppointmentActivity.this);
+
+                // Call addAppointment() method of the AppointmentManager
+                appointmentManager.addAppointment(appointment);
             }
         });
+
 
         selectTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
