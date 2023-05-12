@@ -99,7 +99,13 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success
                             FirebaseUser user = mAuth.getCurrentUser();
-                            startActivity(new Intent(LoginActivity.this, AppointmentsActivity.class));
+                            if (user.isEmailVerified()) {
+                                startActivity(new Intent(LoginActivity.this, AppointmentsActivity.class));
+                            } else {
+                                // If the email is not verified, display a message to the user.
+                                Toast.makeText(LoginActivity.this, "Please verify your email before logging in.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
