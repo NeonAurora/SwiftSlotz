@@ -2,6 +2,7 @@ package com.example.swiftslotz;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,7 +15,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -86,6 +86,7 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText(SignUpActivity.this, "Username already exists!", Toast.LENGTH_SHORT).show();
                 } else {
                     //username does not exist, so create new user
+                    //username does not exist, so create new user
                     mAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(SignUpActivity.this, task -> {
                                 if (!task.isSuccessful()) {
@@ -94,13 +95,30 @@ public class SignUpActivity extends AppCompatActivity {
                                 } else {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     if(user != null){
-                                        User userObj = new User(firstName, lastName, username, email, phone, company, address);
+                                        User userObj = new User(firstName, lastName, username,
+                                                email, phone, company, address);
                                         mDatabase.child("users").child(user.getUid()).setValue(userObj);
+
+                                        // Send verification email
+                                        user.sendEmailVerification()
+                                                .addOnCompleteListener(verificationTask -> {
+                                                    if (verificationTask.isSuccessful()) {
+                                                        Toast.makeText(SignUpActivity.this, "Verification email sent to " + user.getEmail(), Toast.LENGTH_SHORT).show();
+
+                                                        Intent intent = new Intent(SignUpActivity.this, EmailVerificationActivity.class);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    } else {
+                                                        Toast.makeText(SignUpActivity.this, "Failed to send verification email.", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
                                         Toast.makeText(SignUpActivity.this,"Created Account with UID: "+ user.getUid(),Toast.LENGTH_SHORT).show();
                                         finish();
                                     }
                                 }
                             });
+
                 }
             }
 
@@ -110,5 +128,4 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
-
 }

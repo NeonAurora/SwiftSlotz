@@ -12,6 +12,9 @@
         android:theme="@style/Theme.SwiftSlotz"
         tools:targetApi="31">
         <activity
+            android:name=".EmailVerificationActivity"
+            android:exported="false" />
+        <activity
             android:name=".LogoutActivity"
             android:exported="false" />
         <activity
