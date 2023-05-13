@@ -36,14 +36,14 @@ public class AppointmentsActivity extends BaseActivity implements AppointmentsAd
         appointmentManager = new AppointmentManager(this, appointments, appointmentsAdapter);
 
         FloatingActionButton appointmentButton = findViewById(R.id.addAppointmentButton);
-        logoutButton = findViewById(R.id.logoutButton);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(AppointmentsActivity.this, LogoutActivity.class);
-                startActivity(intent);
-            }
-        });
+//        logoutButton = findViewById(R.id.logoutButton);
+//        logoutButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(AppointmentsActivity.this, LogoutActivity.class);
+//                startActivity(intent);
+//            }
+//        });
         appointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
