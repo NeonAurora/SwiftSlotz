@@ -1,10 +1,10 @@
 package com.example.swiftslotz;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -111,7 +111,12 @@ public class LoginActivity extends BaseActivity {
                             // Sign in success
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user.isEmailVerified()) {
-                                startActivity(new Intent(LoginActivity.this, AppointmentsActivity.class));
+                                SharedPreferences preferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putString("fragmentToLoad", "AppointmentsFragment");
+                                editor.apply();
+
+                                startActivity(new Intent(LoginActivity.this, BaseActivity.class));
                             } else {
                                 // If the email is not verified, display a message to the user.
                                 Toast.makeText(LoginActivity.this, "Please verify your email before logging in.",

@@ -1,27 +1,26 @@
 package com.example.swiftslotz;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
-public class AddAppointmentActivity extends BaseActivity {
+public class AddAppointmentFragment extends Fragment {
 
     CompactCalendarView calendarView;
     EditText appointmentTitleEditText;
@@ -29,21 +28,18 @@ public class AddAppointmentActivity extends BaseActivity {
     Button addAppointmentButton;
     Button selectTimeButton;
     TextView selectedTimeTextView;
-    DatabaseReference db;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_appointment);
-        calendarView = findViewById(R.id.calendarView);
-        appointmentTitleEditText = findViewById(R.id.appointmentTitleEditText);
-        appointmentEditText = findViewById(R.id.appointmentEditText);
-        addAppointmentButton = findViewById(R.id.addAppointmentButton);
-        selectTimeButton = findViewById(R.id.selectTimeButton);
-        selectedTimeTextView = findViewById(R.id.selectedTimeTextView);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_add_appointment, container, false);
 
-        //db = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("appointments");
+        calendarView = view.findViewById(R.id.calendarView);
+        appointmentTitleEditText = view.findViewById(R.id.appointmentTitleEditText);
+        appointmentEditText = view.findViewById(R.id.appointmentEditText);
+        addAppointmentButton = view.findViewById(R.id.addAppointmentButton);
+        selectTimeButton = view.findViewById(R.id.selectTimeButton);
+        selectedTimeTextView = view.findViewById(R.id.selectedTimeTextView);
 
         final Calendar selectedDate = Calendar.getInstance();
 
@@ -68,7 +64,7 @@ public class AddAppointmentActivity extends BaseActivity {
                 String selectedDateString = sdf.format(selectedDate.getTime());
 
                 if (appointmentTitle.isEmpty() || appointmentText.isEmpty() || selectedTimeString.isEmpty()) {
-                    Toast.makeText(AddAppointmentActivity.this, "Please enter appointment title, details, and time", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Please enter appointment title, details, and time", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -79,7 +75,7 @@ public class AddAppointmentActivity extends BaseActivity {
                 appointment.setDetails(appointmentText);
 
                 // Initialize the AppointmentManager
-                AppointmentManager appointmentManager = new AppointmentManager(AddAppointmentActivity.this);
+                AppointmentManager appointmentManager = new AppointmentManager(getActivity());
 
                 // Call addAppointment() method of the AppointmentManager
                 appointmentManager.addAppointment(appointment);
@@ -93,6 +89,8 @@ public class AddAppointmentActivity extends BaseActivity {
                 showTimePicker();
             }
         });
+
+        return view;
     }
 
     private void showTimePicker() {
@@ -113,6 +111,6 @@ public class AddAppointmentActivity extends BaseActivity {
             }
         });
 
-        materialTimePicker.show(getSupportFragmentManager(), "MATERIAL_TIME_PICKER");
+        materialTimePicker.show(getParentFragmentManager(), "MATERIAL_TIME_PICKER");
     }
 }
