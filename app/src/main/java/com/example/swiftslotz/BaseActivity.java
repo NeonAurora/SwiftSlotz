@@ -1,5 +1,6 @@
 package com.example.swiftslotz;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -81,7 +82,8 @@ public class BaseActivity extends AppCompatActivity {
 
         // Handle action bar item clicks here.
         if (id == R.id.action_logout) {
-            // Handle logout
+            Intent intent = new Intent(this, LogoutActivity.class);
+            startActivity(intent);
             return true;
         }
 
