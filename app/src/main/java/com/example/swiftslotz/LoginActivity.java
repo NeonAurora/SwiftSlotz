@@ -26,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private TextView signUpTextView;
     private ProgressDialog progressDialog;
+    private Button defaultLoginButton;
 
     private FirebaseAuth mAuth;
 
@@ -40,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
+        defaultLoginButton = findViewById(R.id.defaultLoginButton);
         signUpTextView = findViewById(R.id.signUpTextView);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
@@ -47,6 +49,15 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                userLogin();
+            }
+        });
+
+        defaultLoginButton.setOnClickListener(new View.OnClickListener() { // New button's click listener
+            @Override
+            public void onClick(View view) {
+                emailEditText.setText("arnarnsde@gmail.com");
+                passwordEditText.setText("qwerty");
                 userLogin();
             }
         });
