@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ModifyAppointmentActivity extends AppCompatActivity {
+public class ModifyAppointmentActivity extends BaseActivity {
 
     private EditText appointmentTitleEditText;
     private EditText appointmentDateEditText;

@@ -18,7 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends BaseActivity {
 
     private EditText firstNameEditText, lastNameEditText, usernameEditText, emailEditText, phoneEditText, companyEditText, addressEditText, passwordEditText, confirmPasswordEditText;
     private Button signUpButton;

@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="greyish_black">#3C3C3C</color> <!-- Greyish black color -->
+    <color name="test_color">#FFFFFF</color>
 </resources>

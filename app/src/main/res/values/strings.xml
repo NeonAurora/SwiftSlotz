@@ -9,4 +9,6 @@
     <string name="appointment_time">Enter New Time Here</string>
     <string name="appointment_details">Enter New Detail Here</string>
     <string name="update_appointment">Update Appointment</string>
+    <string name="page1">page1</string>
+    <string name="page2">page2</string>
 </resources>

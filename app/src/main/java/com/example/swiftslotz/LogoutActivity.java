@@ -6,7 +6,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class LogoutActivity extends AppCompatActivity {
+public class LogoutActivity extends BaseActivity {
 
     private FirebaseAuth mAuth;
 
