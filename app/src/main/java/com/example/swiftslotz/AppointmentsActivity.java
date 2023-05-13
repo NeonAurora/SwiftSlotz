@@ -14,7 +14,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppointmentsActivity extends AppCompatActivity implements AppointmentsAdapter.OnAppointmentInteractionListener {
+public class AppointmentsActivity extends BaseActivity implements AppointmentsAdapter.OnAppointmentInteractionListener {
 
     private List<Appointment> appointments;
     private AppointmentsAdapter appointmentsAdapter;
