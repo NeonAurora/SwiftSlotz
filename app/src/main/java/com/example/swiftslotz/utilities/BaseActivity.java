@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.activities.LogoutActivity;
-import com.example.swiftslotz.fragments.botttomBarFragments.Page1Fragment;
 import com.example.swiftslotz.fragments.botttomBarFragments.Page2Fragment;
 import com.example.swiftslotz.fragments.pageFragments.AppointmentsFragment;
 import com.example.swiftslotz.fragments.sidebarFragments.Item1Fragment;
@@ -95,7 +94,7 @@ public class BaseActivity extends AppCompatActivity {
         if (fragmentToLoad.equals("AppointmentsFragment")) {
             // Load AppointmentsFragment
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_frame, new AppointmentsFragment());
+            transaction.replace(R.id.content_frame, new com.example.swiftslotz.fragments.pageFragments.AppointmentsFragment());
             transaction.commit();
 
             // Clear fragmentToLoad from SharedPreferences
@@ -111,7 +110,7 @@ public class BaseActivity extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.action_page1:
-                        selectedFragment = new Page1Fragment();
+                        selectedFragment = new AppointmentsFragment();
                         break;
                     case R.id.action_page2:
                         selectedFragment = new Page2Fragment();
