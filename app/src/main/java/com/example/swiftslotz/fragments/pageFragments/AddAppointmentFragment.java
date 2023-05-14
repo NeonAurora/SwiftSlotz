@@ -1,11 +1,14 @@
 package com.example.swiftslotz.fragments.pageFragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,8 @@ public class AddAppointmentFragment extends Fragment {
     Button addAppointmentButton;
     Button selectTimeButton;
     TextView selectedTimeTextView;
+    EditText appointmentDurationEditText;
+    Spinner unitSpinner;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     @Override
@@ -43,6 +48,13 @@ public class AddAppointmentFragment extends Fragment {
         addAppointmentButton = view.findViewById(R.id.addAppointmentButton);
         selectTimeButton = view.findViewById(R.id.selectTimeButton);
         selectedTimeTextView = view.findViewById(R.id.selectedTimeTextView);
+        appointmentDurationEditText = view.findViewById(R.id.appointmentDurationEditText);
+        unitSpinner = view.findViewById(R.id.unitSpinner);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getActivity(),
+                R.array.units_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        unitSpinner.setAdapter(adapter);
 
         final Calendar selectedDate = Calendar.getInstance();
 
@@ -65,17 +77,36 @@ public class AddAppointmentFragment extends Fragment {
                 String appointmentText = appointmentEditText.getText().toString();
                 String selectedTimeString = selectedTimeTextView.getText().toString().replace("Selected Time: ", "");
                 String selectedDateString = sdf.format(selectedDate.getTime());
+                int appointmentDuration = Integer.parseInt(appointmentDurationEditText.getText().toString());
+                String unit = unitSpinner.getSelectedItem().toString();
 
                 if (appointmentTitle.isEmpty() || appointmentText.isEmpty() || selectedTimeString.isEmpty()) {
                     Toast.makeText(getActivity(), "Please enter appointment title, details, and time", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
+                int durationInMinutes;
+                try {
+                    if (unit.equals("H")) {
+                        durationInMinutes = appointmentDuration * 60;
+                        Toast.makeText(getActivity(), "Hour format inserted", Toast.LENGTH_SHORT).show();
+                    } else {
+                        durationInMinutes = appointmentDuration;
+                        Toast.makeText(getActivity(), "Inserted format: " + unit, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (NumberFormatException e) {
+                    Toast.makeText(getActivity(), "Invalid duration", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+
                 Appointment appointment = new Appointment();
                 appointment.setTitle(appointmentTitle);
                 appointment.setDate(selectedDateString);
                 appointment.setTime(selectedTimeString);
                 appointment.setDetails(appointmentText);
+                appointment.setDuration(durationInMinutes);
 
                 // Initialize the AppointmentManager
                 AppointmentManager appointmentManager = new AppointmentManager(getActivity());
@@ -96,6 +127,9 @@ public class AddAppointmentFragment extends Fragment {
         return view;
     }
 
+    /**
+     *  this shows the time for an appointment
+     */
     private void showTimePicker() {
         MaterialTimePicker materialTimePicker = new MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_24H)
