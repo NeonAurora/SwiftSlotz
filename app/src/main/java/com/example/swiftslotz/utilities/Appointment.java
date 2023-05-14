@@ -1,4 +1,4 @@
-package com.example.swiftslotz;
+package com.example.swiftslotz.utilities;
 
 public class Appointment {
     private int id;

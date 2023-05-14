@@ -1,4 +1,4 @@
-package com.example.swiftslotz;
+package com.example.swiftslotz.utilities;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +11,8 @@ import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.swiftslotz.R;
 
 import java.util.List;
 

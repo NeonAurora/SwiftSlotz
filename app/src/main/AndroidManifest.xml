@@ -12,28 +12,28 @@
         android:theme="@style/Theme.SwiftSlotz"
         tools:targetApi="31">
         <activity
-            android:name=".BaseActivity"
+            android:name=".utilities.BaseActivity"
             android:exported="false" />
         <activity
-            android:name=".EmailVerificationActivity"
+            android:name=".activities.EmailVerificationActivity"
             android:exported="false" />
         <activity
-            android:name=".LogoutActivity"
+            android:name=".activities.LogoutActivity"
             android:exported="false" />
         <activity
-            android:name=".SignUpActivity"
+            android:name=".activities.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ModifyAppointmentFragment"
+            android:name=".fragments.pageFragments.ModifyAppointmentFragment"
             android:exported="false" />
         <activity
-            android:name=".AppointmentsFragment"
+            android:name=".fragments.pageFragments.AppointmentsFragment"
             android:exported="false" />
         <activity
-            android:name=".AddAppointmentFragment"
+            android:name=".fragments.pageFragments.AddAppointmentFragment"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

@@ -1,4 +1,4 @@
-package com.example.swiftslotz;
+package com.example.swiftslotz.fragments.pageFragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.swiftslotz.utilities.Appointment;
+import com.example.swiftslotz.utilities.AppointmentManager;
+import com.example.swiftslotz.R;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;

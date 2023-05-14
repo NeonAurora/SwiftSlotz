@@ -1,10 +1,11 @@
-package com.example.swiftslotz;
+package com.example.swiftslotz.utilities;
 
 import android.content.Context;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.swiftslotz.BuildConfig;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

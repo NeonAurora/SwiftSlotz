@@ -1,6 +1,5 @@
-package com.example.swiftslotz;
+package com.example.swiftslotz.fragments.pageFragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,10 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.example.swiftslotz.utilities.Appointment;
+import com.example.swiftslotz.utilities.AppointmentManager;
+import com.example.swiftslotz.R;
 
 public class ModifyAppointmentFragment extends Fragment {
 

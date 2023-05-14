@@ -1,4 +1,4 @@
-package com.example.swiftslotz;
+package com.example.swiftslotz.activities;
 
 import androidx.annotation.NonNull;
 
@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.swiftslotz.utilities.BaseActivity;
+import com.example.swiftslotz.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
