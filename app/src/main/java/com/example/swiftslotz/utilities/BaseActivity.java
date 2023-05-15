@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.activities.LogoutActivity;
-import com.example.swiftslotz.fragments.botttomBarFragments.Page2Fragment;
+import com.example.swiftslotz.fragments.bottomBarFragments.ScheduleChartFragment;
 import com.example.swiftslotz.fragments.pageFragments.AppointmentsFragment;
 import com.example.swiftslotz.fragments.sidebarFragments.Item1Fragment;
 import com.example.swiftslotz.fragments.sidebarFragments.Item2Fragment;
@@ -113,7 +113,7 @@ public class BaseActivity extends AppCompatActivity {
                         selectedFragment = new AppointmentsFragment();
                         break;
                     case R.id.action_page2:
-                        selectedFragment = new Page2Fragment();
+                        selectedFragment = new ScheduleChartFragment();
                         break;
                     //handle more items as needed
                 }

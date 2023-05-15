@@ -9,4 +9,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="greyish_black">#3C3C3C</color> <!-- Greyish black color -->
     <color name="test_color">#FFFFFF</color>
+    <color name="colorRed">#FF0000</color>
+    <color name="colorGreen">#008000</color>
+    <color name="colorBlue">#0000FF</color>
+    <color name="colorYellow">#FFFF00</color>
+
 </resources>

@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.botttomBarFragments.Page2Fragment">
+    tools:context=".fragments.bottomBarFragments.ScheduleChartFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.example.swiftslotz.views.charts.CustomPieChart
+        android:id="@+id/custom_pie_chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        />
+
 
 </FrameLayout>
