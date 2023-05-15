@@ -129,7 +129,7 @@ public class AppointmentManager {
         int color = Color.RED;
 
         // Create and return the new Sector object.
-        return new Sector(startAngle, sweepAngle, color);
+        return new Sector(startAngle, sweepAngle, color, appointment.getTitle());
     }
 
 }

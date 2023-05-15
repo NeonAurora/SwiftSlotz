@@ -2,8 +2,10 @@ package com.example.swiftslotz.views.charts;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import java.util.List;
@@ -44,14 +46,25 @@ public class CustomPieChart extends View {
 
         float width = getWidth();
         float height = getHeight();
-        float radius = Math.min(width, height) / 2f;
         float cx = width / 2f;
         float cy = height / 2f;
 
+        float outerRadius = Math.min(width, height) / 2f;
+        float innerRadius = outerRadius * 0.8f; // adjust this factor to control the thickness of the ring
+
+        // Draw each sector as part of the ring
         for (Sector sector : sectors) {
             paint.setColor(sector.getColor());
-            canvas.drawArc(cx - radius, cy - radius, cx + radius, cy + radius,
+            canvas.drawArc(cx - outerRadius, cy - outerRadius, cx + outerRadius, cy + outerRadius,
                     sector.getStartAngle(), sector.getSweepAngle(), true, paint);
+            paint.setColor(Color.BLACK);
+            Log.d("logging title", sector.getTitle());
+            canvas.drawText(sector.getTitle(), cx, cy, paint);
         }
+
+        // Draw the inner circle to create the ring effect
+        paint.setColor(Color.WHITE); // adjust this to the background color
+        canvas.drawCircle(cx, cy, innerRadius, paint);
     }
+
 }

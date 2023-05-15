@@ -4,11 +4,13 @@ public class Sector {
     private float startAngle;
     private float sweepAngle;
     private int color;
+    private String title;
 
-    public Sector(float startAngle, float sweepAngle, int color) {
+    public Sector(float startAngle, float sweepAngle, int color, String title) {
         this.startAngle = startAngle;
         this.sweepAngle = sweepAngle;
         this.color = color;
+        this.title = title;
     }
 
     public float getStartAngle() {
@@ -22,4 +24,6 @@ public class Sector {
     public int getColor() {
         return color;
     }
+
+    public String getTitle() { return title; }
 }
