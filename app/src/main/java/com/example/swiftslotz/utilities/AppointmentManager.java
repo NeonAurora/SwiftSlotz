@@ -72,7 +72,9 @@ public class AppointmentManager {
                         sectors.add(sector);
                     }
                 }
-                //appointmentsAdapter.notifyDataSetChanged();
+                if (appointmentsAdapter != null) {
+                    appointmentsAdapter.notifyDataSetChanged();
+                }
                 if (customPieChart != null) {
                     customPieChart.setSectors(sectors);
                 }
@@ -118,8 +120,10 @@ public class AppointmentManager {
         int minutes = Integer.parseInt(timeParts[1]);
 
         // Calculate the start angle and sweep angle in degrees.
-        float startAngle = (hours * 60 + minutes) / 2f;
-        float sweepAngle = appointment.getDuration() / 2f;
+        float startAngle = (hours * 60 + minutes) / 4f;
+        float sweepAngle = appointment.getDuration() / 4f;
+
+        startAngle -= 90;
 
         // Use a default color for now. You can change this to use different colors for different appointments.
         int color = Color.RED;
