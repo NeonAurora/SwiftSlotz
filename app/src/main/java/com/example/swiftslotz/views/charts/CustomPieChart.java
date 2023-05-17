@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomPieChart extends View {
@@ -37,6 +38,18 @@ public class CustomPieChart extends View {
 
     public void setSectors(List<Sector> sectors) {
         this.sectors = sectors;
+        sectorsAM = new ArrayList<>();
+        sectorsPM = new ArrayList<>();
+
+        for (Sector sector : sectors) {
+            String[] timeParts = sector.getTime().split(":");
+            int hours = Integer.parseInt(timeParts[0]);
+            if (hours < 12) {
+                sectorsAM.add(sector);
+            } else {
+                sectorsPM.add(sector);
+            }
+        }
         invalidate();
     }
 
@@ -58,7 +71,7 @@ public class CustomPieChart extends View {
         float innerRadius = outerRadius * 0.8f; // adjust this factor to control the thickness of the ring
 
         // Draw each sector as part of the ring
-        for (Sector sector : sectors) {
+        for (Sector sector : sectorsAM) {
             Log.d("Circular value of Cx", String.valueOf(cx));
             Log.d("Circular value of Cy", String.valueOf(cy));
             paint.setColor(sector.getColor());
@@ -66,12 +79,20 @@ public class CustomPieChart extends View {
                     sector.getStartAngle(), sector.getSweepAngle(), true, paint);
         }
 
+        for (Sector sector : sectorsPM) {
+            Log.d("Circular value of Cx", String.valueOf(cx));
+            Log.d("Circular value of Cy", String.valueOf(cy));
+            paint.setColor(sector.getColor());
+            canvas.drawArc(cx - innerRadius, cy - innerRadius, cx + innerRadius, cy + innerRadius,
+                    sector.getStartAngle(), sector.getSweepAngle(), true, paint);
+        }
+
         // Draw the inner circle to create the ring effect
-        paint.setColor(Color.WHITE); // adjust this to the background color
-        canvas.drawCircle(cx, cy, innerRadius, paint);
+//        paint.setColor(Color.WHITE); // adjust this to the background color
+//        canvas.drawCircle(cx, cy, innerRadius, paint);
 
         // Draw the legend
-        drawLegend(canvas, cx, cy, outerRadius + 20);
+        drawLegend(canvas, cx, cy*1.02f, outerRadius+40);
         Log.d("Canvas Size", String.valueOf(canvas.getHeight()));// adjust these coordinates as needed
     }
 
