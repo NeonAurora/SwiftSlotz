@@ -2,6 +2,7 @@ package com.example.swiftslotz.utilities;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -75,7 +76,16 @@ public class AppointmentManager {
 
                         // Convert the appointment to a sector and add it to the list
                         Sector sector = AppointmentManager.this.appointmentToSector(appointment);
-                        sectors.add(sector);
+                        String[] timeParts = appointment.getTime().split(":");
+                        int hours = Integer.parseInt(timeParts[0]);
+                        if (hours < 12) {
+                            Log.d("Time Hours value is AM", String.valueOf(hours));
+                        }
+                        else {
+                            Log.d("Time Hours value is PM", String.valueOf(hours));
+                            sectors.add(sector);
+                        }
+
                     }
                 }
                 if (appointmentsAdapter != null) {
