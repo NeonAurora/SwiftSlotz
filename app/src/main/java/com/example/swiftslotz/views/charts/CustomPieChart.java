@@ -13,6 +13,8 @@ import java.util.List;
 public class CustomPieChart extends View {
     private Paint paint;
     private List<Sector> sectors;
+    private List<Sector> sectorsAM;
+    private List<Sector> sectorsPM;
 
     public CustomPieChart(Context context) {
         super(context);
