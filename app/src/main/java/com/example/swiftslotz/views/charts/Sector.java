@@ -5,12 +5,14 @@ public class Sector {
     private float sweepAngle;
     private int color;
     private String title;
+    private String time;
 
-    public Sector(float startAngle, float sweepAngle, int color, String title) {
+    public Sector(float startAngle, float sweepAngle, int color, String title, String time) {
         this.startAngle = startAngle;
         this.sweepAngle = sweepAngle;
         this.color = color;
         this.title = title;
+        this.time = time;
     }
 
     public float getStartAngle() {
@@ -26,4 +28,5 @@ public class Sector {
     }
 
     public String getTitle() { return title; }
+    public String getTime() { return time; }
 }

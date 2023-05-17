@@ -16,8 +16,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AppointmentManager {
     private List<Appointment> appointments;
@@ -61,9 +64,12 @@ public class AppointmentManager {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 appointments.clear();
                 sectors.clear();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                String today = sdf.format(new Date());
+
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Appointment appointment = snapshot.getValue(Appointment.class);
-                    if (appointment != null) {
+                    if (appointment != null && appointment.getDate().equals(today)) {
                         appointment.setKey(snapshot.getKey());
                         appointments.add(appointment);
 
@@ -86,6 +92,7 @@ public class AppointmentManager {
             }
         });
     }
+
 
 
     public void addAppointment(Appointment appointment) {
@@ -120,16 +127,18 @@ public class AppointmentManager {
         int minutes = Integer.parseInt(timeParts[1]);
 
         // Calculate the start angle and sweep angle in degrees.
-        float startAngle = (hours * 60 + minutes) / 4f;
-        float sweepAngle = appointment.getDuration() / 4f;
+        float startAngle = (hours * 60 + minutes) / 2f;
+        float sweepAngle = appointment.getDuration() / 2f;
 
         startAngle -= 90;
 
         // Use a default color for now. You can change this to use different colors for different appointments.
         int color = Color.RED;
 
+        String title = appointment.getTitle();
+        String time = appointment.getTime();
         // Create and return the new Sector object.
-        return new Sector(startAngle, sweepAngle, color, appointment.getTitle());
+        return new Sector(startAngle, sweepAngle, color, title, time);
     }
 
 }
