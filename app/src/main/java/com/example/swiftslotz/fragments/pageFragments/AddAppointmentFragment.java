@@ -112,7 +112,11 @@ public class AddAppointmentFragment extends Fragment {
                 AppointmentManager appointmentManager = new AppointmentManager(getActivity());
 
                 // Call addAppointment() method of the AppointmentManager
-                appointmentManager.addAppointment(appointment);
+                try {
+                    appointmentManager.addAppointment(appointment);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 

@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.swiftslotz.BuildConfig;
+import com.example.swiftslotz.dependency_injection.DatabaseService;
 import com.example.swiftslotz.views.charts.CustomPieChart;
 import com.example.swiftslotz.views.charts.Sector;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +31,7 @@ public class AppointmentManager {
     private DatabaseReference userDb;
     private List<Sector> sectors = new ArrayList<>();
     private CustomPieChart customPieChart;
+    private DatabaseService databaseService;
 
     public AppointmentManager(Context context, List<Appointment> appointments, AppointmentsAdapter appointmentsAdapter) {
         this.context = context;
@@ -47,6 +49,22 @@ public class AppointmentManager {
         mAuth = FirebaseAuth.getInstance();
         String userId = mAuth.getCurrentUser().getUid();
         userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("appointments");
+    }
+
+    public AppointmentManager(Context context, DatabaseReference userDb) {
+        this.context = context;
+        this.appointments = new ArrayList<>();
+        this.sectors = new ArrayList<>();
+        this.userDb = userDb;
+        mAuth = FirebaseAuth.getInstance();
+    }
+
+    public AppointmentManager(Context context, List<Appointment> appointments, AppointmentsAdapter appointmentsAdapter, FirebaseAuth auth, DatabaseService databaseService) {
+        this.mAuth = auth;
+        this.context = context;
+        this.appointments = appointments;
+        this.appointmentsAdapter = appointmentsAdapter;
+        this.databaseService = databaseService;  // Initialize the databaseService here.
     }
 
 
@@ -95,12 +113,11 @@ public class AppointmentManager {
 
 
 
-    public void addAppointment(Appointment appointment) {
-        String key = userDb.push().getKey();
-        if (key != null) {
-            userDb.child(key).setValue(appointment);
-        }
+    public String addAppointment(Appointment appointment) throws Exception {
+        return databaseService.addAppointment(appointment);
     }
+
+
 
     public void updateAppointment(Appointment appointment) {
         if (appointment.getKey() != null) {
