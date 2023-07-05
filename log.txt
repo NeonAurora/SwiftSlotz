@@ -11,5 +11,6 @@
 4:35 5/13/2023 - Email Authentication System Introduced
 3:36 5/14/2023 - Customized appbar added
 2:32 5/15/23 - Appointment Duration Introduced
+4:36 06/07/23 - UI-test added in previous commit
 
 
