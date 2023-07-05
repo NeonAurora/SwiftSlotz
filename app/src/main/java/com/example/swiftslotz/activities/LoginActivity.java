@@ -116,6 +116,7 @@ public class LoginActivity extends BaseActivity {
                                 SharedPreferences preferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
                                 SharedPreferences.Editor editor = preferences.edit();
                                 editor.putString("fragmentToLoad", "AppointmentsFragment");
+                                editor.putBoolean("isLoggedIn", true);
                                 editor.apply();
 
                                 startActivity(new Intent(LoginActivity.this, BaseActivity.class));

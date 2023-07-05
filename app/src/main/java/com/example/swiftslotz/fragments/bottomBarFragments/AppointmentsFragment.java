@@ -40,7 +40,7 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
 
         appointmentManager = new AppointmentManager(getActivity(), appointments, appointmentsAdapter);
 
-        FloatingActionButton appointmentButton = view.findViewById(R.id.addAppointmentButton);
+        FloatingActionButton appointmentButton = view.findViewById(R.id.addAppointmentStartButton);
         appointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
