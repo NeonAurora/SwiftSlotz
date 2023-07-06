@@ -50,6 +50,13 @@ To get a local copy up and running, follow these steps:
 
 For detailed examples and usage instructions, please refer to the [Documentation]().
 
+## Testing Demos
+
+Take a look at our test demonstrations to get a deeper understanding of how we ensure the quality of SwiftSlotz:
+
+* [Unit Testing Demo](https://drive.google.com/file/d/159EdnNtliS8nxB7bIeE1P0eCuAWB78zU/view?usp=sharing)
+* [UI Testing Demo](https://drive.google.com/file/d/1QonI1KNcgBvp3eU569yvPDE3GYR8V_aM/view?usp=sharing)
+
 ## Roadmap
 
 See the [open issues]() for a list of proposed features (and known issues).
