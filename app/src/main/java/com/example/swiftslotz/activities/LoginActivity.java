@@ -43,7 +43,7 @@ public class LoginActivity extends BaseActivity {
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
-        defaultLoginButton = findViewById(R.id.defaultLoginButton);
+//        defaultLoginButton = findViewById(R.id.defaultLoginButton);
         signUpTextView = findViewById(R.id.signUpTextView);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
@@ -55,14 +55,14 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
-        defaultLoginButton.setOnClickListener(new View.OnClickListener() { // New button's click listener
-            @Override
-            public void onClick(View view) {
-                emailEditText.setText("arnarnsde@gmail.com");
-                passwordEditText.setText("qwerty");
-                userLogin();
-            }
-        });
+//        defaultLoginButton.setOnClickListener(new View.OnClickListener() { // New button's click listener
+//            @Override
+//            public void onClick(View view) {
+//                emailEditText.setText("arnarnsde@gmail.com");
+//                passwordEditText.setText("qwerty");
+//                userLogin();
+//            }
+//        });
 
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
