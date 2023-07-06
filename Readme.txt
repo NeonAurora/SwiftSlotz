@@ -1,4 +1,4 @@
-# Neon Calendar
+# SwiftSlotz
 
 SwiftSlotz is a revolutionary Appointment Scheduling application aimed at providing the ultimate user-friendly experience. With a modern design, intuitive navigation, and a myriad of features, it redefines the way you organize and visualize your schedule.
 
