@@ -17,6 +17,10 @@
 ## About The Project
 
 ![SwiftSlotz Screenshot](https://github.com/NeonAurora/SwiftSlotz/blob/main/resources/Images/login.png)
+![SwiftSlotz Screenshot](https://github.com/NeonAurora/SwiftSlotz/blob/main/resources/Images/Appointments.png)
+![SwiftSlotz Screenshot](https://github.com/NeonAurora/SwiftSlotz/blob/main/resources/Images/AddAppointment.png)
+![SwiftSlotz Screenshot](https://github.com/NeonAurora/SwiftSlotz/blob/main/resources/Images/demo_screen.png)
+![SwiftSlotz Screenshot](https://github.com/NeonAurora/SwiftSlotz/blob/main/resources/Images/s6.png)
 
 SwiftSlotz is a revolutionary calendar application aimed at providing the ultimate user-friendly experience. With a modern design, intuitive navigation, and a myriad of features, it redefines the way you organize and visualize your schedule.
 
