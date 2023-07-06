@@ -1,6 +1,6 @@
 # SwiftSlotz
 
-[View Demo]() · [Report Bug]() · [Request Feature]()
+[View Demo](https://github.com/NeonAurora/SwiftSlotz/blob/main/resources/App.mp4) · [Report Bug]() · [Request Feature]()
 
 ## Table of Contents
 
