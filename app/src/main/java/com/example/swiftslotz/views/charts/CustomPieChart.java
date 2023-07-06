@@ -129,4 +129,12 @@ public class CustomPieChart extends View {
             canvas.drawText(sector.getTime(), x, y, paint);
         }
     }
+
+    public List<Sector> getSectorsAM() {
+        return this.sectorsAM;
+    }
+
+    public List<Sector> getSectorsPM() {
+        return this.sectorsPM;
+    }
 }

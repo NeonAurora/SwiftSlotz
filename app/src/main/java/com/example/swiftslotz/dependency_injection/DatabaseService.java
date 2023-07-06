@@ -4,4 +4,5 @@ import com.example.swiftslotz.utilities.Appointment;
 
 public interface DatabaseService {
     String addAppointment(Appointment appointment) throws Exception;
+    void updateAppointment(Appointment appointment) throws Exception;
 }

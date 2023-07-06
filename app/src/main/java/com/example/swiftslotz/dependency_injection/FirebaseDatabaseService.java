@@ -22,4 +22,13 @@ public class FirebaseDatabaseService implements DatabaseService {
         }
         return key;
     }
+
+    @Override
+    public void updateAppointment(Appointment appointment) throws Exception { // Add this method
+        if (appointment.getKey() != null) {
+            userDb.child(appointment.getKey()).setValue(appointment);
+        } else {
+            throw new Exception("Failed to update appointment: Appointment key not found");
+        }
+    }
 }

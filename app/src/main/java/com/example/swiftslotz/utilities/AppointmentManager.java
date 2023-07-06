@@ -117,15 +117,20 @@ public class AppointmentManager {
         return databaseService.addAppointment(appointment);
     }
 
+    public DatabaseService getDatabaseService() {
+        return this.databaseService;
+    }
+
+
 
 
     public void updateAppointment(Appointment appointment) {
         if (appointment.getKey() != null) {
-            userDb.child(appointment.getKey()).setValue(appointment)
-                    .addOnSuccessListener(aVoid -> Toast.makeText(context, "Appointment updated successfully", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to update appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            try {
+                databaseService.updateAppointment(appointment); // Replace Firebase call with DatabaseService call
+            } catch (Exception e) {
+            }
         } else {
-            Toast.makeText(context, "Failed to update appointment: Appointment key not found", Toast.LENGTH_SHORT).show();
         }
     }
 
