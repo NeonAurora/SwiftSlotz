@@ -38,7 +38,7 @@ This project is bootstrapped with major libraries such as:
 
 To get a local copy up and running, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/your_username_/SwiftSlotz.git`
+1. Clone the repository: `git clone https://github.com/NeonAurora/SwiftSlotz.git`
 2. Install the required dependencies
 3. Run the application
 
@@ -66,9 +66,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-Your Name - @your_twitter - email@example.com
+NeonAurora - @neonaurora - arnarnsde@gmail.com
 
-Project Link: https://github.com/your_username/SwiftSlotz
+Project Link: https://github.com/NeonAurora/SwiftSlotz
 
 ## Acknowledgments
 
