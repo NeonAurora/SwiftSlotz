@@ -48,7 +48,7 @@ To get a local copy up and running, follow these steps:
 
 ## Usage
 
-For detailed examples and usage instructions, please refer to the [Documentation]().
+For detailed examples and usage instructions, please refer to the [Documentation](https://github.com/NeonAurora/SwiftSlotz/wiki).
 
 ## Testing Demos
 
@@ -59,7 +59,7 @@ Take a look at our test demonstrations to get a deeper understanding of how we e
 
 ## Roadmap
 
-See the [open issues]() for a list of proposed features (and known issues).
+See the [open issues](https://github.com/NeonAurora/SwiftSlotz/issues) for a list of proposed features (and known issues).
 
 ## Contributing
 
