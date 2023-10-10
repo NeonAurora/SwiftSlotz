@@ -59,7 +59,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 emailEditText.setText("arnarnsde@gmail.com");
-                passwordEditText.setText("qwerty");
+                passwordEditText.setText("asdfgh");
                 userLogin();
             }
         });
