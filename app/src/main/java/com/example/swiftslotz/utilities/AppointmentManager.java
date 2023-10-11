@@ -37,7 +37,7 @@ public class AppointmentManager {
         this.appointmentsAdapter = appointmentsAdapter;
         mAuth = FirebaseAuth.getInstance();
         String userId = mAuth.getCurrentUser().getUid();
-        userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("appointments");
+        userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("RequestedAppointments");
     }
 
     public AppointmentManager(Context context) {
@@ -46,7 +46,7 @@ public class AppointmentManager {
         this.sectors = new ArrayList<>();
         mAuth = FirebaseAuth.getInstance();
         String userId = mAuth.getCurrentUser().getUid();
-        userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("appointments");
+        userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("RequestedAppointments");
     }
 
 
@@ -95,10 +95,17 @@ public class AppointmentManager {
 
 
 
-    public void addAppointment(Appointment appointment) {
-        String key = userDb.push().getKey();
+    public void addAppointment(Appointment appointment, String firebaseKey) {
+        DatabaseReference specificUserDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                .getReference("users")
+                .child(firebaseKey)
+                .child("RequestedAppointments");
+
+        String key = specificUserDb.push().getKey();
         if (key != null) {
-            userDb.child(key).setValue(appointment);
+            specificUserDb.child(key).setValue(appointment)
+                    .addOnSuccessListener(aVoid -> Toast.makeText(context, "Appointment added successfully", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to add appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }
 

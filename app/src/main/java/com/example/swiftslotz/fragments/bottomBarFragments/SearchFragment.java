@@ -1,8 +1,6 @@
 package com.example.swiftslotz.fragments.bottomBarFragments;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +21,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -36,6 +33,7 @@ public class SearchFragment extends Fragment {
     private DatabaseReference usersDb;
     private List<User> searchResults;
     private UserAdapter userAdapter;
+    private List<String> firebaseKeys = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,13 +43,12 @@ public class SearchFragment extends Fragment {
         searchEditText = view.findViewById(R.id.searchEditText);
         searchResultsRecyclerView = view.findViewById(R.id.searchResultsRecyclerView);
         Button searchButton = view.findViewById(R.id.searchButton);
+
         searchResultsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
         usersDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users");
         searchResults = new ArrayList<>();
 
-        userAdapter = new UserAdapter(searchResults);
+        userAdapter = new UserAdapter(searchResults, firebaseKeys, getParentFragmentManager());
         searchResultsRecyclerView.setAdapter(userAdapter);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -72,11 +69,14 @@ public class SearchFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 searchResults.clear();
+                firebaseKeys.clear();
                 boolean userFound = false;
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
+                    String key = userSnapshot.getKey();
                     if (user != null && user.getUsername().toLowerCase().contains(query.toLowerCase())) {
                         searchResults.add(user);
+                        firebaseKeys.add(key);
                         userFound = true;
                     }
                 }
@@ -92,6 +92,4 @@ public class SearchFragment extends Fragment {
             }
         });
     }
-
 }
-
