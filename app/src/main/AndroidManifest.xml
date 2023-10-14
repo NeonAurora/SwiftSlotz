@@ -33,9 +33,6 @@
             android:name=".fragments.pageFragments.ModifyAppointmentFragment"
             android:exported="false" />
         <activity
-            android:name=".fragments.bottomBarFragments.AppointmentsFragment"
-            android:exported="false" />
-        <activity
             android:name=".fragments.pageFragments.AddAppointmentFragment"
             android:exported="false" />
         <activity

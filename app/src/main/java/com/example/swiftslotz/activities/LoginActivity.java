@@ -37,6 +37,10 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
@@ -54,15 +58,14 @@ public class LoginActivity extends BaseActivity {
                 userLogin();
             }
         });
-
-//        defaultLoginButton.setOnClickListener(new View.OnClickListener() { // New button's click listener
-//            @Override
-//            public void onClick(View view) {
-//                emailEditText.setText("arnarnsde@gmail.com");
-//                passwordEditText.setText("qwerty");
-//                userLogin();
-//            }
-//        });
+        defaultLoginButton.setOnClickListener(new View.OnClickListener() { // New button's click listener
+            @Override
+            public void onClick(View view) {
+                emailEditText.setText("arnarnsde@gmail.com");
+                passwordEditText.setText("asdfgh");
+                userLogin();
+            }
+        });
 
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override

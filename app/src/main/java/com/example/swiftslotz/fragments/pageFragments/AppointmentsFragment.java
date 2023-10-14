@@ -1,12 +1,10 @@
-package com.example.swiftslotz.fragments.bottomBarFragments;
+package com.example.swiftslotz.fragments.pageFragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.swiftslotz.fragments.pageFragments.AddAppointmentFragment;
-import com.example.swiftslotz.fragments.pageFragments.ModifyAppointmentFragment;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
 import com.example.swiftslotz.utilities.AppointmentsAdapter;
@@ -45,8 +43,9 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
             @Override
             public void onClick(View v) {
                 AddAppointmentFragment addAppointmentFragment = new AddAppointmentFragment();
+                RequestedAppointmentsFragment requestedAppointmentsFragment = new RequestedAppointmentsFragment();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.content_frame, addAppointmentFragment);
+                transaction.replace(R.id.content_frame, requestedAppointmentsFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -57,7 +56,7 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
     @Override
     public void onStart() {
         super.onStart();
-        appointmentManager.fetchDataFromDatabase();
+        appointmentManager.fetchAppointmentsFromDatabase();
     }
 
     @Override

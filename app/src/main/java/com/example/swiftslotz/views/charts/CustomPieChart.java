@@ -112,14 +112,14 @@ public class CustomPieChart extends View {
             // calculate the x and y coordinates for the text
             float x = (float) (cx + (textRadius * Math.cos(textAngle)));
             float y = (float) (cy + (textRadius * Math.sin(textAngle)));
-            Log.d("Calculating textRadius", String.valueOf(textRadius));
-            Log.d("Calculating textAngle", String.valueOf(textAngle));
-            Log.d("Calculating cos", String.valueOf(Math.cos(textAngle)));
-            Log.d("Calculating sin", String.valueOf(Math.sin(textAngle)));
-            Log.d("Value of cx", String.valueOf(cx));
-            Log.d("Value of x", String.valueOf(x));
-            Log.d("Value of cy", String.valueOf(cy));
-            Log.d("Value of y", String.valueOf(y));
+//            Log.d("Calculating textRadius", String.valueOf(textRadius));
+//            Log.d("Calculating textAngle", String.valueOf(textAngle));
+//            Log.d("Calculating cos", String.valueOf(Math.cos(textAngle)));
+//            Log.d("Calculating sin", String.valueOf(Math.sin(textAngle)));
+//            Log.d("Value of cx", String.valueOf(cx));
+//            Log.d("Value of x", String.valueOf(x));
+//            Log.d("Value of cy", String.valueOf(cy));
+//            Log.d("Value of y", String.valueOf(y));
 
 
 

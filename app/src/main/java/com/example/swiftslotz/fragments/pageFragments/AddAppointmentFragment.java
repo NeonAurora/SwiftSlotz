@@ -1,7 +1,6 @@
 package com.example.swiftslotz.fragments.pageFragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
 import com.example.swiftslotz.R;
+import com.example.swiftslotz.utilities.User;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
@@ -36,11 +36,13 @@ public class AddAppointmentFragment extends Fragment {
     TextView selectedTimeTextView;
     EditText appointmentDurationEditText;
     Spinner unitSpinner;
+    String firebaseKey;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_appointment, container, false);
+
 
         calendarView = view.findViewById(R.id.calendarView);
         appointmentTitleEditText = view.findViewById(R.id.appointmentTitleEditText);
@@ -70,6 +72,13 @@ public class AddAppointmentFragment extends Fragment {
             }
         });
 
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            User selectedUser = (User) bundle.getSerializable("selectedUser");
+            firebaseKey = bundle.getString("firebaseKey");
+
+            // Use selectedUser and firebaseKey as needed
+        }
         addAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,7 +121,7 @@ public class AddAppointmentFragment extends Fragment {
                 AppointmentManager appointmentManager = new AppointmentManager(getActivity());
 
                 // Call addAppointment() method of the AppointmentManager
-                appointmentManager.addAppointment(appointment);
+                appointmentManager.addAppointmentRequest(appointment,firebaseKey);
             }
         });
 
