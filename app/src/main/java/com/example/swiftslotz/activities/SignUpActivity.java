@@ -23,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class SignUpActivity extends BaseActivity {
 
     private EditText firstNameEditText, lastNameEditText, usernameEditText, emailEditText, phoneEditText, companyEditText, addressEditText, passwordEditText, confirmPasswordEditText;
-    private Button signUpButton;
+    private Button signUpButton,backBtn;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
@@ -31,6 +31,11 @@ public class SignUpActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        if(getSupportActionBar() != null){
+            getSupportActionBar().hide();
+        }
+
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference();
@@ -45,11 +50,19 @@ public class SignUpActivity extends BaseActivity {
         passwordEditText = findViewById(R.id.passwordEditText);
         confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
         signUpButton = findViewById(R.id.signUpButton);
+        backBtn=findViewById(R.id.backToSignin);
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 userSignUp();
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }
