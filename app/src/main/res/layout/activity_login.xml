@@ -31,15 +31,15 @@
         android:layout_below="@id/passwordEditText"
         android:layout_margin="16dp" />
 
-<!--    <Button-->
-<!--        android:id="@+id/defaultLoginButton"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Default Login"-->
-<!--        android:layout_below="@id/loginButton"-->
-<!--        android:layout_marginLeft="16dp"-->
-<!--        android:layout_marginRight="16dp"-->
-<!--        android:layout_marginTop="16dp" />-->
+    <Button
+        android:id="@+id/defaultLoginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Default Login"
+        android:layout_below="@id/loginButton"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp" />
 
     <TextView
         android:id="@+id/signUpTextView"
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:text="Don't have an account? Sign Up"
         android:textColor="#3F51B5"
-        android:layout_below="@id/loginButton"
+        android:layout_below="@id/defaultLoginButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp" />
 
