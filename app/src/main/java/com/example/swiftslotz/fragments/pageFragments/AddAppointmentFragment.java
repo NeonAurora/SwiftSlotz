@@ -1,7 +1,6 @@
 package com.example.swiftslotz.fragments.pageFragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -122,7 +121,7 @@ public class AddAppointmentFragment extends Fragment {
                 AppointmentManager appointmentManager = new AppointmentManager(getActivity());
 
                 // Call addAppointment() method of the AppointmentManager
-                appointmentManager.addAppointment(appointment,firebaseKey);
+                appointmentManager.addAppointmentRequest(appointment,firebaseKey);
             }
         });
 

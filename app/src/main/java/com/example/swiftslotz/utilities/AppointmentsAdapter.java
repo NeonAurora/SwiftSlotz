@@ -70,7 +70,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         holder.appointmentTitle.setText(appointment.getTitle());
         holder.appointmentDate.setText(appointment.getDate());
         holder.appointmentTime.setText(appointment.getTime());
-
         holder.appointmentDetails.setText(appointment.getDetails());
 
 

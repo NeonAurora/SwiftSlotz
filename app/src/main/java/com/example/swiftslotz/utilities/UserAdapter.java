@@ -3,7 +3,6 @@ package com.example.swiftslotz.utilities;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,9 +49,50 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showUserDetailModal(v.getContext(), user, firebaseGeneratedKey);
+            }
+        });
+    }
+
+    private void showUserDetailModal(Context context, User user, String firebaseKey) {
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.user_detail_modal);
+
+        // Set the dimensions of the dialog
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;  // Set width to 100% of screen width
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;  // Set height to wrap content
+        dialog.getWindow().setAttributes(lp);
+
+        // Initialize TextViews and Buttons
+        TextView firstNameTextView = dialog.findViewById(R.id.firstNameTextView);
+        TextView lastNameTextView = dialog.findViewById(R.id.lastNameTextView);
+        TextView usernameTextView = dialog.findViewById(R.id.usernameTextView);
+        TextView emailTextView = dialog.findViewById(R.id.emailTextView);
+        TextView phoneTextView = dialog.findViewById(R.id.phoneTextView);
+        TextView companyTextView = dialog.findViewById(R.id.companyTextView);
+        TextView addressTextView = dialog.findViewById(R.id.addressTextView);
+
+        // Set user details
+        firstNameTextView.setText("First Name: " + user.getFirstName());
+        lastNameTextView.setText("Last Name: " + user.getLastName());
+        usernameTextView.setText("Username: " + user.getUsername());
+        emailTextView.setText("Email: " + user.getEmail());
+        phoneTextView.setText("Phone: " + user.getPhone());
+        companyTextView.setText("Company: " + user.getCompany());
+        addressTextView.setText("Address: " + user.getAddress());
+
+        Button getAppointmentButton = dialog.findViewById(R.id.getAppointmentButton);
+        Button goBackButton = dialog.findViewById(R.id.goBackButton);
+
+        getAppointmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("selectedUser", user);
-                bundle.putString("firebaseKey", firebaseGeneratedKey);
+                bundle.putString("firebaseKey", firebaseKey);
 
                 AddAppointmentFragment addAppointmentFragment = new AddAppointmentFragment();
                 addAppointmentFragment.setArguments(bundle);
@@ -63,6 +103,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 transaction.commit();
             }
         });
+
+        goBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     @Override
