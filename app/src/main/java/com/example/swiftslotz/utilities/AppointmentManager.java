@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.views.charts.CustomPieChart;
 import com.example.swiftslotz.views.charts.Sector;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,7 +31,7 @@ public class AppointmentManager {
     private RequestedAppointmentsAdapter requestedAppointmentsAdapter;
     private Context context;
     private FirebaseAuth mAuth;
-    private DatabaseReference userDb;
+    private DatabaseReference userDb,rootRef;
     private List<Sector> sectors = new ArrayList<>();
     private CustomPieChart customPieChart;
 
@@ -40,6 +42,8 @@ public class AppointmentManager {
         mAuth = FirebaseAuth.getInstance();
         String userId = mAuth.getCurrentUser().getUid();
         userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("appointments");
+        rootRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
+
     }
 
     public AppointmentManager(Context context, List<Appointment> requestedAppointments, RequestedAppointmentsAdapter requestedAppointmentsAdapter) {
@@ -49,6 +53,8 @@ public class AppointmentManager {
         mAuth = FirebaseAuth.getInstance();
         String userId = mAuth.getCurrentUser().getUid();
         userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("RequestedAppointments");
+        rootRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
+
     }
 
     public AppointmentManager(Context context) {
@@ -58,6 +64,8 @@ public class AppointmentManager {
         mAuth = FirebaseAuth.getInstance();
         String userId = mAuth.getCurrentUser().getUid();
         userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("appointments");
+        rootRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
+
     }
 
 
@@ -218,6 +226,42 @@ public class AppointmentManager {
         String time = appointment.getTime();
         // Create and return the new Sector object.
         return new Sector(startAngle, sweepAngle, color, title, time);
+    }
+
+    // Method to approve an appointment
+    public void approveAppointment(Appointment appointment, String appointmentKey) {
+        DatabaseReference requestedAppointmentsRef = rootRef.child("RequestedAppointments").child(appointmentKey);
+        DatabaseReference appointmentsRef = rootRef.child("appointments").child(appointmentKey);
+
+        // Step 1: Read from RequestedAppointments (actually, you already have the appointment object)
+        // Step 2: Write to appointments
+        appointmentsRef.setValue(appointment).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // Step 3: Delete from RequestedAppointments
+                requestedAppointmentsRef.removeValue();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Handle failure
+                Log.e("ApproveAppointmentError", "Error approving appointment: " + e.getMessage());
+            }
+        });
+    }
+
+    // Method to reject an appointment
+    public void rejectAppointment(String appointmentKey) {
+        DatabaseReference requestedAppointmentsRef = rootRef.child("RequestedAppointments").child(appointmentKey);
+
+        // Simply remove the appointment from RequestedAppointments
+        requestedAppointmentsRef.removeValue().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Handle failure
+                Log.e("RejectAppointmentError", "Error rejecting appointment: " + e.getMessage());
+            }
+        });
     }
 
 }
