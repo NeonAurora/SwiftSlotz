@@ -1,6 +1,6 @@
 # SwiftSlotz
 
-[View Demo](https://github.com/NeonAurora/SwiftSlotz/blob/main/resources/App.mp4) · [Report Bug]() · [Request Feature]()
+[View Demo](https://drive.google.com/file/d/1_eaz-fS6hnybl51LtM1IMJ9Pgwb0Yc0P/view?usp=sharing) · [Report Bug]() · [Request Feature]()
 
 ## Table of Contents
 
@@ -16,7 +16,11 @@
 
 ## About The Project
 
-![SwiftSlotz Screenshot]()
+![SwiftSlotz Screenshot](https://github.com/NeonAurora/SwiftSlotz/blob/main/resources/Images/login.png)
+![SwiftSlotz Screenshot](https://github.com/NeonAurora/SwiftSlotz/blob/main/resources/Images/Appointments.png)
+![SwiftSlotz Screenshot](https://github.com/NeonAurora/SwiftSlotz/blob/main/resources/Images/AddAppointment.png)
+![SwiftSlotz Screenshot](https://github.com/NeonAurora/SwiftSlotz/blob/main/resources/Images/demo_screen.png)
+![SwiftSlotz Screenshot](https://github.com/NeonAurora/SwiftSlotz/blob/main/resources/Images/s6.png)
 
 SwiftSlotz is a revolutionary calendar application aimed at providing the ultimate user-friendly experience. With a modern design, intuitive navigation, and a myriad of features, it redefines the way you organize and visualize your schedule.
 
@@ -44,11 +48,18 @@ To get a local copy up and running, follow these steps:
 
 ## Usage
 
-For detailed examples and usage instructions, please refer to the [Documentation]().
+For detailed examples and usage instructions, please refer to the [Documentation](https://github.com/NeonAurora/SwiftSlotz/wiki).
+
+## Testing Demos
+
+Take a look at our test demonstrations to get a deeper understanding of how we ensure the quality of SwiftSlotz:
+
+* [Unit Testing Demo](https://drive.google.com/file/d/159EdnNtliS8nxB7bIeE1P0eCuAWB78zU/view?usp=sharing)
+* [UI Testing Demo](https://drive.google.com/file/d/1QonI1KNcgBvp3eU569yvPDE3GYR8V_aM/view?usp=sharing)
 
 ## Roadmap
 
-See the [open issues]() for a list of proposed features (and known issues).
+See the [open issues](https://github.com/NeonAurora/SwiftSlotz/issues) for a list of proposed features (and known issues).
 
 ## Contributing
 
