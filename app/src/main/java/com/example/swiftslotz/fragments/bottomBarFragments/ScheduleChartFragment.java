@@ -35,7 +35,7 @@ public class ScheduleChartFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        appointmentManager.fetchDataFromDatabase();
+        appointmentManager.fetchAppointmentsFromDatabase();
     }
 
     // Some method that gets called when the data changes

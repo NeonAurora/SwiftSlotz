@@ -36,8 +36,9 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        
+        if (getSupportActionBar() != null) {
 
-        if(getSupportActionBar() != null){
             getSupportActionBar().hide();
         }
 
@@ -52,12 +53,14 @@ public class LoginActivity extends BaseActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                userLogin();
-            }
-        });
+        if (loginButton != null) {
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    userLogin();
+                }
+            });
+        }
 
         defaultLoginButton.setOnClickListener(new View.OnClickListener() { // New button's click listener
             @Override
@@ -67,6 +70,7 @@ public class LoginActivity extends BaseActivity {
                 userLogin();
             }
         });
+
 
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override

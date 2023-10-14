@@ -97,7 +97,7 @@ public class BaseActivity extends AppCompatActivity {
         if (fragmentToLoad.equals("AppointmentsFragment")) {
             // Load AppointmentsFragment
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_frame, new com.example.swiftslotz.fragments.pageFragments.AppointmentsFragment());
+            transaction.replace(R.id.content_frame, new AppointmentsFragment());
             transaction.commit();
 
             // Clear fragmentToLoad from SharedPreferences

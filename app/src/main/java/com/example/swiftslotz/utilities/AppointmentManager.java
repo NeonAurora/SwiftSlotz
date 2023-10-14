@@ -2,6 +2,7 @@ package com.example.swiftslotz.utilities;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ import java.util.Locale;
 public class AppointmentManager {
     private List<Appointment> appointments;
     private AppointmentsAdapter appointmentsAdapter;
+    private RequestedAppointmentsAdapter requestedAppointmentsAdapter;
     private Context context;
     private FirebaseAuth mAuth;
     private DatabaseReference userDb;
@@ -37,6 +39,15 @@ public class AppointmentManager {
         this.appointmentsAdapter = appointmentsAdapter;
         mAuth = FirebaseAuth.getInstance();
         String userId = mAuth.getCurrentUser().getUid();
+        userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("appointments");
+    }
+
+    public AppointmentManager(Context context, List<Appointment> requestedAppointments, RequestedAppointmentsAdapter requestedAppointmentsAdapter) {
+        this.context = context;
+        this.appointments = requestedAppointments;
+        this.requestedAppointmentsAdapter = requestedAppointmentsAdapter;
+        mAuth = FirebaseAuth.getInstance();
+        String userId = mAuth.getCurrentUser().getUid();
         userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("RequestedAppointments");
     }
 
@@ -46,7 +57,7 @@ public class AppointmentManager {
         this.sectors = new ArrayList<>();
         mAuth = FirebaseAuth.getInstance();
         String userId = mAuth.getCurrentUser().getUid();
-        userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("RequestedAppointments");
+        userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("appointments");
     }
 
 
@@ -58,7 +69,7 @@ public class AppointmentManager {
         return sectors;
     }
 
-    public void fetchDataFromDatabase() {
+    public void fetchAppointmentsFromDatabase() {
         userDb.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -93,9 +104,42 @@ public class AppointmentManager {
         });
     }
 
+    public void fetchRequestedAppointmentsFromDatabase() {
+        userDb.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                appointments.clear();
+                sectors.clear();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                String today = sdf.format(new Date());
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Appointment appointment = snapshot.getValue(Appointment.class);
+                    if (appointment != null && appointment.getDate().equals(today)) {
+                        appointment.setKey(snapshot.getKey());
+                        appointments.add(appointment);
+                    }
+                }
+                String isFlag;
+                if (requestedAppointmentsAdapter != null) {
+                    requestedAppointmentsAdapter.notifyDataSetChanged();
+                    isFlag="true";
+                } else {
+                    isFlag = "False";
+                }
+                Log.e("ISFLAG", isFlag);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "Failed to fetch data: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
-    public void addAppointment(Appointment appointment, String firebaseKey) {
+
+    public void addAppointmentRequest(Appointment appointment, String firebaseKey) {
         DatabaseReference specificUserDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
                 .getReference("users")
                 .child(firebaseKey)
@@ -103,6 +147,8 @@ public class AppointmentManager {
 
         String key = specificUserDb.push().getKey();
         if (key != null) {
+            appointment.setRequestingUserFirebaseKey(mAuth.getCurrentUser().getUid());
+
             specificUserDb.child(key).setValue(appointment)
                     .addOnSuccessListener(aVoid -> Toast.makeText(context, "Appointment added successfully", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> Toast.makeText(context, "Failed to add appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
@@ -126,6 +172,32 @@ public class AppointmentManager {
                     .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }
+
+    public void getClientNameFromKey(String firebaseKey, ClientNameCallback callback) {
+        DatabaseReference userRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(firebaseKey);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String clientName = dataSnapshot.child("username").getValue(String.class);
+                    if (clientName != null) {
+                        callback.onClientNameReceived(clientName);
+                        Log.e("Client Name", clientName);
+                    } else {
+                        callback.onError("Client name is null");
+                    }
+                } else {
+                    callback.onError("DataSnapshot does not exist");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onError(databaseError.getMessage());
+            }
+        });
+    }
+
 
     private Sector appointmentToSector(Appointment appointment) {
         // Parse the appointment time into hours and minutes.

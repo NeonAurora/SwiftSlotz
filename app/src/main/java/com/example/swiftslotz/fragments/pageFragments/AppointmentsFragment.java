@@ -43,8 +43,9 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
             @Override
             public void onClick(View v) {
                 AddAppointmentFragment addAppointmentFragment = new AddAppointmentFragment();
+                RequestedAppointmentsFragment requestedAppointmentsFragment = new RequestedAppointmentsFragment();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.content_frame, addAppointmentFragment);
+                transaction.replace(R.id.content_frame, requestedAppointmentsFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -55,7 +56,7 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
     @Override
     public void onStart() {
         super.onStart();
-        appointmentManager.fetchDataFromDatabase();
+        appointmentManager.fetchAppointmentsFromDatabase();
     }
 
     @Override

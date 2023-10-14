@@ -9,6 +9,8 @@ public class Appointment {
     private String details;
     private String key;
     private int durationInMinutes;
+
+    private String requestingUserFirebaseKey;
     public Appointment() {
     }
     public Appointment( String title, String date, String time, String details) {
@@ -73,5 +75,13 @@ public class Appointment {
 
     public void setDuration(int duration) {
         this.durationInMinutes = duration;
+    }
+
+    public String getRequestingUserFirebaseKey() {
+        return requestingUserFirebaseKey;
+    }
+
+    public void setRequestingUserFirebaseKey(String requestingUserFirebaseKey) {
+        this.requestingUserFirebaseKey = requestingUserFirebaseKey;
     }
 }
