@@ -80,7 +80,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         usernameTextView.setText("Username: " + user.getUsername());
         emailTextView.setText("Email: " + user.getEmail());
         phoneTextView.setText("Phone: " + user.getPhone());
-        companyTextView.setText("Company: " + user.getCompany());
+        companyTextView.setText("Occupation: " + user.getOccupation());
         addressTextView.setText("Address: " + user.getAddress());
 
         Button getAppointmentButton = dialog.findViewById(R.id.getAppointmentButton);

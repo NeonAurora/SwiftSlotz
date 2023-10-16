@@ -155,8 +155,10 @@ public class BaseActivity extends AppCompatActivity {
 
         // Handle action bar item clicks here.
         if (id == R.id.action_logout) {
-            Intent intent = new Intent(this, LogoutActivity.class);
-            startActivity(intent);
+            // Navigate to ProfileFragment instead of LogoutActivity
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, new ProfileFragment());
+            transaction.commit();
             return true;
         }
 

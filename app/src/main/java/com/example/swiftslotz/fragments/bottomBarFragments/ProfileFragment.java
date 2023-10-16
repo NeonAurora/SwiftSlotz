@@ -1,11 +1,13 @@
 package com.example.swiftslotz.fragments.bottomBarFragments;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +17,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.R;
+import com.example.swiftslotz.activities.LoginActivity;
+import com.example.swiftslotz.activities.LogoutActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,9 +28,13 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ProfileFragment extends Fragment {
 
-    private ImageView userAvatar;
-    private TextView userName;
-    private TextView userEmail;
+    private TextView firstName;
+    private TextView lastName;
+    private TextView username;
+    private TextView email;
+    private TextView phone;
+    private TextView company;
+    private TextView address;
 
     private FirebaseAuth mAuth;
     private DatabaseReference userDb;
@@ -36,21 +44,33 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        userAvatar = view.findViewById(R.id.user_avatar);
-        userName = view.findViewById(R.id.user_name);
-        userEmail = view.findViewById(R.id.user_email);
+        firstName = view.findViewById(R.id.user_firstName);
+        lastName = view.findViewById(R.id.user_lastName);
+        username = view.findViewById(R.id.user_username);
+        email = view.findViewById(R.id.user_email);
+        phone = view.findViewById(R.id.user_phone);
+        company = view.findViewById(R.id.user_occupation);
+        address = view.findViewById(R.id.user_address);
 
         mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() != null) {
             String userId = mAuth.getCurrentUser().getUid();
             userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
 
-            // Fetch user details from Firebase
             fetchUserDetails();
-        }
-        else {
+        } else {
             Toast.makeText(getActivity(), "User not signed in", Toast.LENGTH_SHORT).show();
         }
+
+        Button logoutButton = view.findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), LogoutActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         return view;
     }
@@ -59,22 +79,16 @@ public class ProfileFragment extends Fragment {
         userDb.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    if (dataSnapshot.hasChild("firstName") && dataSnapshot.hasChild("email")) {
-                        String name = dataSnapshot.child("firstName").getValue(String.class);
-                        Log.d("User name is ", name);
-                        String email = dataSnapshot.child("email").getValue(String.class);
-                        Log.d("User email is", email);
-
-                        // Update the UI with the user's details
-                        userName.setText(name);
-                        userEmail.setText(email);
-                    } else {
-                        Toast.makeText(getActivity(), "User data not available", Toast.LENGTH_SHORT).show();
-                    }
-
-                    // TODO: Load the user's avatar into userAvatar using an image loading library like Glide or Picasso
-                    // Glide.with(getContext()).load(avatarUrl).into(userAvatar);
+                if (dataSnapshot.exists()) {
+                    firstName.setText(dataSnapshot.child("firstName").getValue(String.class));
+                    lastName.setText(dataSnapshot.child("lastName").getValue(String.class));
+                    username.setText(dataSnapshot.child("username").getValue(String.class));
+                    email.setText(dataSnapshot.child("email").getValue(String.class));
+                    phone.setText(dataSnapshot.child("phone").getValue(String.class));
+                    company.setText(dataSnapshot.child("company").getValue(String.class));
+                    address.setText(dataSnapshot.child("address").getValue(String.class));
+                } else {
+                    Toast.makeText(getActivity(), "Failed to load user details", Toast.LENGTH_SHORT).show();
                 }
             }
 

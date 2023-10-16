@@ -1,5 +1,6 @@
 package com.example.swiftslotz.utilities;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +21,12 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
     private List<Appointment> appointments;
     private OnAppointmentInteractionListener listener;
+    AppointmentManager appointmentManager;
 
-    public AppointmentsAdapter(List<Appointment> appointments, OnAppointmentInteractionListener listener) {
+    public AppointmentsAdapter(List<Appointment> appointments, OnAppointmentInteractionListener listener, AppointmentManager appointmentManager) {
         this.appointments = appointments;
         this.listener = listener;
+        this.appointmentManager = appointmentManager;
     }
 
     public interface OnAppointmentInteractionListener {
@@ -72,6 +75,19 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         holder.appointmentTime.setText(appointment.getTime());
         holder.appointmentDetails.setText(appointment.getDetails());
 
+        appointmentManager.getClientNameFromKey(appointment.getRequestingUserFirebaseKey(), new ClientNameCallback() {
+            @Override
+            public void onClientNameReceived(String clientName) {
+                holder.acceptedClientName.setText(clientName);
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e("ClientNameFetchError", "Error fetching client name: " + error);
+            }
+        });
+
+
 
         holder.optionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +107,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         TextView appointmentTitle;
         TextView appointmentDate;
         TextView appointmentTime;
+        TextView acceptedClientName;
 
         TextView appointmentDetails;
 
@@ -102,6 +119,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             appointmentDate = itemView.findViewById(R.id.appointmentDate);
             appointmentTime = itemView.findViewById(R.id.appointmentTime);
             appointmentDetails = itemView.findViewById(R.id.appointmentDetails);
+            acceptedClientName = itemView.findViewById(R.id.acceptedClientName);
             optionsButton = itemView.findViewById(R.id.appointmentOptions);
         }
     }

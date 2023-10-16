@@ -32,7 +32,8 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
 
         appointmentsRecyclerView = view.findViewById(R.id.appointmentsRecyclerView);
         appointments = new ArrayList<>();
-        appointmentsAdapter = new AppointmentsAdapter(appointments, this);
+        AppointmentManager appointmentManager1 = new AppointmentManager(getActivity());
+        appointmentsAdapter = new AppointmentsAdapter(appointments, this, appointmentManager1);
         appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         appointmentsRecyclerView.setAdapter(appointmentsAdapter);
 

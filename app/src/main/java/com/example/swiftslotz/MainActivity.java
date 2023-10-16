@@ -1,6 +1,7 @@
 package com.example.swiftslotz;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.swiftslotz.activities.LoginActivity;
@@ -17,7 +18,14 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        if (sharedPreferences.getBoolean("rememberMe", false)) {
+            startActivity(new Intent(MainActivity.this, BaseActivity.class));
+            finish();
+        } else {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        }
     }
 }
+

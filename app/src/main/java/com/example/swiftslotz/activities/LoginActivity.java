@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +29,10 @@ public class LoginActivity extends BaseActivity {
     private Button loginButton;
     private TextView signUpTextView;
     private ProgressDialog progressDialog;
-    private Button defaultLoginButton;
+    private Button defaultLoginButton1;
+    private Button defaultLoginButton2;
+    private CheckBox rememberMeCheckbox;
+    private SharedPreferences sharedPreferences;
 
     private FirebaseAuth mAuth;
 
@@ -36,9 +40,8 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        
-        if (getSupportActionBar() != null) {
 
+        if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
@@ -48,10 +51,18 @@ public class LoginActivity extends BaseActivity {
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
-        defaultLoginButton = findViewById(R.id.defaultLoginButton);
+        defaultLoginButton1 = findViewById(R.id.defaultLoginButton1);
+        defaultLoginButton2 = findViewById(R.id.defaultLoginButton2);
         signUpTextView = findViewById(R.id.signUpTextView);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
+        rememberMeCheckbox = findViewById(R.id.rememberMeCheckBox);
+        sharedPreferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
+
+        if (sharedPreferences.getBoolean("rememberMe", false)) {
+            startActivity(new Intent(LoginActivity.this, BaseActivity.class));
+            finish();
+        }
 
         if (loginButton != null) {
             loginButton.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +73,7 @@ public class LoginActivity extends BaseActivity {
             });
         }
 
-        defaultLoginButton.setOnClickListener(new View.OnClickListener() { // New button's click listener
+        defaultLoginButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 emailEditText.setText("arnarnsde@gmail.com");
@@ -71,6 +82,14 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
+        defaultLoginButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                emailEditText.setText("arnarnsd@gmail.com");
+                passwordEditText.setText("asdfgh");
+                userLogin();
+            }
+        });
 
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,34 +130,29 @@ public class LoginActivity extends BaseActivity {
 
         progressDialog.show();
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
-                            // Sign in success
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user.isEmailVerified()) {
-                                SharedPreferences preferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = preferences.edit();
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putBoolean("rememberMe", rememberMeCheckbox.isChecked());
                                 editor.putString("fragmentToLoad", "AppointmentsFragment");
                                 editor.apply();
 
                                 startActivity(new Intent(LoginActivity.this, BaseActivity.class));
                             } else {
-                                // If the email is not verified, display a message to the user.
                                 Toast.makeText(LoginActivity.this, "Please verify your email before logging in.",
                                         Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            // If sign in fails, display a message to the user.
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
-
 }

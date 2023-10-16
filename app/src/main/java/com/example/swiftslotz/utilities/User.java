@@ -9,7 +9,7 @@ public class User implements Serializable {
     private String username;
     private String email;
     private String phone;
-    private String company;
+    private String occupation;
     private String address;
 
     public User() {
@@ -22,7 +22,7 @@ public class User implements Serializable {
         this.username = username;
         this.email = email;
         this.phone = phone;
-        this.company = company;
+        this.occupation = company;
         this.address = address;
     }
 
@@ -46,8 +46,8 @@ public class User implements Serializable {
         return phone;
     }
 
-    public String getCompany() {
-        return company;
+    public String getOccupation() {
+        return occupation;
     }
 
     public String getAddress() {

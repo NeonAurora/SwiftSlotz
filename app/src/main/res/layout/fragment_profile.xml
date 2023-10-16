@@ -4,20 +4,28 @@
     android:layout_height="match_parent"
     tools:context=".fragments.bottomBarFragments.ProfileFragment">
 
-    <ImageView
-        android:id="@+id/user_avatar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:src="@drawable/user_placeholder" />
-
     <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/user_firstName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/user_avatar"
-        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:textSize="18sp"
+        android:text="First Name" />
+
+    <TextView
+        android:id="@+id/user_lastName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_firstName"
+        android:layout_marginTop="12dp"
+        android:textSize="18sp"
+        android:text="Last Name" />
+
+    <TextView
+        android:id="@+id/user_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_lastName"
         android:layout_marginTop="12dp"
         android:textSize="18sp"
         android:text="Username" />
@@ -26,21 +34,44 @@
         android:id="@+id/user_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/user_name"
-        android:layout_centerHorizontal="true"
+        android:layout_below="@id/user_username"
         android:layout_marginTop="12dp"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:text="Email" />
 
-    <!-- Add more fields as necessary -->
-
-    <Button
-        android:id="@+id/edit_profile_button"
+    <TextView
+        android:id="@+id/user_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/user_email"
+        android:layout_marginTop="12dp"
+        android:textSize="18sp"
+        android:text="Phone" />
+
+    <TextView
+        android:id="@+id/user_occupation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_phone"
+        android:layout_marginTop="12dp"
+        android:textSize="18sp"
+        android:text="Company" />
+
+    <TextView
+        android:id="@+id/user_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_occupation"
+        android:layout_marginTop="12dp"
+        android:textSize="18sp"
+        android:text="Address" />
+
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_address"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
-        android:text="Edit Profile" />
-
+        android:text="Log Out" />
 </RelativeLayout>

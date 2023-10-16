@@ -88,7 +88,7 @@ public class RequestedAppointmentsAdapter extends RecyclerView.Adapter<Requested
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             appointmentTitle = itemView.findViewById(R.id.appointmentTitle);
-            clientName = itemView.findViewById(R.id.clientName);
+            clientName = itemView.findViewById(R.id.requestingClientName);
             appointmentDate = itemView.findViewById(R.id.appointmentDate);
             appointmentTime = itemView.findViewById(R.id.appointmentTime);
             appointmentDetails = itemView.findViewById(R.id.appointmentDetails);
