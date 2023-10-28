@@ -121,9 +121,9 @@ public class BaseActivity extends AppCompatActivity {
                     case R.id.action_page3:
                         selectedFragment = new ScheduleChartFragment();
                         break;
-                    case R.id.action_page4:
-                        selectedFragment = new ProfileFragment();
-                        break;
+//                    case R.id.action_page4:
+//                        selectedFragment = new ProfileFragment();
+//                        break;
                     //handle more items as needed
                 }
                 if (selectedFragment != null) {

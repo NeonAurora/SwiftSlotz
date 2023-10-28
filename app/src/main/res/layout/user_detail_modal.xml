@@ -1,82 +1,95 @@
 <!-- user_detail_modal.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
     <!-- User Details -->
+
+    <!-- Buttons -->
+
     <TextView
         android:id="@+id/firstNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="First Name: "
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        tools:layout_editor_absoluteX="113dp"
+        tools:layout_editor_absoluteY="202dp" />
 
     <TextView
         android:id="@+id/lastNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Last Name: "
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        tools:layout_editor_absoluteX="256dp"
+        tools:layout_editor_absoluteY="72dp" />
 
     <TextView
         android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Username: "
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        tools:layout_editor_absoluteX="221dp"
+        tools:layout_editor_absoluteY="355dp" />
 
     <TextView
         android:id="@+id/emailTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Email: "
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        tools:layout_editor_absoluteX="230dp"
+        tools:layout_editor_absoluteY="102dp" />
 
     <TextView
         android:id="@+id/phoneTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Phone: "
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        tools:layout_editor_absoluteX="10dp"
+        tools:layout_editor_absoluteY="132dp" />
 
     <TextView
         android:id="@+id/companyTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Company: "
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        tools:layout_editor_absoluteX="117dp"
+        tools:layout_editor_absoluteY="124dp" />
 
     <TextView
         android:id="@+id/addressTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Address: "
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        tools:layout_editor_absoluteX="270dp"
+        tools:layout_editor_absoluteY="220dp" />
 
-    <!-- Buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/getAppointmentButton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp">
+        android:layout_gravity="start"
+        android:layout_weight="1"
+        android:text="Get Appointment"
+        tools:layout_editor_absoluteX="26dp"
+        tools:layout_editor_absoluteY="240dp" />
 
-        <Button
-            android:id="@+id/getAppointmentButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="start"
-            android:layout_marginEnd="8dp"
-            android:text="Get Appointment" />
-
-        <Button
-            android:id="@+id/goBackButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="end"
-            android:text="Go Back" />
-    </LinearLayout>
-</LinearLayout>
+    <Button
+        android:id="@+id/goBackButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_weight="1"
+        android:text="Go Back"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="361dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

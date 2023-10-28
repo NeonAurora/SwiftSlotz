@@ -38,7 +38,6 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         
         if (getSupportActionBar() != null) {
-
             getSupportActionBar().hide();
         }
 
