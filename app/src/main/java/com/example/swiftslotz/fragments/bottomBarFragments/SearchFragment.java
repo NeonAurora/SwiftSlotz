@@ -41,14 +41,14 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         searchEditText = view.findViewById(R.id.searchEditText);
-        searchResultsRecyclerView = view.findViewById(R.id.searchResultsRecyclerView);
         Button searchButton = view.findViewById(R.id.searchButton);
+        searchResultsRecyclerView = view.findViewById(R.id.searchResultsRecyclerView);
 
         searchResultsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         usersDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users");
         searchResults = new ArrayList<>();
 
-        userAdapter = new UserAdapter(searchResults, firebaseKeys, getParentFragmentManager());
+        userAdapter = new UserAdapter(getActivity(),searchResults, firebaseKeys, getParentFragmentManager());
         searchResultsRecyclerView.setAdapter(userAdapter);
 
         searchButton.setOnClickListener(new View.OnClickListener() {

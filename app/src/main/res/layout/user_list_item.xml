@@ -6,7 +6,7 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/usernameTextView"
+        android:id="@+id/sl_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Username"

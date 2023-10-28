@@ -1,95 +1,114 @@
 <!-- user_detail_modal.xml -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/backgroundMain"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="3dp">
 
     <!-- User Details -->
 
     <!-- Buttons -->
 
-    <TextView
-        android:id="@+id/firstNameTextView"
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="First Name: "
-        android:textSize="16sp"
-        tools:layout_editor_absoluteX="113dp"
-        tools:layout_editor_absoluteY="202dp" />
+        android:orientation="vertical"
+        android:padding="3dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/lastNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Last Name: "
-        android:textSize="16sp"
-        tools:layout_editor_absoluteX="256dp"
-        tools:layout_editor_absoluteY="72dp" />
+        <TextView
+            android:id="@+id/sl_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="2dp"
+            android:text="Username: "
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/usernameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Username: "
-        android:textSize="16sp"
-        tools:layout_editor_absoluteX="221dp"
-        tools:layout_editor_absoluteY="355dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
-    <TextView
-        android:id="@+id/emailTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email: "
-        android:textSize="16sp"
-        tools:layout_editor_absoluteX="230dp"
-        tools:layout_editor_absoluteY="102dp" />
+            <TextView
+                android:id="@+id/sl_firstname"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:text="First Name: "
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/phoneTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Phone: "
-        android:textSize="16sp"
-        tools:layout_editor_absoluteX="10dp"
-        tools:layout_editor_absoluteY="132dp" />
+            <TextView
+                android:id="@+id/sl_lastname"
+                android:layout_width="wrap_content"
+                android:layout_height="26dp"
+                android:layout_marginLeft="5dp"
+                android:text="Last Name: "
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/companyTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Company: "
-        android:textSize="16sp"
-        tools:layout_editor_absoluteX="117dp"
-        tools:layout_editor_absoluteY="124dp" />
+        <TextView
+            android:id="@+id/sl_company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="Company: "
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/addressTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Address: "
-        android:textSize="16sp"
-        tools:layout_editor_absoluteX="270dp"
-        tools:layout_editor_absoluteY="220dp" />
+        <TextView
+            android:id="@+id/sl_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Address: "
+            android:textColor="#000000"
+            android:textSize="16sp" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/getAppointmentButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
+    <ImageView
+        android:id="@+id/sl_call"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="15dp"
         android:layout_weight="1"
-        android:text="Get Appointment"
-        tools:layout_editor_absoluteX="26dp"
-        tools:layout_editor_absoluteY="240dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/sl_email"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_call" />
 
-    <Button
-        android:id="@+id/goBackButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
+    <ImageView
+        android:id="@+id/sl_email"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="15dp"
         android:layout_weight="1"
-        android:text="Go Back"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="361dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/sl_addApp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_email" />
+
+    <ImageView
+        android:id="@+id/sl_addApp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_add_appointment" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
