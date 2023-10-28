@@ -51,12 +51,16 @@ public class SearchFragment extends Fragment {
         userAdapter = new UserAdapter(getActivity(),searchResults, firebaseKeys, getParentFragmentManager());
         searchResultsRecyclerView.setAdapter(userAdapter);
 
+
+
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String query = searchEditText.getText().toString().trim();
                 if (!query.isEmpty()) {
-                    searchForUser(query);
+                    searchForUser(query.toLowerCase());
+                }else{
+                    getAllUser();
                 }
             }
         });
@@ -74,7 +78,12 @@ public class SearchFragment extends Fragment {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
                     String key = userSnapshot.getKey();
-                    if (user != null && user.getUsername().toLowerCase().contains(query.toLowerCase())) {
+                    boolean cond= user.getUsername().toLowerCase().contains(query) ||
+                            user.getFirstName().toLowerCase().contains(query) ||
+                            user.getLastName().toLowerCase().contains(query) ||
+                            user.getCompany().toLowerCase().contains(query) ||
+                            user.getAddress().toLowerCase().contains(query) ;
+                    if (user != null && cond ) {
                         searchResults.add(user);
                         firebaseKeys.add(key);
                         userFound = true;
@@ -82,6 +91,29 @@ public class SearchFragment extends Fragment {
                 }
                 if (!userFound) {
                     Toast.makeText(getContext(), "No user with this username found", Toast.LENGTH_SHORT).show();
+                }
+                userAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getContext(), "Failed to fetch data: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getAllUser() {
+        usersDb.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                searchResults.clear();
+                firebaseKeys.clear();
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    User user = userSnapshot.getValue(User.class);
+                    String key = userSnapshot.getKey();
+                    searchResults.add(user);
+                    firebaseKeys.add(key);
+
                 }
                 userAdapter.notifyDataSetChanged();
             }
