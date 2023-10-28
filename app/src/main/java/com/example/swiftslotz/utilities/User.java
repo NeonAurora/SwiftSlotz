@@ -1,6 +1,7 @@
 package com.example.swiftslotz.utilities;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class User implements Serializable {
 
@@ -11,6 +12,7 @@ public class User implements Serializable {
     private String phone;
     private String occupation;
     private String address;
+    private Map<String, String> appointments;
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)

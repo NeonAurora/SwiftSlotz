@@ -45,8 +45,8 @@ public class SignUpActivity extends BaseActivity {
         usernameEditText = findViewById(R.id.usernameEditText);
         emailEditText = findViewById(R.id.emailEditText);
         phoneEditText = findViewById(R.id.phoneEditText);
-        companyEditText = findViewById(R.id.addressEditText);
-        addressEditText = findViewById(R.id.occupationEditText);
+        companyEditText = findViewById(R.id.occupationEditText);
+        addressEditText = findViewById(R.id.addressEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
         signUpButton = findViewById(R.id.signUpButton);

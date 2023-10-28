@@ -1,8 +1,6 @@
 package com.example.swiftslotz.fragments.bottomBarFragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.R;
-import com.example.swiftslotz.activities.LoginActivity;
 import com.example.swiftslotz.activities.LogoutActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -33,7 +30,7 @@ public class ProfileFragment extends Fragment {
     private TextView username;
     private TextView email;
     private TextView phone;
-    private TextView company;
+    private TextView occupation;
     private TextView address;
 
     private FirebaseAuth mAuth;
@@ -49,7 +46,7 @@ public class ProfileFragment extends Fragment {
         username = view.findViewById(R.id.user_username);
         email = view.findViewById(R.id.user_email);
         phone = view.findViewById(R.id.user_phone);
-        company = view.findViewById(R.id.user_occupation);
+        occupation = view.findViewById(R.id.user_occupation);
         address = view.findViewById(R.id.user_address);
 
         mAuth = FirebaseAuth.getInstance();
@@ -85,7 +82,7 @@ public class ProfileFragment extends Fragment {
                     username.setText(dataSnapshot.child("username").getValue(String.class));
                     email.setText(dataSnapshot.child("email").getValue(String.class));
                     phone.setText(dataSnapshot.child("phone").getValue(String.class));
-                    company.setText(dataSnapshot.child("company").getValue(String.class));
+                    occupation.setText(dataSnapshot.child("occupation").getValue(String.class));
                     address.setText(dataSnapshot.child("address").getValue(String.class));
                 } else {
                     Toast.makeText(getActivity(), "Failed to load user details", Toast.LENGTH_SHORT).show();
