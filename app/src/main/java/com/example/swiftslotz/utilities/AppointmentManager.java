@@ -31,7 +31,7 @@ public class AppointmentManager {
     private RequestedAppointmentsAdapter requestedAppointmentsAdapter;
     private Context context;
     private FirebaseAuth mAuth;
-    private DatabaseReference userDb,rootRef;
+    private DatabaseReference userDb,rootRef, globalAppointmentDb;
     private List<Sector> sectors = new ArrayList<>();
     private CustomPieChart customPieChart;
 
@@ -43,6 +43,8 @@ public class AppointmentManager {
         String userId = mAuth.getCurrentUser().getUid();
         userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("appointments");
         rootRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
+        globalAppointmentDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("AppointmentCollection");
+
 
     }
 
@@ -54,6 +56,8 @@ public class AppointmentManager {
         String userId = mAuth.getCurrentUser().getUid();
         userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("RequestedAppointments");
         rootRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
+        globalAppointmentDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("AppointmentCollection");
+
 
     }
 
@@ -65,6 +69,7 @@ public class AppointmentManager {
         String userId = mAuth.getCurrentUser().getUid();
         userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("appointments");
         rootRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
+        globalAppointmentDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("AppointmentCollection");
 
     }
 
@@ -78,30 +83,50 @@ public class AppointmentManager {
     }
 
     public void fetchAppointmentsFromDatabase() {
-        userDb.addValueEventListener(new ValueEventListener() {
+        // Fetch appointment keys for the current user
+        rootRef.child("appointments").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                appointments.clear();
-                sectors.clear();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                String today = sdf.format(new Date());
-
+                List<String> appointmentKeys = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Appointment appointment = snapshot.getValue(Appointment.class);
-                    if (appointment != null && appointment.getDate().equals(today)) {
-                        appointment.setKey(snapshot.getKey());
-                        appointments.add(appointment);
-
-                        // Convert the appointment to a sector and add it to the list
-                        Sector sector = AppointmentManager.this.appointmentToSector(appointment);
-                        sectors.add(sector);
+                    String key = snapshot.getKey();
+                    if (key != null) {
+                        appointmentKeys.add(key);
                     }
                 }
-                if (appointmentsAdapter != null) {
-                    appointmentsAdapter.notifyDataSetChanged();
-                }
-                if (customPieChart != null) {
-                    customPieChart.setSectors(sectors);
+                // Clear existing appointments
+                appointments.clear();
+                sectors.clear();
+
+                // Fetch actual appointment data using the keys
+                for (String key : appointmentKeys) {
+                    globalAppointmentDb.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Appointment appointment = snapshot.getValue(Appointment.class);
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                            String today = sdf.format(new Date());
+                            if (appointment != null && appointment.getDate().equals(today)) {
+                                appointment.setKey(snapshot.getKey());
+                                appointments.add(appointment);
+
+                                // Convert the appointment to a sector and add it to the list
+                                Sector sector = AppointmentManager.this.appointmentToSector(appointment);
+                                sectors.add(sector);
+                            }
+                            if (appointmentsAdapter != null) {
+                                appointmentsAdapter.notifyDataSetChanged();
+                            }
+                            if (customPieChart != null) {
+                                customPieChart.setSectors(sectors);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            // Handle error
+                        }
+                    });
                 }
             }
 
@@ -231,24 +256,48 @@ public class AppointmentManager {
     // Method to approve an appointment
     public void approveAppointment(Appointment appointment, String appointmentKey) {
         DatabaseReference requestedAppointmentsRef = rootRef.child("RequestedAppointments").child(appointmentKey);
-        DatabaseReference appointmentsRef = rootRef.child("appointments").child(appointmentKey);
+        DatabaseReference globalAppointmentRef = globalAppointmentDb.push(); // Create a new entry in globalAppointmentDb
 
-        // Step 1: Read from RequestedAppointments (actually, you already have the appointment object)
-        // Step 2: Write to appointments
-        appointmentsRef.setValue(appointment).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                // Step 3: Delete from RequestedAppointments
-                requestedAppointmentsRef.removeValue();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // Handle failure
-                Log.e("ApproveAppointmentError", "Error approving appointment: " + e.getMessage());
-            }
-        });
+        // Generate a unique key for the global appointment
+        String globalAppointmentKey = globalAppointmentRef.getKey();
+
+        if (globalAppointmentKey != null) {
+            // Add involved users to the appointment object
+            List<String> involvedUsers = new ArrayList<>();
+            involvedUsers.add(mAuth.getCurrentUser().getUid());  // Boss
+            involvedUsers.add(appointment.getRequestingUserFirebaseKey());  // Underling
+            appointment.setInvolvedUsers(involvedUsers);
+
+            // Step 1: Write to globalAppointmentDb
+            globalAppointmentRef.setValue(appointment).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    // Step 2: Update the boss's appointments node with the global unique key
+                    userDb.child(globalAppointmentKey).setValue(true);
+
+                    // Step 3: Update the underling's appointments node with the global unique key
+                    DatabaseReference underlingDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                            .getReference("users")
+                            .child(appointment.getRequestingUserFirebaseKey())
+                            .child("appointments");
+                    underlingDb.child(globalAppointmentKey).setValue(true);
+
+                    // Step 4: Delete from RequestedAppointments
+                    requestedAppointmentsRef.removeValue();
+                    Toast.makeText(context, "Appointment approved successfully", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("ApproveAppointmentError", "Error writing to globalAppointmentDb: " + e.getMessage());
+                }
+            });
+        } else {
+            Log.e("ApproveAppointmentError", "Global appointment key is null");
+        }
     }
+
+
 
     // Method to reject an appointment
     public void rejectAppointment(String appointmentKey) {

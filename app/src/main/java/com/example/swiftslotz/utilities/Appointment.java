@@ -1,5 +1,7 @@
 package com.example.swiftslotz.utilities;
 
+import java.util.List;
+
 public class Appointment {
     private int id;
     private String title;
@@ -11,6 +13,7 @@ public class Appointment {
     private int durationInMinutes;
 
     private String requestingUserFirebaseKey;
+    private List<String> involvedUsers;
     public Appointment() {
     }
     public Appointment( String title, String date, String time, String details) {
@@ -83,5 +86,13 @@ public class Appointment {
 
     public void setRequestingUserFirebaseKey(String requestingUserFirebaseKey) {
         this.requestingUserFirebaseKey = requestingUserFirebaseKey;
+    }
+
+    public List<String> getInvolvedUsers() {
+        return involvedUsers;
+    }
+
+    public void setInvolvedUsers(List<String> involvedUsers) {
+        this.involvedUsers = involvedUsers;
     }
 }
