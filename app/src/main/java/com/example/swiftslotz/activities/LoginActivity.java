@@ -29,8 +29,7 @@ public class LoginActivity extends BaseActivity {
     private Button loginButton;
     private TextView signUpTextView;
     private ProgressDialog progressDialog;
-    private Button defaultLoginButton1;
-    private Button defaultLoginButton2;
+    private Button defaultLoginButton1, defaultLoginButton2, defaultLoginButton3;
     private CheckBox rememberMeCheckbox;
     private SharedPreferences sharedPreferences;
 
@@ -53,6 +52,7 @@ public class LoginActivity extends BaseActivity {
         loginButton = findViewById(R.id.loginButton);
         defaultLoginButton1 = findViewById(R.id.defaultLoginButton1);
         defaultLoginButton2 = findViewById(R.id.defaultLoginButton2);
+        defaultLoginButton3 = findViewById(R.id.defaultLoginButton3);
         signUpTextView = findViewById(R.id.signUpTextView);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
@@ -86,6 +86,15 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 emailEditText.setText("arnarnsd@gmail.com");
+                passwordEditText.setText("asdfgh");
+                userLogin();
+            }
+        });
+
+        defaultLoginButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                emailEditText.setText("eglebone@gmail.com");
                 passwordEditText.setText("asdfgh");
                 userLogin();
             }

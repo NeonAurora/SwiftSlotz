@@ -313,4 +313,80 @@ public class AppointmentManager {
         });
     }
 
+    public void fetchSingleAppointmentFromDatabase(String appointmentKey, SingleAppointmentCallback callback) {
+        globalAppointmentDb.child(appointmentKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Appointment appointment = snapshot.getValue(Appointment.class);
+                if (appointment != null) {
+                    appointment.setKey(snapshot.getKey());
+                    callback.onSingleAppointmentReceived(appointment);
+                } else {
+                    callback.onError("Appointment not found");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onError(error.getMessage());
+            }
+        });
+    }
+
+    public interface SingleAppointmentCallback {
+        void onSingleAppointmentReceived(Appointment appointment);
+        void onError(String error);
+    }
+
+    public void joinAppointment(Appointment appointment, String appointmentKey) {
+        DatabaseReference globalAppointmentRef = globalAppointmentDb.child(appointmentKey); // Reference to the existing appointment
+
+        // Step 1: Add the current user to the involved users list in the appointment object
+        List<String> involvedUsers = appointment.getInvolvedUsers();
+        involvedUsers.add(mAuth.getCurrentUser().getUid());  // Current User
+        appointment.setInvolvedUsers(involvedUsers);
+
+        // Step 2: Update the globalAppointmentDb
+        globalAppointmentRef.setValue(appointment).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // Step 3: Update the current user's appointments node with the global unique key
+                userDb.child(appointmentKey).setValue(true);
+                Toast.makeText(context, "Joined appointment successfully", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("JoinAppointmentError", "Error writing to globalAppointmentDb: " + e.getMessage());
+            }
+        });
+    }
+
+    public interface UserNameCallback {
+        void onUserNameReceived(String userName);
+    }
+
+    public void getUserNameFromFirebaseKey(String firebaseKey, UserNameCallback callback) {
+        DatabaseReference userRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(firebaseKey);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String userName = snapshot.child("username").getValue(String.class);
+                    if (userName != null) {
+                        callback.onUserNameReceived(userName);
+                    } else {
+                        Log.e("NUll Username Found", userName);
+                    }
+                } else {
+                    Log.e("NO user found", "");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle error here
+            }
+        });
+    }
 }

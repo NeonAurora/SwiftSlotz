@@ -1,6 +1,5 @@
 package com.example.swiftslotz.utilities;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,13 +12,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.example.swiftslotz.R;
-import com.example.swiftslotz.activities.LogoutActivity;
 import com.example.swiftslotz.fragments.bottomBarFragments.ProfileFragment;
 import com.example.swiftslotz.fragments.bottomBarFragments.ScheduleChartFragment;
 import com.example.swiftslotz.fragments.bottomBarFragments.SearchFragment;
-import com.example.swiftslotz.fragments.pageFragments.AddAppointmentFragment;
 import com.example.swiftslotz.fragments.pageFragments.AppointmentsFragment;
-import com.example.swiftslotz.fragments.sidebarFragments.Item1Fragment;
+import com.example.swiftslotz.fragments.sidebarFragments.SearchExistingAppointmentFragment;
 import com.example.swiftslotz.fragments.sidebarFragments.Item2Fragment;
 import com.example.swiftslotz.fragments.sidebarFragments.Item3Fragment;
 import com.example.swiftslotz.fragments.sidebarFragments.Item4Fragment;
@@ -63,7 +60,7 @@ public class BaseActivity extends AppCompatActivity {
                 switch (id) {
                     case R.id.drawer_item1:
                         // Replace with your actual fragments
-                        selectedFragment = new Item1Fragment();
+                        selectedFragment = new SearchExistingAppointmentFragment();
                         break;
                     case R.id.drawer_item2:
                         selectedFragment = new Item2Fragment();

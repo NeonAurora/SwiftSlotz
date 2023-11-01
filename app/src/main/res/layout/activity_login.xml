@@ -63,6 +63,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/defaultLoginButton1" />
 
+    <Button
+        android:id="@+id/defaultLoginButton3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/loginButton"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="48dp"
+        android:backgroundTint="@color/btnBack"
+        android:text="Default Login 3"
+        android:textColor="@color/btnText"
+        app:layout_constraintEnd_toStartOf="@+id/defaultLoginButton2"
+        app:layout_constraintTop_toBottomOf="@+id/defaultLoginButton1" />
+
     <EditText
         android:id="@+id/passwordEditText"
         android:layout_width="match_parent"

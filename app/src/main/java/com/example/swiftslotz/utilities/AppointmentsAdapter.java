@@ -1,5 +1,8 @@
 package com.example.swiftslotz.utilities;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -96,6 +100,21 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             }
         });
 
+        holder.detailsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String appointmentKey = appointments.get(position).getKey();
+
+                ClipboardManager clipboard = (ClipboardManager) view.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("appointmentKey", appointmentKey);
+
+                if (clipboard != null) {
+                    clipboard.setPrimaryClip(clip);
+                    Toast.makeText(view.getContext(), "successfully copied", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -111,7 +130,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
         TextView appointmentDetails;
 
-        ImageButton optionsButton;
+        ImageButton optionsButton, detailsButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -121,6 +140,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             appointmentDetails = itemView.findViewById(R.id.appointmentDetails);
             acceptedClientName = itemView.findViewById(R.id.acceptedClientName);
             optionsButton = itemView.findViewById(R.id.appointmentOptions);
+            detailsButton = itemView.findViewById(R.id.details);
         }
     }
 }
