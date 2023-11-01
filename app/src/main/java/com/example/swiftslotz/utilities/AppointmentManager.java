@@ -10,14 +10,18 @@ import androidx.annotation.NonNull;
 import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.views.charts.CustomPieChart;
 import com.example.swiftslotz.views.charts.Sector;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,6 +48,7 @@ public class AppointmentManager {
         userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("appointments");
         rootRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
         globalAppointmentDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("AppointmentCollection");
+        updateFCMToken();
 
 
     }
@@ -57,6 +62,7 @@ public class AppointmentManager {
         userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("RequestedAppointments");
         rootRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
         globalAppointmentDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("AppointmentCollection");
+        updateFCMToken();
 
 
     }
@@ -70,6 +76,7 @@ public class AppointmentManager {
         userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("appointments");
         rootRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
         globalAppointmentDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("AppointmentCollection");
+        updateFCMToken();
 
     }
 
@@ -137,6 +144,24 @@ public class AppointmentManager {
         });
     }
 
+    public void updateFCMToken() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            // Handle failure, you might want to log this or show a message to the user
+                            return;
+                        }
+                        // Get the token
+                        String token = task.getResult();
+                        // Save this token to your Firebase database against the user's ID
+                        rootRef.child("device_token").setValue(token);
+                    }
+                });
+    }
+
+
     public void fetchRequestedAppointmentsFromDatabase() {
         userDb.addValueEventListener(new ValueEventListener() {
             @Override
@@ -183,10 +208,35 @@ public class AppointmentManager {
             appointment.setRequestingUserFirebaseKey(mAuth.getCurrentUser().getUid());
 
             specificUserDb.child(key).setValue(appointment)
-                    .addOnSuccessListener(aVoid -> Toast.makeText(context, "Appointment added successfully", Toast.LENGTH_SHORT).show())
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(context, "Appointment added successfully", Toast.LENGTH_SHORT).show();
+
+                        // Fetch the FCM token of the user to whom you're sending the appointment request
+                        DatabaseReference userRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                                .getReference("users")
+                                .child(firebaseKey)
+                                .child("device_token");
+
+                        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String userFcmToken = dataSnapshot.getValue(String.class);
+                                if (userFcmToken != null) {
+                                    // Send FCM notification
+                                    NotificationManager.sendFCMNotification(userFcmToken);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                // Handle error here
+                            }
+                        });
+                    })
                     .addOnFailureListener(e -> Toast.makeText(context, "Failed to add appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }
+
 
     public void updateAppointment(Appointment appointment) {
         if (appointment.getKey() != null) {
