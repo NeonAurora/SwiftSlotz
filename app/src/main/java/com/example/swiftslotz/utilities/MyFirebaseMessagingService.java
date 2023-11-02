@@ -1,7 +1,6 @@
 package com.example.swiftslotz.utilities;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -21,19 +20,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Map<String, String> data = remoteMessage.getData();
             Log.d(TAG, "Message data payload: " + data);
 
-            // Convert the data map to a string for display
-            String dataString = data.toString();
-            Toast.makeText(getApplicationContext(), dataString, Toast.LENGTH_SHORT).show();
-            // Handle the data payload here
-        }
+            // Extract title and body from the data payload
+            String title = data.get("title") != null ? data.get("title") : "Default Title";
+            String body = "From " + remoteMessage.getFrom() + ": " +
+                    (data.get("body") != null ? data.get("body") : "Default Body");
 
-        // Check if message contains a notification payload.
-        if (remoteMessage.getNotification() != null) {
-            String title = remoteMessage.getNotification().getTitle() != null ?
-                    remoteMessage.getNotification().getTitle() : "Default Title";
-            String body = remoteMessage.getNotification().getBody() != null ?
-                    remoteMessage.getNotification().getBody() : "Default Body";
+            // Display the notification
             NotificationDisplay.displayNotification(getApplicationContext(), title, body);
+        } else {
+            Log.e("err", "Remote Message Data Payload is Empty");
         }
     }
 }
