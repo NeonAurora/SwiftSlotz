@@ -20,10 +20,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Map<String, String> data = remoteMessage.getData();
             Log.d(TAG, "Message data payload: " + data);
 
-            // Extract title and body from the data payload
+            // Extract title, body, and username from the data payload
             String title = data.get("title") != null ? data.get("title") : "Default Title";
-            String body = "From " + remoteMessage.getFrom() + ": " +
-                    (data.get("body") != null ? data.get("body") : "Default Body");
+            String username = data.get("username") != null ? data.get("username") : "Unknown User";
+            String bodyMessage = data.get("body") != null ? data.get("body") : "Default Body";
+
+            String body = "From " + username + ": " + bodyMessage;
 
             // Display the notification
             NotificationDisplay.displayNotification(getApplicationContext(), title, body);
@@ -31,4 +33,5 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.e("err", "Remote Message Data Payload is Empty");
         }
     }
+
 }

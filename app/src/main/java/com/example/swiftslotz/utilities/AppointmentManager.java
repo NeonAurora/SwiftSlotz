@@ -222,8 +222,14 @@ public class AppointmentManager {
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 String userFcmToken = dataSnapshot.getValue(String.class);
                                 if (userFcmToken != null) {
-                                    // Send FCM notification
-                                    NotificationManager.sendFCMNotification(userFcmToken);
+                                    // Fetch the username of the user making the appointment request
+                                    getUserNameFromFirebaseKey(mAuth.getCurrentUser().getUid(), new UserNameCallback() {
+                                        @Override
+                                        public void onUserNameReceived(String userName) {
+                                            // Send FCM notification with the username
+                                            NotificationManager.sendFCMNotification(userFcmToken, userName);
+                                        }
+                                    });
                                 }
                             }
 
@@ -236,6 +242,7 @@ public class AppointmentManager {
                     .addOnFailureListener(e -> Toast.makeText(context, "Failed to add appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }
+
 
 
     public void updateAppointment(Appointment appointment) {

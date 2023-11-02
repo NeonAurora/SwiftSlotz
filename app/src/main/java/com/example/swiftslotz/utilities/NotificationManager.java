@@ -15,7 +15,7 @@ import java.net.URL;
 public class NotificationManager {
     private static final String SERVER_KEY = "AAAAjUMreT4:APA91bHGA5nH7pazY8Mc3gBRrgrPQIJn2MhyixiRaJSmV4jjnWc44r4hj1GbqwXzBuyLjQJ_FcE4gZddEDI7jmaBAPUAbrRP3wdSPE_IzynTW2BO7J9GON28vaBMMBrmEKU8TF74wmTY";  // Replace with your actual server key
 
-    public static void sendFCMNotification(final String userFcmToken) {
+    public static void sendFCMNotification(final String userFcmToken, final String username) {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
@@ -30,6 +30,7 @@ public class NotificationManager {
                     JSONObject data = new JSONObject();
                     data.put("title", "New Appointment Request");
                     data.put("body", "You have a new appointment request.");
+                    data.put("username", username);
                     root.put("data", data);
                     root.put("to", userFcmToken);
 
@@ -62,7 +63,7 @@ public class NotificationManager {
             }
         }.execute();
     }
-    
+
 
 
 }
