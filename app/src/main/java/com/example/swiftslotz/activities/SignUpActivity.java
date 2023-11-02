@@ -73,7 +73,7 @@ public class SignUpActivity extends BaseActivity {
         final String username = usernameEditText.getText().toString().trim();
         final String email = emailEditText.getText().toString().trim();
         final String phone = phoneEditText.getText().toString().trim();
-        final String company = companyEditText.getText().toString().trim();
+        final String occupation = companyEditText.getText().toString().trim();
         final String address = addressEditText.getText().toString().trim();
         final String password = passwordEditText.getText().toString().trim();
         String confirmPassword = confirmPasswordEditText.getText().toString().trim();
@@ -111,7 +111,7 @@ public class SignUpActivity extends BaseActivity {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     if(user != null){
                                         User userObj = new User(firstName, lastName, username,
-                                                email, phone, company, address);
+                                                email, phone, occupation , address );
                                         mDatabase.child("users").child(user.getUid()).setValue(userObj);
 
                                         // Send verification email

@@ -118,9 +118,9 @@ public class BaseActivity extends AppCompatActivity {
                     case R.id.action_page3:
                         selectedFragment = new ScheduleChartFragment();
                         break;
-                    case R.id.action_page4:
-                        selectedFragment = new ProfileFragment();
-                        break;
+//                    case R.id.action_page4:
+//                        selectedFragment = new ProfileFragment();
+//                        break;
                     //handle more items as needed
                 }
                 if (selectedFragment != null) {
@@ -151,12 +151,16 @@ public class BaseActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         // Handle action bar item clicks here.
-        if (id == R.id.action_logout) {
-            // Navigate to ProfileFragment instead of LogoutActivity
+
+        if (id == R.id.user_profile) {
+            Fragment selectedFragment = new ProfileFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_frame, new ProfileFragment());
+            transaction.replace(R.id.content_frame, selectedFragment);
             transaction.commit();
-            return true;
+//            Intent intent = new Intent(this, LogoutActivity.class);
+//            startActivity(intent);
+//            return true;
+
         }
 
         // Pass the event to ActionBarDrawerToggle, if it returns true, then it has handled the app icon touch event.

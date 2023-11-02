@@ -17,13 +17,13 @@ public class User implements Serializable {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String firstName, String lastName, String username, String email, String phone, String company, String address) {
+    public User(String firstName, String lastName, String username, String email, String phone, String occupation, String address) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.email = email;
         this.phone = phone;
-        this.occupation = company;
+        this.occupation = occupation;
         this.address = address;
     }
 
@@ -36,6 +36,34 @@ public class User implements Serializable {
         this.occupation = occupation;
         this.address = address;
         this.appointments = appointments;  // Include this line to initialize the appointments field
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setOccupation(String company) {
+        this.occupation = company;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
 
