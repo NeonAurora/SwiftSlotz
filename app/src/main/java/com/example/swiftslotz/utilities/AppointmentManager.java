@@ -257,11 +257,45 @@ public class AppointmentManager {
 
     public void deleteAppointment(Appointment appointment) {
         if (appointment.getKey() != null) {
-            userDb.child(appointment.getKey()).removeValue()
-                    .addOnSuccessListener(aVoid -> Toast.makeText(context, "Appointment deleted successfully", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            // Step 1: Fetch the appointment details from the global collection
+            globalAppointmentDb.child(appointment.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Appointment globalAppointment = snapshot.getValue(Appointment.class);
+                    if (globalAppointment != null) {
+                        // Step 2: Save the fetched appointment details under the user's PastAppointments node
+                        DatabaseReference pastAppointmentsRef = rootRef.child("PastAppointments");
+                        pastAppointmentsRef.child(appointment.getKey()).setValue(globalAppointment)
+                                .addOnSuccessListener(aVoid -> {
+                                    // Step 3: Remove the appointment from the user's appointments node
+                                    userDb.child(appointment.getKey()).removeValue()
+                                            .addOnSuccessListener(aVoid2 -> {
+                                                // Step 4: Remove the user's ID from the involvedUsers list in the global appointment collection
+                                                List<String> involvedUsers = globalAppointment.getInvolvedUsers();
+                                                if (involvedUsers != null) {
+                                                    involvedUsers.remove(mAuth.getCurrentUser().getUid());
+                                                    globalAppointmentDb.child(appointment.getKey()).child("involvedUsers").setValue(involvedUsers)
+                                                            .addOnSuccessListener(aVoid3 -> Toast.makeText(context, "Appointment moved to history and user removed from involved users successfully", Toast.LENGTH_SHORT).show())
+                                                            .addOnFailureListener(e -> Toast.makeText(context, "Failed to remove user from involved users: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                                                }
+                                            })
+                                            .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                                })
+                                .addOnFailureListener(e -> Toast.makeText(context, "Failed to move appointment to history: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    } else {
+                        Toast.makeText(context, "Failed to fetch appointment details from global collection", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(context, "Failed to fetch appointment details: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
+
+
 
     public void getClientNameFromKey(String firebaseKey, ClientNameCallback callback) {
         DatabaseReference userRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(firebaseKey);
@@ -443,6 +477,34 @@ public class AppointmentManager {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Handle error here
+            }
+        });
+    }
+
+    public interface FetchPastAppointmentsCallback {
+        void onFetched(List<Appointment> pastAppointments);
+        void onError(String error);
+    }
+
+    public void getPastAppointments(FetchPastAppointmentsCallback callback) {
+        DatabaseReference pastAppointmentsRef = rootRef.child("PastAppointments");
+        pastAppointmentsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Appointment> pastAppointments = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Appointment appointment = snapshot.getValue(Appointment.class);
+                    if (appointment != null) {
+                        appointment.setKey(snapshot.getKey());
+                        pastAppointments.add(appointment);
+                    }
+                }
+                callback.onFetched(pastAppointments);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onError(databaseError.getMessage());
             }
         });
     }

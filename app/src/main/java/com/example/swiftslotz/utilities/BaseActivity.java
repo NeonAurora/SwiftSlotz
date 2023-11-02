@@ -16,8 +16,8 @@ import com.example.swiftslotz.fragments.bottomBarFragments.ProfileFragment;
 import com.example.swiftslotz.fragments.bottomBarFragments.ScheduleChartFragment;
 import com.example.swiftslotz.fragments.bottomBarFragments.SearchFragment;
 import com.example.swiftslotz.fragments.pageFragments.AppointmentsFragment;
+import com.example.swiftslotz.fragments.sidebarFragments.PastAppointmentsFragment;
 import com.example.swiftslotz.fragments.sidebarFragments.SearchExistingAppointmentFragment;
-import com.example.swiftslotz.fragments.sidebarFragments.Item2Fragment;
 import com.example.swiftslotz.fragments.sidebarFragments.Item3Fragment;
 import com.example.swiftslotz.fragments.sidebarFragments.Item4Fragment;
 import com.example.swiftslotz.fragments.sidebarFragments.Item5Fragment;
@@ -63,7 +63,7 @@ public class BaseActivity extends AppCompatActivity {
                         selectedFragment = new SearchExistingAppointmentFragment();
                         break;
                     case R.id.drawer_item2:
-                        selectedFragment = new Item2Fragment();
+                        selectedFragment = new PastAppointmentsFragment();
                         break;
                     case R.id.drawer_item3:
                         selectedFragment = new Item3Fragment();
