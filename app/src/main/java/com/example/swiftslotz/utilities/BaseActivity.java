@@ -1,6 +1,5 @@
 package com.example.swiftslotz.utilities;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,11 +12,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.example.swiftslotz.R;
-import com.example.swiftslotz.activities.LogoutActivity;
 import com.example.swiftslotz.fragments.bottomBarFragments.ProfileFragment;
 import com.example.swiftslotz.fragments.bottomBarFragments.ScheduleChartFragment;
 import com.example.swiftslotz.fragments.bottomBarFragments.SearchFragment;
-import com.example.swiftslotz.fragments.pageFragments.AddAppointmentFragment;
 import com.example.swiftslotz.fragments.pageFragments.AppointmentsFragment;
 import com.example.swiftslotz.fragments.sidebarFragments.Item1Fragment;
 import com.example.swiftslotz.fragments.sidebarFragments.Item2Fragment;
@@ -154,10 +151,14 @@ public class BaseActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         // Handle action bar item clicks here.
-        if (id == R.id.action_logout) {
-            Intent intent = new Intent(this, LogoutActivity.class);
-            startActivity(intent);
-            return true;
+        if (id == R.id.user_profile) {
+            Fragment selectedFragment = new ProfileFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, selectedFragment);
+            transaction.commit();
+//            Intent intent = new Intent(this, LogoutActivity.class);
+//            startActivity(intent);
+//            return true;
         }
 
         // Pass the event to ActionBarDrawerToggle, if it returns true, then it has handled the app icon touch event.
