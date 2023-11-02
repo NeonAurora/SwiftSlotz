@@ -1,8 +1,12 @@
 package com.example.swiftslotz.utilities;
 
 import android.util.Log;
+import android.widget.Toast;
+
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -14,7 +18,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            Map<String, String> data = remoteMessage.getData();
+            Log.d(TAG, "Message data payload: " + data);
+
+            // Convert the data map to a string for display
+            String dataString = data.toString();
+            Toast.makeText(getApplicationContext(), dataString, Toast.LENGTH_SHORT).show();
             // Handle the data payload here
         }
 
@@ -27,6 +36,4 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationDisplay.displayNotification(getApplicationContext(), title, body);
         }
     }
-
 }
-
