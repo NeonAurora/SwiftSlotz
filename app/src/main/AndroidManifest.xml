@@ -12,11 +12,14 @@
         android:theme="@style/Theme.SwiftSlotz"
         tools:targetApi="31">
         <activity
-            android:name=".panda"
-            android:exported="false" />
-        <activity
             android:name=".utilities.BaseActivity"
-            android:exported="false" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.EmailVerificationActivity"
             android:exported="false" />
@@ -37,14 +40,13 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            >
+            android:exported="false">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <service
             android:name=".utilities.MyFirebaseMessagingService"
