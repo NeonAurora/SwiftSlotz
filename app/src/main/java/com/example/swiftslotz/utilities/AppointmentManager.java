@@ -8,6 +8,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.swiftslotz.BuildConfig;
+import com.example.swiftslotz.adapters.AppointmentsAdapter;
+import com.example.swiftslotz.adapters.RequestedAppointmentsAdapter;
 import com.example.swiftslotz.views.charts.CustomPieChart;
 import com.example.swiftslotz.views.charts.Sector;
 import com.google.android.gms.tasks.OnCompleteListener;

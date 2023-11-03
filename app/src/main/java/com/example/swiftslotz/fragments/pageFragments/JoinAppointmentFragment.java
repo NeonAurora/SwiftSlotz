@@ -18,7 +18,7 @@ import com.example.swiftslotz.R;
 import com.example.swiftslotz.fragments.sidebarFragments.SearchExistingAppointmentFragment;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
-import com.example.swiftslotz.utilities.InvolvedUsersAdapter;
+import com.example.swiftslotz.adapters.InvolvedUsersAdapter;
 
 import java.util.ArrayList;
 

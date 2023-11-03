@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
-import com.example.swiftslotz.utilities.AppointmentsAdapter;
+import com.example.swiftslotz.adapters.AppointmentsAdapter;
 import com.example.swiftslotz.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.Fragment;

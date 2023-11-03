@@ -1,4 +1,4 @@
-package com.example.swiftslotz.utilities;
+package com.example.swiftslotz.adapters;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.swiftslotz.R;
+import com.example.swiftslotz.utilities.Appointment;
+import com.example.swiftslotz.utilities.AppointmentManager;
+import com.example.swiftslotz.utilities.ClientNameCallback;
 
 import java.util.List;
 

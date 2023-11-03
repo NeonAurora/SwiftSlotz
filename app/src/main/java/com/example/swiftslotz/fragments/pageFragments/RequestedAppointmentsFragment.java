@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
-import com.example.swiftslotz.utilities.RequestedAppointmentsAdapter;
+import com.example.swiftslotz.adapters.RequestedAppointmentsAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
