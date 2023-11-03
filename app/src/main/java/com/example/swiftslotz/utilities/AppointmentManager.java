@@ -25,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +41,8 @@ public class AppointmentManager {
     private DatabaseReference userDb,rootRef, globalAppointmentDb;
     private List<Sector> sectors = new ArrayList<>();
     private CustomPieChart customPieChart;
+
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
     public AppointmentManager(Context context, List<Appointment> appointments, AppointmentsAdapter appointmentsAdapter) {
         this.context = context;
@@ -118,6 +121,7 @@ public class AppointmentManager {
                             if (appointment != null && appointment.getDate().equals(today)) {
                                 appointment.setKey(snapshot.getKey());
                                 appointments.add(appointment);
+                                checkAndUpdateAppointmentStatuses();
 
                                 // Convert the appointment to a sector and add it to the list
                                 Sector sector = AppointmentManager.this.appointmentToSector(appointment);
@@ -509,5 +513,47 @@ public class AppointmentManager {
                 callback.onError(databaseError.getMessage());
             }
         });
+    }
+
+    public void intervalCheck() {
+        Log.d("intervalCheck", "Interval Check Called");
+    }
+
+    public void checkAndUpdateAppointmentStatuses() {
+        String currentDateTime = SDF.format(new Date());
+        Log.d("Check Update Function", "Function called");
+
+        for (Appointment appointment : appointments) {
+            Log.d("Appointments", "For loop running");
+            if (isAppointmentExpired(appointment.getDate(), appointment.getTime(), currentDateTime)) {
+                Log.d("IF cycle", "IF block executed");
+                appointment.setIsExpired(true);
+                Log.d("IsExpired", "Set to True");
+                updateAppointmentStatus(appointment);
+            }
+        }
+    }
+
+    // Helper method to determine if an appointment is expired
+    private boolean isAppointmentExpired(String appointmentDate, String appointmentTime, String currentDateTime) {
+        String appointmentDateTime = appointmentDate + " " + appointmentTime;
+        try {
+            Date appointmentDateObj = SDF.parse(appointmentDateTime);
+            Date currentDateObj = SDF.parse(currentDateTime);
+            return currentDateObj.after(appointmentDateObj);
+        } catch (ParseException e) {
+            Log.e("AppointmentManager", "Error parsing dates", e);
+            return false;
+        }
+    }
+
+    // Method to update the appointment status in the database
+    private void updateAppointmentStatus(Appointment appointment) {
+        if (appointment.getKey() != null) {
+            DatabaseReference appointmentRef = globalAppointmentDb.child(appointment.getKey());
+            appointmentRef.child("isExpired").setValue(appointment.getIsExpired())
+                    .addOnSuccessListener(aVoid -> Log.d("AppointmentManager", "Appointment status updated successfully"))
+                    .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to update appointment status", e));
+        }
     }
 }

@@ -14,6 +14,8 @@ public class Appointment {
 
     private String requestingUserFirebaseKey;
     private List<String> involvedUsers;
+
+    private Boolean isExpired;
     public Appointment() {
     }
     public Appointment( String title, String date, String time, String details) {
@@ -34,6 +36,17 @@ public class Appointment {
         this.time = time;
         this.details = details;
         this.durationInMinutes = durationInMinutes;
+    }
+
+    public Appointment( String title, String date, String time, String details, int durationInMinutes, Boolean isExpired) {
+
+
+        this.title = title;
+        this.date = date;
+        this.time = time;
+        this.details = details;
+        this.durationInMinutes = durationInMinutes;
+        this.isExpired = isExpired;
     }
 
     public int getId() {
@@ -94,5 +107,13 @@ public class Appointment {
 
     public void setInvolvedUsers(List<String> involvedUsers) {
         this.involvedUsers = involvedUsers;
+    }
+
+    public Boolean getIsExpired() {
+        return isExpired;
+    }
+
+    public void setIsExpired(Boolean expired) {
+        isExpired = expired;
     }
 }
