@@ -81,7 +81,7 @@ public class SearchFragment extends Fragment {
                     boolean cond= user.getUsername().toLowerCase().contains(query) ||
                             user.getFirstName().toLowerCase().contains(query) ||
                             user.getLastName().toLowerCase().contains(query) ||
-                            user.getCompany().toLowerCase().contains(query) ||
+                            user.getOccupation().toLowerCase().contains(query) ||
                             user.getAddress().toLowerCase().contains(query) ;
                     if (user != null && cond ) {
                         searchResults.add(user);
