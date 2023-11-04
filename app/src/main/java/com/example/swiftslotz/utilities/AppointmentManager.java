@@ -34,7 +34,7 @@ import java.util.Locale;
 
 public class AppointmentManager {
     private List<Appointment> appointments;
-    private AppointmentsAdapter appointmentsAdapter;
+    private AppointmentsAdapter appointmentsAdapter, adapter;
     private RequestedAppointmentsAdapter requestedAppointmentsAdapter;
     private Context context;
     private FirebaseAuth mAuth;
@@ -191,7 +191,7 @@ public class AppointmentManager {
                 } else {
                     isFlag = "False";
                 }
-                Log.e("ISFLAG", isFlag);
+                Log.e("IsFLAG", isFlag);
             }
 
             @Override
@@ -270,7 +270,7 @@ public class AppointmentManager {
                     Appointment globalAppointment = snapshot.getValue(Appointment.class);
                     if (globalAppointment != null) {
                         // Step 2: Save the fetched appointment details under the user's PastAppointments node
-                        DatabaseReference pastAppointmentsRef = rootRef.child("PastAppointments");
+                        DatabaseReference pastAppointmentsRef = rootRef.child("RemovedAppointments");
                         pastAppointmentsRef.child(appointment.getKey()).setValue(globalAppointment)
                                 .addOnSuccessListener(aVoid -> {
                                     // Step 3: Remove the appointment from the user's appointments node
@@ -351,48 +351,48 @@ public class AppointmentManager {
     }
 
     // Method to approve an appointment
-    public void approveAppointment(Appointment appointment, String appointmentKey) {
-        DatabaseReference requestedAppointmentsRef = rootRef.child("RequestedAppointments").child(appointmentKey);
-        DatabaseReference globalAppointmentRef = globalAppointmentDb.push(); // Create a new entry in globalAppointmentDb
+        public void approveAppointment(Appointment appointment, String appointmentKey) {
+            DatabaseReference requestedAppointmentsRef = rootRef.child("RequestedAppointments").child(appointmentKey);
+            DatabaseReference globalAppointmentRef = globalAppointmentDb.push(); // Create a new entry in globalAppointmentDb
 
-        // Generate a unique key for the global appointment
-        String globalAppointmentKey = globalAppointmentRef.getKey();
+            // Generate a unique key for the global appointment
+            String globalAppointmentKey = globalAppointmentRef.getKey();
 
-        if (globalAppointmentKey != null) {
-            // Add involved users to the appointment object
-            List<String> involvedUsers = new ArrayList<>();
-            involvedUsers.add(mAuth.getCurrentUser().getUid());  // Boss
-            involvedUsers.add(appointment.getRequestingUserFirebaseKey());  // Underling
-            appointment.setInvolvedUsers(involvedUsers);
+            if (globalAppointmentKey != null) {
+                // Add involved users to the appointment object
+                List<String> involvedUsers = new ArrayList<>();
+                involvedUsers.add(mAuth.getCurrentUser().getUid());  // Boss
+                involvedUsers.add(appointment.getRequestingUserFirebaseKey());  // Underling
+                appointment.setInvolvedUsers(involvedUsers);
 
-            // Step 1: Write to globalAppointmentDb
-            globalAppointmentRef.setValue(appointment).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    // Step 2: Update the boss's appointments node with the global unique key
-                    userDb.child(globalAppointmentKey).setValue(true);
+                // Step 1: Write to globalAppointmentDb
+                globalAppointmentRef.setValue(appointment).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Step 2: Update the boss's appointments node with the global unique key
+                        userDb.child(globalAppointmentKey).setValue(true);
 
-                    // Step 3: Update the underling's appointments node with the global unique key
-                    DatabaseReference underlingDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
-                            .getReference("users")
-                            .child(appointment.getRequestingUserFirebaseKey())
-                            .child("appointments");
-                    underlingDb.child(globalAppointmentKey).setValue(true);
+                        // Step 3: Update the underling's appointments node with the global unique key
+                        DatabaseReference underlingDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                                .getReference("users")
+                                .child(appointment.getRequestingUserFirebaseKey())
+                                .child("appointments");
+                        underlingDb.child(globalAppointmentKey).setValue(true);
 
-                    // Step 4: Delete from RequestedAppointments
-                    requestedAppointmentsRef.removeValue();
-                    Toast.makeText(context, "Appointment approved successfully", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e("ApproveAppointmentError", "Error writing to globalAppointmentDb: " + e.getMessage());
-                }
-            });
-        } else {
-            Log.e("ApproveAppointmentError", "Global appointment key is null");
+                        // Step 4: Delete from RequestedAppointments
+                        requestedAppointmentsRef.removeValue();
+                        Toast.makeText(context, "Appointment approved successfully", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("ApproveAppointmentError", "Error writing to globalAppointmentDb: " + e.getMessage());
+                    }
+                });
+            } else {
+                Log.e("ApproveAppointmentError", "Global appointment key is null");
+            }
         }
-    }
 
 
 
@@ -487,13 +487,13 @@ public class AppointmentManager {
         });
     }
 
-    public interface FetchPastAppointmentsCallback {
+    public interface FetchRemovedAppointmentsCallback {
         void onFetched(List<Appointment> pastAppointments);
         void onError(String error);
     }
 
-    public void getPastAppointments(FetchPastAppointmentsCallback callback) {
-        DatabaseReference pastAppointmentsRef = rootRef.child("PastAppointments");
+    public void getRemovedAppointments(FetchRemovedAppointmentsCallback callback) {
+        DatabaseReference pastAppointmentsRef = rootRef.child("RemovedAppointments");
         pastAppointmentsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -550,10 +550,122 @@ public class AppointmentManager {
     // Method to update the appointment status in the database
     private void updateAppointmentStatus(Appointment appointment) {
         if (appointment.getKey() != null) {
+            // Reference to the current appointment in AppointmentCollection
             DatabaseReference appointmentRef = globalAppointmentDb.child(appointment.getKey());
-            appointmentRef.child("isExpired").setValue(appointment.getIsExpired())
-                    .addOnSuccessListener(aVoid -> Log.d("AppointmentManager", "Appointment status updated successfully"))
+
+            // Set the appointment as expired
+            appointmentRef.child("isExpired").setValue(true)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("AppointmentManager", "Appointment status updated successfully");
+
+                        // Move the appointment to ExpiredAppointmentsCollection
+                        DatabaseReference expiredRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                                .getReference("ExpiredAppointmentsCollection")
+                                .child(appointment.getKey());
+                        expiredRef.setValue(appointment)
+                                .addOnSuccessListener(aVoid1 -> {
+                                    Log.d("AppointmentManager", "Appointment moved to ExpiredAppointmentsCollection successfully");
+
+                                    // Remove the appointment from AppointmentCollection
+                                    appointmentRef.removeValue()
+                                            .addOnSuccessListener(aVoid2 -> {
+                                                Log.d("AppointmentManager", "Appointment removed from AppointmentCollection successfully");
+
+                                                // Notify involved users and update their lists
+                                                updateUsersAppointmentLists(appointment);
+                                            })
+                                            .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to remove appointment from AppointmentCollection", e));
+                                })
+                                .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to move appointment to ExpiredAppointmentsCollection", e));
+                    })
                     .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to update appointment status", e));
         }
     }
+
+    private void updateUsersAppointmentLists(Appointment appointment) {
+        // Assuming you have a list of userIds involved in the appointment
+        List<String> userIds = appointment.getInvolvedUsers();
+        for (String userId : userIds) {
+            // Reference to the user's appointments
+            DatabaseReference userAppointmentsRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                    .getReference("users")
+                    .child(userId)
+                    .child("appointments")
+                    .child(appointment.getKey());
+
+            // Remove the appointment from the user's list
+            userAppointmentsRef.removeValue()
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("AppointmentManager", "Appointment removed from user's list successfully");
+
+                        // Add only the appointment key with a value of true to the user's ExpiredAppointments list
+                        DatabaseReference userExpiredAppointmentsRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                                .getReference("users")
+                                .child(userId)
+                                .child("ExpiredAppointments")
+                                .child(appointment.getKey());
+                        userExpiredAppointmentsRef.setValue(true) // Set the value to true instead of setting the whole appointment object
+                                .addOnSuccessListener(aVoid1 -> Log.d("AppointmentManager", "Appointment key added to user's ExpiredAppointments list successfully"))
+                                .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to add appointment key to user's ExpiredAppointments list", e));
+                    })
+                    .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to remove appointment from user's list", e));
+        }
+    }
+
+    public interface FetchExpiredAppointmentsCallback {
+        void onFetched(List<Appointment> expiredAppointments);
+        void onError(String error);
+    }
+
+    // Method to fetch expired appointments
+    public void fetchExpiredAppointments(FetchExpiredAppointmentsCallback callback) {
+        String userId = mAuth.getCurrentUser().getUid(); // Ensure this is the correct way to get the user ID
+        DatabaseReference userExpiredAppointmentsRef = rootRef.child("ExpiredAppointments");
+
+        userExpiredAppointmentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<String> expiredAppointmentKeys = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String key = snapshot.getKey();
+                    if (key != null && Boolean.TRUE.equals(snapshot.getValue(Boolean.class))) {
+                        expiredAppointmentKeys.add(key);
+                    }
+                }
+
+                // Fetch actual expired appointment data using the keys
+                DatabaseReference expiredAppointmentsCollectionRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                        .getReference("ExpiredAppointmentsCollection");
+                List<Appointment> expiredAppointments = new ArrayList<>();
+
+                for (String key : expiredAppointmentKeys) {
+                    expiredAppointmentsCollectionRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Appointment expiredAppointment = snapshot.getValue(Appointment.class);
+                            if (expiredAppointment != null) {
+                                expiredAppointment.setKey(snapshot.getKey());
+                                expiredAppointments.add(expiredAppointment);
+                            }
+                            // If all keys have been processed, invoke the callback
+                            if (expiredAppointments.size() == expiredAppointmentKeys.size()) {
+                                callback.onFetched(expiredAppointments);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            callback.onError(error.getMessage());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onError(databaseError.getMessage());
+            }
+        });
+    }
+
 }

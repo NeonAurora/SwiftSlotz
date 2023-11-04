@@ -7,13 +7,17 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.swiftslotz.R;
+import com.example.swiftslotz.fragments.pageFragments.RemovedAppointmentsFragment;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
 import com.example.swiftslotz.adapters.PastAppointmentsAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +28,7 @@ public class PastAppointmentsFragment extends Fragment {
     private PastAppointmentsAdapter adapter;
     private List<Appointment> pastAppointmentsList;
     private AppointmentManager appointmentManager;
+    FloatingActionButton fabRemovedAppointments;
 
     public PastAppointmentsFragment() {
         // Required empty public constructor
@@ -53,29 +58,53 @@ public class PastAppointmentsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_past_appointments, container, false);
 
         pastAppointmentsRecyclerView = view.findViewById(R.id.pastAppointmentsRecyclerView);
+        fabRemovedAppointments = view.findViewById(R.id.fab_removed_appointments);
         pastAppointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         pastAppointmentsList = new ArrayList<>();
         appointmentManager = new AppointmentManager(getContext());
+        Fragment selectedFragment = null;
+        fabRemovedAppointments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Create a new instance of RemovedAppointmentsFragment
+                RemovedAppointmentsFragment removedAppointmentsFragment = new RemovedAppointmentsFragment();
+
+                // Use FragmentManager and FragmentTransaction to replace the current fragment
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                // Replace the current fragment with the RemovedAppointmentsFragment instance
+                fragmentTransaction.replace(R.id.content_frame, removedAppointmentsFragment);
+
+                // Add the transaction to the back stack if you want to navigate back
+                fragmentTransaction.addToBackStack(null);
+
+                // Commit the transaction
+                fragmentTransaction.commit();
+            }
+        });
 
         fetchPastAppointments();
 
         return view;
     }
 
+
     private void fetchPastAppointments() {
-        appointmentManager.getPastAppointments(new AppointmentManager.FetchPastAppointmentsCallback() {
+        appointmentManager.fetchExpiredAppointments(new AppointmentManager.FetchExpiredAppointmentsCallback() {
             @Override
-            public void onFetched(List<Appointment> pastAppointments) {
-                pastAppointmentsList = pastAppointments;
+            public void onFetched(List<Appointment> expiredAppointments) {
+                pastAppointmentsList = expiredAppointments;
                 adapter = new PastAppointmentsAdapter(getContext(), pastAppointmentsList);
                 pastAppointmentsRecyclerView.setAdapter(adapter);
             }
 
             @Override
             public void onError(String error) {
-                Toast.makeText(getContext(), "Error fetching past appointments: " + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error fetching expired appointments: " + error, Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 }

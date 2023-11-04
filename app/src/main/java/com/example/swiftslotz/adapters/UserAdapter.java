@@ -1,6 +1,5 @@
-package com.example.swiftslotz.utilities;
+package com.example.swiftslotz.adapters;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,8 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.fragments.pageFragments.AddAppointmentFragment;
+import com.example.swiftslotz.utilities.User;
 
 import java.util.List;
 
