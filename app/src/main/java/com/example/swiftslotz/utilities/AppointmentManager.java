@@ -351,48 +351,80 @@ public class AppointmentManager {
     }
 
     // Method to approve an appointment
-        public void approveAppointment(Appointment appointment, String appointmentKey) {
-            DatabaseReference requestedAppointmentsRef = rootRef.child("RequestedAppointments").child(appointmentKey);
-            DatabaseReference globalAppointmentRef = globalAppointmentDb.push(); // Create a new entry in globalAppointmentDb
+    public void approveAppointment(Appointment appointment, String appointmentKey) {
+        DatabaseReference requestedAppointmentsRef = rootRef.child("RequestedAppointments").child(appointmentKey);
+        DatabaseReference globalAppointmentRef = globalAppointmentDb.push(); // Create a new entry in globalAppointmentDb
 
-            // Generate a unique key for the global appointment
-            String globalAppointmentKey = globalAppointmentRef.getKey();
+        // Generate a unique key for the global appointment
+        String globalAppointmentKey = globalAppointmentRef.getKey();
 
-            if (globalAppointmentKey != null) {
-                // Add involved users to the appointment object
-                List<String> involvedUsers = new ArrayList<>();
-                involvedUsers.add(mAuth.getCurrentUser().getUid());  // Boss
-                involvedUsers.add(appointment.getRequestingUserFirebaseKey());  // Underling
-                appointment.setInvolvedUsers(involvedUsers);
+        if (globalAppointmentKey != null) {
+            // Add involved users to the appointment object
+            List<String> involvedUsers = new ArrayList<>();
+            involvedUsers.add(mAuth.getCurrentUser().getUid());  // Boss
+            involvedUsers.add(appointment.getRequestingUserFirebaseKey());  // Underling
+            appointment.setInvolvedUsers(involvedUsers);
 
-                // Step 1: Write to globalAppointmentDb
-                globalAppointmentRef.setValue(appointment).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // Step 2: Update the boss's appointments node with the global unique key
-                        userDb.child(globalAppointmentKey).setValue(true);
+            // Step 1: Write to globalAppointmentDb
+            globalAppointmentRef.setValue(appointment).addOnSuccessListener(aVoid -> {
+                // Step 2: Update the boss's appointments node with the global unique key
+                userDb.child(globalAppointmentKey).setValue(true);
 
-                        // Step 3: Update the underling's appointments node with the global unique key
-                        DatabaseReference underlingDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
-                                .getReference("users")
-                                .child(appointment.getRequestingUserFirebaseKey())
-                                .child("appointments");
-                        underlingDb.child(globalAppointmentKey).setValue(true);
+                // Step 3: Update the underling's appointments node with the global unique key
+                DatabaseReference underlingDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                        .getReference("users")
+                        .child(appointment.getRequestingUserFirebaseKey())
+                        .child("appointments");
+                underlingDb.child(globalAppointmentKey).setValue(true);
 
-                        // Step 4: Delete from RequestedAppointments
-                        requestedAppointmentsRef.removeValue();
-                        Toast.makeText(context, "Appointment approved successfully", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("ApproveAppointmentError", "Error writing to globalAppointmentDb: " + e.getMessage());
-                    }
-                });
-            } else {
-                Log.e("ApproveAppointmentError", "Global appointment key is null");
-            }
+                // Step 4: Delete from RequestedAppointments
+                requestedAppointmentsRef.removeValue();
+                Toast.makeText(context, "Appointment approved successfully", Toast.LENGTH_SHORT).show();
+
+                // Step 5: Send a notification to the requesting user
+                sendApprovalNotification(appointment.getRequestingUserFirebaseKey(), mAuth.getCurrentUser().getUid());
+
+            }).addOnFailureListener(e -> {
+                Log.e("ApproveAppointmentError", "Error writing to globalAppointmentDb: " + e.getMessage());
+            });
+        } else {
+            Log.e("ApproveAppointmentError", "Global appointment key is null");
         }
+    }
+
+    private void sendApprovalNotification(String requestingUserFirebaseKey, String approverFirebaseKey) {
+        DatabaseReference requestingUserRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                .getReference("users")
+                .child(requestingUserFirebaseKey)
+                .child("device_token");
+
+        requestingUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String requestingUserFcmToken = dataSnapshot.getValue(String.class);
+                if (requestingUserFcmToken != null) {
+                    // Fetch the username of the user who approved the appointment
+                    getUserNameFromFirebaseKey(approverFirebaseKey, new UserNameCallback() {
+                        @Override
+                        public void onUserNameReceived(String approverUserName) {
+                            // Send FCM notification with the approver's username
+                            NotificationManager.sendApprovalFCMNotification(requestingUserFcmToken, approverUserName, "Your appointment request has been approved.");
+                        }
+
+                        public void onError(String error) {
+                            Log.e("NotificationError", "Error fetching username for notification: " + error);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("NotificationError", "Error fetching FCM token: " + databaseError.getMessage());
+            }
+        });
+    }
+
 
 
 
@@ -400,15 +432,64 @@ public class AppointmentManager {
     public void rejectAppointment(String appointmentKey) {
         DatabaseReference requestedAppointmentsRef = rootRef.child("RequestedAppointments").child(appointmentKey);
 
-        // Simply remove the appointment from RequestedAppointments
-        requestedAppointmentsRef.removeValue().addOnFailureListener(new OnFailureListener() {
+        // Fetch the appointment details first to get the requesting user's Firebase key
+        requestedAppointmentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                // Handle failure
-                Log.e("RejectAppointmentError", "Error rejecting appointment: " + e.getMessage());
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Appointment appointment = dataSnapshot.getValue(Appointment.class);
+                if (appointment != null) {
+                    String requestingUserFirebaseKey = appointment.getRequestingUserFirebaseKey();
+
+                    // Now remove the appointment from RequestedAppointments
+                    requestedAppointmentsRef.removeValue().addOnSuccessListener(aVoid -> {
+                        // Send a notification to the requesting user about the rejection
+                        sendRejectionNotification(requestingUserFirebaseKey, mAuth.getCurrentUser().getUid());
+                    }).addOnFailureListener(e -> {
+                        // Handle failure
+                        Log.e("RejectAppointmentError", "Error rejecting appointment: " + e.getMessage());
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("RejectAppointmentError", "Error fetching appointment for rejection: " + databaseError.getMessage());
             }
         });
     }
+
+    private void sendRejectionNotification(String requestingUserFirebaseKey, String rejectorFirebaseKey) {
+        DatabaseReference requestingUserRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                .getReference("users")
+                .child(requestingUserFirebaseKey)
+                .child("device_token");
+
+        requestingUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String requestingUserFcmToken = dataSnapshot.getValue(String.class);
+                if (requestingUserFcmToken != null) {
+                    // Fetch the username of the user who rejected the appointment
+                    getUserNameFromFirebaseKey(rejectorFirebaseKey, new UserNameCallback() {
+                        @Override
+                        public void onUserNameReceived(String rejectorUserName) {
+                            // Send FCM notification with the rejector's username
+                            NotificationManager.sendRejectionFCMNotification(requestingUserFcmToken, rejectorUserName, "Your appointment request has been rejected.");
+                        }
+                        public void onError(String error) {
+                            Log.e("NotificationError", "Error fetching username for notification: " + error);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("NotificationError", "Error fetching FCM token: " + databaseError.getMessage());
+            }
+        });
+    }
+
 
     public void fetchSingleAppointmentFromDatabase(String appointmentKey, SingleAppointmentCallback callback) {
         globalAppointmentDb.child(appointmentKey).addListenerForSingleValueEvent(new ValueEventListener() {

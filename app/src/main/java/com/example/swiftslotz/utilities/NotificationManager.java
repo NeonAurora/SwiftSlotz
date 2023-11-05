@@ -64,6 +64,101 @@ public class NotificationManager {
         }.execute();
     }
 
+    public static void sendApprovalFCMNotification(final String userFcmToken, final String username, final String appointmentDetails) {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                try {
+                    URL url = new URL("https://fcm.googleapis.com/fcm/send");
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setRequestProperty("Authorization", "key=" + SERVER_KEY);
+                    httpURLConnection.setRequestProperty("Content-Type", "application/json");
 
+                    JSONObject root = new JSONObject();
+                    JSONObject data = new JSONObject();
+                    data.put("title", "Appointment Approved");
+                    data.put("body", "Your appointment request with " + username + " has been approved.");
+                    data.put("username", username);
+                    data.put("appointmentDetails", appointmentDetails); // Additional details if needed
+                    root.put("data", data);
+                    root.put("to", userFcmToken);
 
+                    OutputStreamWriter wr = new OutputStreamWriter(httpURLConnection.getOutputStream());
+                    wr.write(root.toString());
+                    wr.flush();
+
+                    InputStream is = httpURLConnection.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    String line;
+                    StringBuilder response = new StringBuilder();
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line);
+                    }
+                    reader.close();
+
+                    return response.toString();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                if (result != null) {
+                    Log.d("FCM", "Server response: " + result);
+                }
+            }
+        }.execute();
+    }
+
+    public static void sendRejectionFCMNotification(final String userFcmToken, final String username, final String appointmentDetails) {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                try {
+                    URL url = new URL("https://fcm.googleapis.com/fcm/send");
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setRequestProperty("Authorization", "key=" + SERVER_KEY);
+                    httpURLConnection.setRequestProperty("Content-Type", "application/json");
+
+                    JSONObject root = new JSONObject();
+                    JSONObject data = new JSONObject();
+                    data.put("title", "Appointment Rejected");
+                    data.put("body", "Your appointment request with " + username + " has been rejected.");
+                    data.put("username", username);
+                    data.put("appointmentDetails", appointmentDetails); // Additional details if needed
+                    root.put("data", data);
+                    root.put("to", userFcmToken);
+
+                    OutputStreamWriter wr = new OutputStreamWriter(httpURLConnection.getOutputStream());
+                    wr.write(root.toString());
+                    wr.flush();
+
+                    InputStream is = httpURLConnection.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    String line;
+                    StringBuilder response = new StringBuilder();
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line);
+                    }
+                    reader.close();
+
+                    return response.toString();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                if (result != null) {
+                    Log.d("FCM", "Server response: " + result);
+                }
+            }
+        }.execute();
+    }
 }
