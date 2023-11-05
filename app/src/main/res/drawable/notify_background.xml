@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- The image as the background -->
+    <item android:drawable="@drawable/notif_back_image" />
+
+    <!-- The gradient on top of the image -->
+    <item>
+        <shape>
+            <gradient
+                android:type="linear"
+                android:angle="0"
+                android:startColor="#ffFF6A1F"
+                android:centerColor="#ddFF6A1F"
+                android:endColor="#00EE82EE" />
+        </shape>
+    </item>
+</layer-list>

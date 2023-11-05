@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/notify_background"
         android:padding="16dp">
 
         <TextView
@@ -19,6 +21,7 @@
             android:layout_height="wrap_content"
             android:text="Appointment Title"
             android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textColor="#FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,19 +29,31 @@
             android:id="@+id/acceptedClientName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="2dp"
             android:text="Client Name"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appointmentTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/appointmentDetails" />
 
         <TextView
             android:id="@+id/appointmentDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="2dp"
             android:text="Appointment Date"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/acceptedClientName" />
+            app:layout_constraintTop_toBottomOf="@+id/acceptedClientName" /><![CDATA[
+
+
+
+
+        " />
+
+
+
+
+
+        ]]>
 
         <ImageButton
             android:id="@+id/appointmentOptions"
@@ -46,41 +61,62 @@
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/appointment_options"
-            android:src="@android:drawable/ic_menu_more"
+            android:src="@drawable/ic_arrow_down"
+
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <ImageButton
             android:id="@+id/details"
             android:layout_width="45dp"
             android:layout_height="38dp"
-            android:layout_marginStart="268dp"
-            android:layout_marginTop="84dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/appointment_details"
-            android:src="@drawable/ic_radio_waves"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appointmentOptions" />
+            android:src="@drawable/ic_copy"
+            app:layout_constraintStart_toEndOf="@+id/textView5"
+            app:layout_constraintTop_toBottomOf="@+id/appointmentTime" />
 
         <TextView
             android:id="@+id/appointmentTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="88dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="2dp"
             android:text="Appointment Time"
-            app:layout_constraintStart_toEndOf="@id/appointmentDate"
-            app:layout_constraintTop_toBottomOf="@id/acceptedClientName" />
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/textView4"
+            app:layout_constraintTop_toBottomOf="@+id/acceptedClientName" />
 
         <TextView
             android:id="@+id/appointmentDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="2dp"
             android:text="Appointment Details"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appointmentDate" />
+            app:layout_constraintTop_toBottomOf="@+id/appointmentTitle" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="at"
+            app:layout_constraintStart_toEndOf="@+id/appointmentDate"
+            app:layout_constraintTop_toBottomOf="@+id/acceptedClientName" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="copy the code to share"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appointmentDate" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

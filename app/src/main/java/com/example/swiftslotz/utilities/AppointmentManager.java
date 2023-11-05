@@ -179,7 +179,9 @@ public class AppointmentManager {
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Appointment appointment = snapshot.getValue(Appointment.class);
-                    if (appointment != null && appointment.getDate().equals(today)) {
+                    if (appointment != null
+                    //&& appointment.getDate().equals(today)
+                    ) {
                         appointment.setKey(snapshot.getKey());
                         appointments.add(appointment);
                     }
