@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,12 +34,12 @@ public class AddAppointmentFragment extends Fragment {
     EditText appointmentEditText;
     Button addAppointmentButton;
     Button selectTimeButton;
-    TextView selectedTimeTextView;
+    TextView selectedTimeTextView, monthTextView, yearTextView;
     EditText appointmentDurationEditText;
     Spinner unitSpinner;
     String firebaseKey;
+    ImageButton scrollLeftButton, scrollRightButton;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_appointment, container, false);
@@ -52,6 +53,11 @@ public class AddAppointmentFragment extends Fragment {
         selectedTimeTextView = view.findViewById(R.id.selectedTimeTextView);
         appointmentDurationEditText = view.findViewById(R.id.appointmentDurationEditText);
         unitSpinner = view.findViewById(R.id.unitSpinner);
+        scrollLeftButton = view.findViewById(R.id.scrollLeftButton);  // New initialization
+        scrollRightButton = view.findViewById(R.id.scrollRightButton);
+        monthTextView = view.findViewById(R.id.monthTextView);
+        yearTextView = view.findViewById(R.id.yearTextView);
+        Calendar cal = Calendar.getInstance();
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getActivity(),
                 R.array.units_array, android.R.layout.simple_spinner_item);
@@ -59,6 +65,8 @@ public class AddAppointmentFragment extends Fragment {
         unitSpinner.setAdapter(adapter);
 
         final Calendar selectedDate = Calendar.getInstance();
+        monthTextView.setText(new SimpleDateFormat("MMMM", Locale.getDefault()).format(cal.getTime()));
+        yearTextView.setText(Integer.toString(cal.get(Calendar.YEAR)));
 
         calendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
@@ -68,7 +76,27 @@ public class AddAppointmentFragment extends Fragment {
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
-                // Do nothing
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(firstDayOfNewMonth);
+                int month = cal.get(Calendar.MONTH);
+                int year = cal.get(Calendar.YEAR);
+
+                monthTextView.setText(new SimpleDateFormat("MMMM", Locale.getDefault()).format(cal.getTime()));
+                yearTextView.setText(Integer.toString(year));
+            }
+        });
+
+        scrollLeftButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendarView.scrollLeft();
+            }
+        });
+
+        scrollRightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendarView.scrollRight();
             }
         });
 

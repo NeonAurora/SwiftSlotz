@@ -1,6 +1,7 @@
 package com.example.swiftslotz;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
@@ -56,10 +57,11 @@ public class MainActivity extends BaseActivity {
 
                 finish();
             }
-        }, 3000);
+        }, 100);
 
 
     }
+
 
 //    @Override
 //    protected void onStart() {
@@ -68,3 +70,4 @@ public class MainActivity extends BaseActivity {
 //        startActivity(intent);
 //    }
 }
+

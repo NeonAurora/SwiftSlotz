@@ -16,8 +16,8 @@ import com.example.swiftslotz.fragments.bottomBarFragments.ProfileFragment;
 import com.example.swiftslotz.fragments.bottomBarFragments.ScheduleChartFragment;
 import com.example.swiftslotz.fragments.bottomBarFragments.SearchFragment;
 import com.example.swiftslotz.fragments.pageFragments.AppointmentsFragment;
-import com.example.swiftslotz.fragments.sidebarFragments.Item1Fragment;
-import com.example.swiftslotz.fragments.sidebarFragments.Item2Fragment;
+import com.example.swiftslotz.fragments.sidebarFragments.PastAppointmentsFragment;
+import com.example.swiftslotz.fragments.sidebarFragments.SearchExistingAppointmentFragment;
 import com.example.swiftslotz.fragments.sidebarFragments.Item3Fragment;
 import com.example.swiftslotz.fragments.sidebarFragments.Item4Fragment;
 import com.example.swiftslotz.fragments.sidebarFragments.Item5Fragment;
@@ -60,10 +60,10 @@ public class BaseActivity extends AppCompatActivity {
                 switch (id) {
                     case R.id.drawer_item1:
                         // Replace with your actual fragments
-                        selectedFragment = new Item1Fragment();
+                        selectedFragment = new SearchExistingAppointmentFragment();
                         break;
                     case R.id.drawer_item2:
-                        selectedFragment = new Item2Fragment();
+                        selectedFragment = new PastAppointmentsFragment();
                         break;
                     case R.id.drawer_item3:
                         selectedFragment = new Item3Fragment();
@@ -151,6 +151,7 @@ public class BaseActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         // Handle action bar item clicks here.
+
         if (id == R.id.user_profile) {
             Fragment selectedFragment = new ProfileFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -159,6 +160,7 @@ public class BaseActivity extends AppCompatActivity {
 //            Intent intent = new Intent(this, LogoutActivity.class);
 //            startActivity(intent);
 //            return true;
+
         }
 
         // Pass the event to ActionBarDrawerToggle, if it returns true, then it has handled the app icon touch event.

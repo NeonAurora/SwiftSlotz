@@ -1,13 +1,20 @@
-package com.example.swiftslotz.utilities;
+package com.example.swiftslotz.adapters;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.swiftslotz.R;
+import com.example.swiftslotz.utilities.Appointment;
+import com.example.swiftslotz.utilities.AppointmentManager;
+import com.example.swiftslotz.utilities.ClientNameCallback;
+
 import java.util.List;
 
 public class RequestedAppointmentsAdapter extends RecyclerView.Adapter<RequestedAppointmentsAdapter.ViewHolder> {
@@ -47,6 +54,25 @@ public class RequestedAppointmentsAdapter extends RecyclerView.Adapter<Requested
                 Log.e("ClientNameFetchError", "Error fetching client name: " + error);
             }
         });
+
+        // Approve button click listener
+        holder.approveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Appointment appointment = requestedAppointments.get(position);
+                String appointmentKey = appointment.getKey();
+                appointmentManager.approveAppointment(appointment, appointmentKey);  // Using rootRef here
+            }
+        });
+
+        // Reject button click listener
+        holder.rejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String appointmentKey = requestedAppointments.get(position).getKey();
+                appointmentManager.rejectAppointment(appointmentKey);  // Using rootRef here
+            }
+        });
     }
 
     @Override
@@ -60,14 +86,17 @@ public class RequestedAppointmentsAdapter extends RecyclerView.Adapter<Requested
         TextView appointmentDate;
         TextView appointmentTime;
         TextView appointmentDetails;
+        ImageButton approveButton, rejectButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             appointmentTitle = itemView.findViewById(R.id.appointmentTitle);
-            clientName = itemView.findViewById(R.id.clientName);
+            clientName = itemView.findViewById(R.id.requestingClientName);
             appointmentDate = itemView.findViewById(R.id.appointmentDate);
             appointmentTime = itemView.findViewById(R.id.appointmentTime);
             appointmentDetails = itemView.findViewById(R.id.appointmentDetails);
+            approveButton = itemView.findViewById(R.id.approveButton);
+            rejectButton = itemView.findViewById(R.id.rejectButton);
         }
     }
 }

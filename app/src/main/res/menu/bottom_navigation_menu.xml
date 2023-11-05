@@ -1,11 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     >
     <item
-        android:id="@+id/action_page1"
+        android:id="@+id/action_page2"
         android:icon="@drawable/icon_req"
         android:title="Request" />
     <item
-        android:id="@+id/action_page2"
+        android:id="@+id/action_page1"
         android:icon="@drawable/icon_home"
         android:title="Home" />
     <item

@@ -49,4 +49,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:20.0.4'
     implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
     implementation 'com.github.sundeepk:compact-calendar-view:3.0.0'
+    implementation 'com.google.firebase:firebase-messaging:22.0.0'  // Check for the latest version
 }

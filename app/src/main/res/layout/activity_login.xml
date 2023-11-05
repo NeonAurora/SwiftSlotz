@@ -35,20 +35,46 @@
         android:textColor="@color/btnText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/rememberMeCheckBox" />
 
     <Button
-        android:id="@+id/defaultLoginButton"
+        android:id="@+id/defaultLoginButton1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/loginButton"
         android:layout_marginTop="50dp"
         android:layout_marginRight="20dp"
         android:backgroundTint="@color/btnBack"
-        android:text="Default Login"
+        android:text="Default Login 1"
         android:textColor="@color/btnText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+    <Button
+        android:id="@+id/defaultLoginButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/loginButton"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="20dp"
+        android:backgroundTint="@color/btnBack"
+        android:text="Default Login 2"
+        android:textColor="@color/btnText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/defaultLoginButton1" />
+
+    <Button
+        android:id="@+id/defaultLoginButton3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/loginButton"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="48dp"
+        android:backgroundTint="@color/btnBack"
+        android:text="Default Login 3"
+        android:textColor="@color/btnText"
+        app:layout_constraintEnd_toStartOf="@+id/defaultLoginButton2"
+        app:layout_constraintTop_toBottomOf="@+id/defaultLoginButton1" />
 
     <EditText
         android:id="@+id/passwordEditText"
@@ -65,6 +91,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
+    <CheckBox
+        android:id="@+id/rememberMeCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Remember Me"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+        android:layout_marginTop="10dp"/>
+
 
     <ImageView
         android:id="@+id/imageView2"
@@ -97,7 +133,7 @@
             android:id="@+id/signUpTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/defaultLoginButton"
+            android:layout_below="@id/defaultLoginButton1"
             android:layout_centerHorizontal="true"
             android:text="Sign Up"
             android:textColor="#3F51B5" />
