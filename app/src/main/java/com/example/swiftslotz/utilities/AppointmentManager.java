@@ -179,7 +179,7 @@ public class AppointmentManager {
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Appointment appointment = snapshot.getValue(Appointment.class);
-                    if (appointment != null && appointment.getDate().equals(today)) {
+                    if (appointment != null) {
                         appointment.setKey(snapshot.getKey());
                         appointments.add(appointment);
                     }
@@ -283,6 +283,7 @@ public class AppointmentManager {
                                                     globalAppointmentDb.child(appointment.getKey()).child("involvedUsers").setValue(involvedUsers)
                                                             .addOnSuccessListener(aVoid3 -> Toast.makeText(context, "Appointment moved to history and user removed from involved users successfully", Toast.LENGTH_SHORT).show())
                                                             .addOnFailureListener(e -> Toast.makeText(context, "Failed to remove user from involved users: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                                                    appointmentsAdapter.notifyDataSetChanged();
                                                 }
                                             })
                                             .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
