@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.swiftslotz.R;
+import com.example.swiftslotz.fragments.pageFragments.AppointmentDetailsFragment;
 import com.example.swiftslotz.fragments.pageFragments.RemovedAppointmentsFragment;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
@@ -103,6 +104,26 @@ public class PastAppointmentsFragment extends Fragment {
             @Override
             public void onError(String error) {
                 Toast.makeText(getContext(), "Error fetching expired appointments: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+        adapter.setOnItemClickListener(new PastAppointmentsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Appointment appointment) {
+                // Create a new instance of AppointmentDetailsFragment
+                AppointmentDetailsFragment appointmentDetailsFragment = new AppointmentDetailsFragment();
+
+                // Use FragmentManager and FragmentTransaction to replace the current fragment
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                // Replace the current fragment with the AppointmentDetailsFragment instance
+                fragmentTransaction.replace(R.id.content_frame, appointmentDetailsFragment);
+
+                // Add the transaction to the back stack if you want to navigate back
+                fragmentTransaction.addToBackStack(null);
+
+                // Commit the transaction
+                fragmentTransaction.commit();
             }
         });
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,15 @@ import java.util.List;
 public class PastAppointmentsAdapter extends RecyclerView.Adapter<PastAppointmentsAdapter.ViewHolder> {
     private List<Appointment> pastAppointments;
     private Context context;
+    private OnItemClickListener onItemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(Appointment appointment);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
 
     public PastAppointmentsAdapter(Context context, List<Appointment> pastAppointments) {
         this.context = context;
@@ -53,6 +63,13 @@ public class PastAppointmentsAdapter extends RecyclerView.Adapter<PastAppointmen
             pastAppointmentDate = itemView.findViewById(R.id.pastAppointmentDate);
             pastAppointmentTime = itemView.findViewById(R.id.pastAppointmentTime);
             pastAppointmentDetails = itemView.findViewById(R.id.pastAppointmentDetails);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onItemClickListener != null && getAdapterPosition() != RecyclerView.NO_POSITION)
+                        onItemClickListener.onItemClick(pastAppointments.get(getAdapterPosition()));
+                }
+            });
         }
     }
 }
