@@ -2,6 +2,8 @@ package com.example.swiftslotz.utilities;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -23,6 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 
 import java.text.ParseException;
@@ -748,6 +752,53 @@ public class AppointmentManager {
                 callback.onError(databaseError.getMessage());
             }
         });
+    }
+
+    public void uploadImageToFirebaseStorage(Uri imageUri, String appointmentKey, ImageUploadCallback callback) {
+
+        if (appointmentKey == null || appointmentKey.isEmpty()) {
+            callback.onError("Appointment key is null");
+            return;
+        }
+        StorageReference storageRef = FirebaseStorage.getInstance(BuildConfig.FIREBASE_STORAGE_URL).getReference();
+        StorageReference imageRef = storageRef.child("appointments" + appointmentKey + ".jpg");
+
+        imageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    // Image uploaded successfully
+                    // Get the download URL
+                    imageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                        // Got the download URL
+                        updateAppointmentWithImageURl(appointmentKey, downloadUri.toString(), callback);
+                    }).addOnFailureListener(e -> {
+                        // Handle any errors
+                        callback.onError("Failed to get image URL: " + e.getMessage());
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    // Handle unsuccessful uploads
+                    callback.onError("Upload failed: " + e.getMessage());
+                });
+
+    }
+
+    private void updateAppointmentWithImageURl(String appointmentKey, String imageUrl, ImageUploadCallback callback) {
+        DatabaseReference expiredAppointmentsCollectionRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                .getReference("ExpiredAppointmentsCollection").child(appointmentKey);
+        expiredAppointmentsCollectionRef.child("imageUrl").setValue(imageUrl)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("AppointmentManager", "Appointment updated with image URL successfully");
+                    callback.onSuccess("Appointment updated with image URL successfully");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("AppointmentManager", "Failed to update appointment with image URL", e);
+                    callback.onError("Failed to update appointment with image URL");
+                });
+    }
+
+    public interface ImageUploadCallback{
+        void onSuccess(String message);
+        void onError(String error);
     }
 
 }

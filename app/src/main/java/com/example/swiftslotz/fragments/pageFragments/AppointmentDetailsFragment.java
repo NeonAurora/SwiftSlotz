@@ -1,49 +1,29 @@
 package com.example.swiftslotz.fragments.pageFragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.TextView;
+import android.widget.Button;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.example.swiftslotz.R;
+import com.example.swiftslotz.utilities.Appointment;
+import com.example.swiftslotz.adapters.InvolvedUsersAdapter;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AppointmentDetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AppointmentDetailsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private Appointment appointment;
+    private RecyclerView involvedUsersRecyclerView;
+    private InvolvedUsersAdapter involvedUsersAdapter;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public AppointmentDetailsFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AppointmentDetailsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AppointmentDetailsFragment newInstance(String param1, String param2) {
+    public static AppointmentDetailsFragment newInstance(Appointment appointment) {
         AppointmentDetailsFragment fragment = new AppointmentDetailsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable("appointment", appointment); // Ensure Appointment is Serializable
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,15 +32,40 @@ public class AppointmentDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            appointment = (Appointment) getArguments().getSerializable("appointment");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_appointment_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_appointment_details, container, false);
+
+        // Initialize UI elements based on the updated layout
+        TextView titleView = view.findViewById(R.id.appointment_title_details);
+        TextView dateView = view.findViewById(R.id.appointment_date_details);
+        TextView timeView = view.findViewById(R.id.appointment_time_details);
+        TextView detailsView = view.findViewById(R.id.appointment_details_details);
+        TextView durationView = view.findViewById(R.id.appointment_duration_details);
+        involvedUsersRecyclerView = view.findViewById(R.id.involved_users_recyclerview);
+        involvedUsersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        involvedUsersAdapter = new InvolvedUsersAdapter(getContext(), appointment.getInvolvedUsers());
+        involvedUsersRecyclerView.setAdapter(involvedUsersAdapter);
+
+        Button goBackButton = view.findViewById(R.id.go_back_button_details);
+
+        // Set appointment details
+        titleView.setText(appointment.getTitle());
+        dateView.setText(appointment.getDate());
+        timeView.setText(appointment.getTime());
+        detailsView.setText(appointment.getDetails());
+        durationView.setText(String.valueOf(appointment.getDuration()) + " minutes");
+
+        goBackButton.setOnClickListener(v -> {
+            FragmentManager fragmentManager = getParentFragmentManager();
+            fragmentManager.popBackStack();
+        });
+
+        return view;
     }
 }

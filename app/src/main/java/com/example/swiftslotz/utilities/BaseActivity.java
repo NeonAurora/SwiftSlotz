@@ -15,7 +15,7 @@ import com.example.swiftslotz.R;
 import com.example.swiftslotz.fragments.bottomBarFragments.ProfileFragment;
 import com.example.swiftslotz.fragments.bottomBarFragments.ScheduleChartFragment;
 import com.example.swiftslotz.fragments.bottomBarFragments.SearchFragment;
-import com.example.swiftslotz.fragments.pageFragments.AppointmentsFragment;
+import com.example.swiftslotz.fragments.bottomBarFragments.AppointmentsFragment;
 import com.example.swiftslotz.fragments.sidebarFragments.PastAppointmentsFragment;
 import com.example.swiftslotz.fragments.sidebarFragments.SearchExistingAppointmentFragment;
 import com.example.swiftslotz.fragments.sidebarFragments.Item3Fragment;

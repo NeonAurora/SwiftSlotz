@@ -20,11 +20,13 @@ android {
     buildTypes {
         debug {
             buildConfigField 'String', 'FIREBASE_DATABASE_URL', "\"${FIREBASE_DATABASE_URL}\""
+            buildConfigField 'String', 'FIREBASE_STORAGE_URL', "\"${FIREBASE_STORAGE_BUCKET}\""
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField 'String', 'FIREBASE_DATABASE_URL', "\"${FIREBASE_DATABASE_URL}\""
+            buildConfigField 'String', 'FIREBASE_STORAGE_URL', "\"${FIREBASE_STORAGE_BUCKET}\""
         }
     }
 
@@ -49,5 +51,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:20.0.4'
     implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
     implementation 'com.github.sundeepk:compact-calendar-view:3.0.0'
-    implementation 'com.google.firebase:firebase-messaging:22.0.0'  // Check for the latest version
+    implementation 'com.google.firebase:firebase-messaging:22.0.0'
+    implementation("com.google.firebase:firebase-storage")
 }

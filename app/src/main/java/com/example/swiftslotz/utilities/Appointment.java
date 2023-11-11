@@ -1,8 +1,9 @@
 package com.example.swiftslotz.utilities;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Appointment {
+public class Appointment implements Serializable {
     private int id;
     private String title;
     private String date;

@@ -1,11 +1,14 @@
 package com.example.swiftslotz.fragments.sidebarFragments;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -29,7 +32,9 @@ public class PastAppointmentsFragment extends Fragment {
     private PastAppointmentsAdapter adapter;
     private List<Appointment> pastAppointmentsList;
     private AppointmentManager appointmentManager;
-    FloatingActionButton fabRemovedAppointments;
+    private FloatingActionButton fabRemovedAppointments;
+    private ActivityResultLauncher<String> mGetContent;
+    private String currentAppointmentKey;
 
     public PastAppointmentsFragment() {
         // Required empty public constructor
@@ -63,6 +68,8 @@ public class PastAppointmentsFragment extends Fragment {
         pastAppointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         pastAppointmentsList = new ArrayList<>();
+        adapter = new PastAppointmentsAdapter(getContext(), pastAppointmentsList);
+        pastAppointmentsRecyclerView.setAdapter(adapter);
         appointmentManager = new AppointmentManager(getContext());
         Fragment selectedFragment = null;
         fabRemovedAppointments.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +93,18 @@ public class PastAppointmentsFragment extends Fragment {
             }
         });
 
+        mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(), result -> {
+            if (result != null) {
+                // Handle the selected image URI (e.g., upload to Firebase Storage)
+                uploadImageToFirebase(result);
+            }
+        });
+
+        adapter.setOnUploadButtonClickListener(appointment -> {
+            currentAppointmentKey = appointment.getKey();
+            mGetContent.launch("image/*");
+        });
+
         fetchPastAppointments();
 
         return view;
@@ -96,9 +115,17 @@ public class PastAppointmentsFragment extends Fragment {
         appointmentManager.fetchExpiredAppointments(new AppointmentManager.FetchExpiredAppointmentsCallback() {
             @Override
             public void onFetched(List<Appointment> expiredAppointments) {
-                pastAppointmentsList = expiredAppointments;
-                adapter = new PastAppointmentsAdapter(getContext(), pastAppointmentsList);
-                pastAppointmentsRecyclerView.setAdapter(adapter);
+                pastAppointmentsList.clear();
+                pastAppointmentsList.addAll(expiredAppointments);
+                adapter.notifyDataSetChanged();
+
+
+                adapter.setOnItemClickListener(new PastAppointmentsAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(Appointment appointment) {
+                        navigateToAppointmentDetails(appointment);
+                    }
+                });
             }
 
             @Override
@@ -106,26 +133,34 @@ public class PastAppointmentsFragment extends Fragment {
                 Toast.makeText(getContext(), "Error fetching expired appointments: " + error, Toast.LENGTH_SHORT).show();
             }
         });
-        adapter.setOnItemClickListener(new PastAppointmentsAdapter.OnItemClickListener() {
+    }
+
+    private void uploadImageToFirebase(Uri imageUri) {
+        // Implement the callback
+        AppointmentManager.ImageUploadCallback uploadCallback = new AppointmentManager.ImageUploadCallback() {
             @Override
-            public void onItemClick(Appointment appointment) {
-                // Create a new instance of AppointmentDetailsFragment
-                AppointmentDetailsFragment appointmentDetailsFragment = new AppointmentDetailsFragment();
-
-                // Use FragmentManager and FragmentTransaction to replace the current fragment
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                // Replace the current fragment with the AppointmentDetailsFragment instance
-                fragmentTransaction.replace(R.id.content_frame, appointmentDetailsFragment);
-
-                // Add the transaction to the back stack if you want to navigate back
-                fragmentTransaction.addToBackStack(null);
-
-                // Commit the transaction
-                fragmentTransaction.commit();
+            public void onSuccess(String message) {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
-        });
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        // Call the method to upload the image
+        appointmentManager.uploadImageToFirebaseStorage(imageUri, currentAppointmentKey, uploadCallback);
+    }
+
+    private void navigateToAppointmentDetails(Appointment appointment) {
+        AppointmentDetailsFragment appointmentDetailsFragment = AppointmentDetailsFragment.newInstance(appointment);
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.content_frame, appointmentDetailsFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 }

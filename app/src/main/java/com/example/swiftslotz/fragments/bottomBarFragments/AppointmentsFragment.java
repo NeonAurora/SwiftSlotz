@@ -1,10 +1,13 @@
-package com.example.swiftslotz.fragments.pageFragments;
+package com.example.swiftslotz.fragments.bottomBarFragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.swiftslotz.fragments.pageFragments.AddAppointmentFragment;
+import com.example.swiftslotz.fragments.pageFragments.ModifyAppointmentFragment;
+import com.example.swiftslotz.fragments.pageFragments.RequestedAppointmentsFragment;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
 import com.example.swiftslotz.adapters.AppointmentsAdapter;
