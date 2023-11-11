@@ -4,12 +4,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Button;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.adapters.InvolvedUsersAdapter;
@@ -47,6 +50,7 @@ public class AppointmentDetailsFragment extends Fragment {
         TextView timeView = view.findViewById(R.id.appointment_time_details);
         TextView detailsView = view.findViewById(R.id.appointment_details_details);
         TextView durationView = view.findViewById(R.id.appointment_duration_details);
+        ImageView imageView = view.findViewById(R.id.appointment_image);
         involvedUsersRecyclerView = view.findViewById(R.id.involved_users_recyclerview);
         involvedUsersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         involvedUsersAdapter = new InvolvedUsersAdapter(getContext(), appointment.getInvolvedUsers());
@@ -65,6 +69,13 @@ public class AppointmentDetailsFragment extends Fragment {
             FragmentManager fragmentManager = getParentFragmentManager();
             fragmentManager.popBackStack();
         });
+
+        if (appointment.getImageUrl() != null && !appointment.getImageUrl().isEmpty()) {
+            imageView.setVisibility(View.VISIBLE);
+            Glide.with(this)
+                    .load(appointment.getImageUrl())
+                    .into(imageView);
+        }
 
         return view;
     }

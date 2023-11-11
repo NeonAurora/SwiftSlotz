@@ -17,6 +17,7 @@ public class Appointment implements Serializable {
     private List<String> involvedUsers;
 
     private Boolean isExpired;
+    public String imageUrl;
     public Appointment() {
     }
     public Appointment( String title, String date, String time, String details) {
@@ -116,5 +117,11 @@ public class Appointment implements Serializable {
 
     public void setIsExpired(Boolean expired) {
         isExpired = expired;
+    }
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
