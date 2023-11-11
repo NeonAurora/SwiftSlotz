@@ -16,6 +16,7 @@ import com.example.swiftslotz.R;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.adapters.InvolvedUsersAdapter;
 import com.example.swiftslotz.adapters.ImageAdapter;
+import com.example.swiftslotz.utilities.AppointmentManager;
 
 public class AppointmentDetailsFragment extends Fragment {
 
@@ -23,13 +24,19 @@ public class AppointmentDetailsFragment extends Fragment {
     private RecyclerView involvedUsersRecyclerView, imagesRecyclerView;
     private InvolvedUsersAdapter involvedUsersAdapter;
     private ImageAdapter imageAdapter;
+    private AppointmentManager appointmentManager;
 
-    public static AppointmentDetailsFragment newInstance(Appointment appointment) {
+    public static AppointmentDetailsFragment newInstance(Appointment appointment, AppointmentManager appointmentManager) {
         AppointmentDetailsFragment fragment = new AppointmentDetailsFragment();
         Bundle args = new Bundle();
         args.putSerializable("appointment", appointment); // Ensure Appointment is Serializable
+        fragment.setAppointmentManager(appointmentManager);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void setAppointmentManager(AppointmentManager appointmentManager) {
+        this.appointmentManager = appointmentManager;
     }
 
     @Override
@@ -62,7 +69,7 @@ public class AppointmentDetailsFragment extends Fragment {
 
         imagesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         Log.d("AppointmentImageDetails", "onCreateView: " + appointment.getImageUrls().toString());
-        imageAdapter = new ImageAdapter(getContext(), appointment.getImageUrls()); // Assuming getImageUrls() returns List<String>
+        imageAdapter = new ImageAdapter(getContext(), appointment.getImageUrls(), appointmentManager, appointment.getKey()); // Assuming getImageUrls() returns List<String>
         imagesRecyclerView.setAdapter(imageAdapter);
 
         Button goBackButton = view.findViewById(R.id.go_back_button_details);

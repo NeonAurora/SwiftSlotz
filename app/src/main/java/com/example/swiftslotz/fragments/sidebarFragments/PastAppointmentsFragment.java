@@ -154,7 +154,7 @@ public class PastAppointmentsFragment extends Fragment {
     }
 
     private void navigateToAppointmentDetails(Appointment appointment) {
-        AppointmentDetailsFragment appointmentDetailsFragment = AppointmentDetailsFragment.newInstance(appointment);
+        AppointmentDetailsFragment appointmentDetailsFragment = AppointmentDetailsFragment.newInstance(appointment, appointmentManager);
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

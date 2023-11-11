@@ -5,20 +5,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.swiftslotz.R;
+import com.example.swiftslotz.utilities.AppointmentManager;
+
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
     private List<String> imageUrls;
     private Context context;
+    private AppointmentManager appointmentManager;
+    private String appointmentKey;
 
-    public ImageAdapter(Context context, List<String> imageUrls) {
+    public ImageAdapter(Context context, List<String> imageUrls, AppointmentManager appointmentManager, String appointmentKey) {
         this.context = context;
         this.imageUrls = imageUrls;
+        this.appointmentManager = appointmentManager;
+        this.appointmentKey = appointmentKey;
     }
 
     @NonNull
@@ -34,6 +41,24 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         Glide.with(context)
                 .load(imageUrl)
                 .into(holder.imageView);
+
+        holder.deleteButton.setOnClickListener(v -> {
+            // Delete the image from Firebase Storage and update the imgUrl list
+            appointmentManager.deleteImageFromFirebaseStorage(imageUrl, appointmentKey, new AppointmentManager.ImageDeleteCallback() {
+                @Override
+                public void onSuccess(String message) {
+                    // Remove the image URL from the list and notify the adapter
+                    imageUrls.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, imageUrls.size());
+                }
+
+                @Override
+                public void onError(String error) {
+                    // Handle the error, e.g., show a Toast
+                }
+            });
+        });
     }
 
     @Override
@@ -43,11 +68,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
+        FloatingActionButton deleteButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image_item_view);
+            deleteButton = itemView.findViewById(R.id.fab_remove_image); // Replace with your delete button's ID
         }
     }
 }
-

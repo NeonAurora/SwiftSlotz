@@ -23,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
@@ -801,5 +802,54 @@ public class AppointmentManager {
         void onSuccess(String message);
         void onError(String error);
     }
+
+    public void deleteImageFromFirebaseStorage(String imageUrl, String appointmentKey, ImageDeleteCallback callback) {
+        if (appointmentKey == null || appointmentKey.isEmpty()) {
+            callback.onError("Appointment key is null");
+            return;
+        }
+
+        // Create a reference to the file to delete
+        StorageReference storageRef = FirebaseStorage.getInstance(BuildConfig.FIREBASE_STORAGE_URL).getReferenceFromUrl(imageUrl);
+
+        // Delete the file
+        storageRef.delete().addOnSuccessListener(aVoid -> {
+            // File deleted successfully
+            removeImageUrlFromDatabase(imageUrl, appointmentKey, callback);
+        }).addOnFailureListener(e -> {
+            // Uh-oh, an error occurred!
+            callback.onError("Failed to delete image: " + e.getMessage());
+        });
+    }
+
+    private void removeImageUrlFromDatabase(String imageUrl, String appointmentKey, ImageDeleteCallback callback) {
+        DatabaseReference expiredAppointmentsCollectionRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                .getReference("ExpiredAppointmentsCollection").child(appointmentKey).child("imageUrls");
+
+        expiredAppointmentsCollectionRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<String> currentUrls = dataSnapshot.getValue(new GenericTypeIndicator<List<String>>() {});
+                if (currentUrls != null && currentUrls.remove(imageUrl)) {
+                    expiredAppointmentsCollectionRef.setValue(currentUrls)
+                            .addOnSuccessListener(aVoid -> callback.onSuccess("Image URL removed successfully"))
+                            .addOnFailureListener(e -> callback.onError("Failed to remove image URL: " + e.getMessage()));
+                } else {
+                    callback.onError("Image URL not found in the list");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onError("Database error: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    public interface ImageDeleteCallback {
+        void onSuccess(String message);
+        void onError(String error);
+    }
+
 
 }
