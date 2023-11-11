@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AppointmentManager {
     private List<Appointment> appointments;
@@ -754,47 +756,46 @@ public class AppointmentManager {
         });
     }
 
-    public void uploadImageToFirebaseStorage(Uri imageUri, String appointmentKey, ImageUploadCallback callback) {
-
+    public void uploadImagesToFirebaseStorage(List<Uri> imageUris, String appointmentKey, ImageUploadCallback callback) {
         if (appointmentKey == null || appointmentKey.isEmpty()) {
             callback.onError("Appointment key is null");
             return;
         }
+
         StorageReference storageRef = FirebaseStorage.getInstance(BuildConfig.FIREBASE_STORAGE_URL).getReference();
-        StorageReference imageRef = storageRef.child("appointments" + appointmentKey + ".jpg");
+        List<String> imageUrls = new ArrayList<>();
+        AtomicInteger uploadCount = new AtomicInteger(imageUris.size());
 
-        imageRef.putFile(imageUri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    // Image uploaded successfully
-                    // Get the download URL
-                    imageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
-                        // Got the download URL
-                        updateAppointmentWithImageURl(appointmentKey, downloadUri.toString(), callback);
-                    }).addOnFailureListener(e -> {
-                        // Handle any errors
-                        callback.onError("Failed to get image URL: " + e.getMessage());
-                    });
-                })
-                .addOnFailureListener(e -> {
-                    // Handle unsuccessful uploads
-                    callback.onError("Upload failed: " + e.getMessage());
-                });
+        for (Uri imageUri : imageUris) {
+            StorageReference imageRef = storageRef.child("appointments/" + appointmentKey + "/" + UUID.randomUUID().toString() + ".jpg");
 
+            imageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                        imageUrls.add(downloadUri.toString());
+                        if (uploadCount.decrementAndGet() == 0) {
+                            updateAppointmentWithImageUrls(appointmentKey, imageUrls, callback);
+                        }
+                    }).addOnFailureListener(e -> callback.onError("Failed to get image URL: " + e.getMessage())))
+                    .addOnFailureListener(e -> callback.onError("Upload failed: " + e.getMessage()));
+        }
     }
 
-    private void updateAppointmentWithImageURl(String appointmentKey, String imageUrl, ImageUploadCallback callback) {
+
+    private void updateAppointmentWithImageUrls(String appointmentKey, List<String> imageUrls, ImageUploadCallback callback) {
         DatabaseReference expiredAppointmentsCollectionRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
                 .getReference("ExpiredAppointmentsCollection").child(appointmentKey);
-        expiredAppointmentsCollectionRef.child("imageUrl").setValue(imageUrl)
+
+        expiredAppointmentsCollectionRef.child("imageUrls").setValue(imageUrls)
                 .addOnSuccessListener(aVoid -> {
-                    Log.d("AppointmentManager", "Appointment updated with image URL successfully");
-                    callback.onSuccess("Appointment updated with image URL successfully");
+                    Log.d("AppointmentManager", "Appointment updated with image URLs successfully");
+                    callback.onSuccess("Appointment updated with image URLs successfully");
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("AppointmentManager", "Failed to update appointment with image URL", e);
-                    callback.onError("Failed to update appointment with image URL");
+                    Log.e("AppointmentManager", "Failed to update appointment with image URLs", e);
+                    callback.onError("Failed to update appointment with image URLs");
                 });
     }
+
 
     public interface ImageUploadCallback{
         void onSuccess(String message);

@@ -1,10 +1,10 @@
 package com.example.swiftslotz.fragments.pageFragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Button;
 import androidx.fragment.app.Fragment;
@@ -12,16 +12,17 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.adapters.InvolvedUsersAdapter;
+import com.example.swiftslotz.adapters.ImageAdapter;
 
 public class AppointmentDetailsFragment extends Fragment {
 
     private Appointment appointment;
-    private RecyclerView involvedUsersRecyclerView;
+    private RecyclerView involvedUsersRecyclerView, imagesRecyclerView;
     private InvolvedUsersAdapter involvedUsersAdapter;
+    private ImageAdapter imageAdapter;
 
     public static AppointmentDetailsFragment newInstance(Appointment appointment) {
         AppointmentDetailsFragment fragment = new AppointmentDetailsFragment();
@@ -44,17 +45,25 @@ public class AppointmentDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_appointment_details, container, false);
 
-        // Initialize UI elements based on the updated layout
+        // Initialize UI elements
         TextView titleView = view.findViewById(R.id.appointment_title_details);
         TextView dateView = view.findViewById(R.id.appointment_date_details);
         TextView timeView = view.findViewById(R.id.appointment_time_details);
         TextView detailsView = view.findViewById(R.id.appointment_details_details);
         TextView durationView = view.findViewById(R.id.appointment_duration_details);
-        ImageView imageView = view.findViewById(R.id.appointment_image);
         involvedUsersRecyclerView = view.findViewById(R.id.involved_users_recyclerview);
+        imagesRecyclerView = view.findViewById(R.id.appointment_images_recyclerview);
+
+        // Set up RecyclerViews
         involvedUsersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        Log.d("AppointmentIUDetails", "onCreateView: " + appointment.getInvolvedUsers().toString());
         involvedUsersAdapter = new InvolvedUsersAdapter(getContext(), appointment.getInvolvedUsers());
         involvedUsersRecyclerView.setAdapter(involvedUsersAdapter);
+
+        imagesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        Log.d("AppointmentImageDetails", "onCreateView: " + appointment.getImageUrls().toString());
+        imageAdapter = new ImageAdapter(getContext(), appointment.getImageUrls()); // Assuming getImageUrls() returns List<String>
+        imagesRecyclerView.setAdapter(imageAdapter);
 
         Button goBackButton = view.findViewById(R.id.go_back_button_details);
 
@@ -69,13 +78,6 @@ public class AppointmentDetailsFragment extends Fragment {
             FragmentManager fragmentManager = getParentFragmentManager();
             fragmentManager.popBackStack();
         });
-
-        if (appointment.getImageUrl() != null && !appointment.getImageUrl().isEmpty()) {
-            imageView.setVisibility(View.VISIBLE);
-            Glide.with(this)
-                    .load(appointment.getImageUrl())
-                    .into(imageView);
-        }
 
         return view;
     }

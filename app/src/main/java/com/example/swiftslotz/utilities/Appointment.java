@@ -1,6 +1,7 @@
 package com.example.swiftslotz.utilities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Appointment implements Serializable {
@@ -17,8 +18,9 @@ public class Appointment implements Serializable {
     private List<String> involvedUsers;
 
     private Boolean isExpired;
-    public String imageUrl;
+    public List<String> imageUrls;
     public Appointment() {
+        imageUrls = new ArrayList<>();
     }
     public Appointment( String title, String date, String time, String details) {
 
@@ -118,10 +120,10 @@ public class Appointment implements Serializable {
     public void setIsExpired(Boolean expired) {
         isExpired = expired;
     }
-    public String getImageUrl() {
-        return imageUrl;
+    public List<String> getImageUrls() {
+        return imageUrls;
     }
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }

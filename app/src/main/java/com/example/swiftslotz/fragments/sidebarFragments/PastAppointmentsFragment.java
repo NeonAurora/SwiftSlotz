@@ -93,10 +93,10 @@ public class PastAppointmentsFragment extends Fragment {
             }
         });
 
-        mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(), result -> {
-            if (result != null) {
+        mGetContent = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), results -> {
+            if (results != null && results.size() > 0) {
                 // Handle the selected image URI (e.g., upload to Firebase Storage)
-                uploadImageToFirebase(result);
+                uploadImageToFirebase(results);
             }
         });
 
@@ -135,7 +135,7 @@ public class PastAppointmentsFragment extends Fragment {
         });
     }
 
-    private void uploadImageToFirebase(Uri imageUri) {
+    private void uploadImageToFirebase(List<Uri> imageUris) {
         // Implement the callback
         AppointmentManager.ImageUploadCallback uploadCallback = new AppointmentManager.ImageUploadCallback() {
             @Override
@@ -150,7 +150,7 @@ public class PastAppointmentsFragment extends Fragment {
         };
 
         // Call the method to upload the image
-        appointmentManager.uploadImageToFirebaseStorage(imageUri, currentAppointmentKey, uploadCallback);
+        appointmentManager.uploadImagesToFirebaseStorage(imageUris, currentAppointmentKey, uploadCallback);
     }
 
     private void navigateToAppointmentDetails(Appointment appointment) {
