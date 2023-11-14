@@ -57,6 +57,7 @@ public class AppointmentDetailsFragment extends Fragment {
         TextView dateView = view.findViewById(R.id.appointment_date_details);
         TextView timeView = view.findViewById(R.id.appointment_time_details);
         TextView detailsView = view.findViewById(R.id.appointment_details_details);
+        TextView hostUserView = view.findViewById(R.id.hosted_by_user_textview_details);
         TextView durationView = view.findViewById(R.id.appointment_duration_details);
         involvedUsersRecyclerView = view.findViewById(R.id.involved_users_recyclerview);
         imagesRecyclerView = view.findViewById(R.id.appointment_images_recyclerview);
@@ -80,6 +81,11 @@ public class AppointmentDetailsFragment extends Fragment {
         timeView.setText(appointment.getTime());
         detailsView.setText(appointment.getDetails());
         durationView.setText(String.valueOf(appointment.getDuration()) + " minutes");
+
+        // Fetch and set the Host user's name
+        appointmentManager.getUserNameFromFirebaseKey(appointment.getHostUserFirebaseKey(), userName -> {
+            hostUserView.setText(userName);
+        });
 
         goBackButton.setOnClickListener(v -> {
             FragmentManager fragmentManager = getParentFragmentManager();

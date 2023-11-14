@@ -15,10 +15,12 @@ public class Appointment implements Serializable {
     private int durationInMinutes;
 
     private String requestingUserFirebaseKey;
+    public String hostUserFirebaseKey;
     private List<String> involvedUsers;
 
     private Boolean isExpired;
     public List<String> imageUrls;
+    private Integer timeConstraintInMinutes;
     public Appointment() {
         imageUrls = new ArrayList<>();
     }
@@ -105,6 +107,14 @@ public class Appointment implements Serializable {
         this.requestingUserFirebaseKey = requestingUserFirebaseKey;
     }
 
+    public String getHostUserFirebaseKey() {
+        return hostUserFirebaseKey;
+    }
+
+    public void setHostUserFirebaseKey(String hostUserFirebaseKey) {
+        this.hostUserFirebaseKey = hostUserFirebaseKey;
+    }
+
     public List<String> getInvolvedUsers() {
         return involvedUsers;
     }
@@ -116,7 +126,6 @@ public class Appointment implements Serializable {
     public Boolean getIsExpired() {
         return isExpired;
     }
-
     public void setIsExpired(Boolean expired) {
         isExpired = expired;
     }
@@ -125,5 +134,11 @@ public class Appointment implements Serializable {
     }
     public void setImageUrls(List<String> imageUrls) {
         this.imageUrls = imageUrls;
+    }
+    public Integer getTimeConstraintInMinutes() {
+        return timeConstraintInMinutes;
+    }
+    public void setTimeConstraintInMinutes(Integer timeConstraintInMinutes) {
+        this.timeConstraintInMinutes = timeConstraintInMinutes;
     }
 }

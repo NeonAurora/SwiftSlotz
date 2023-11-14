@@ -24,6 +24,7 @@
     <string name="close">close</string>
     <string name="approve_appointment">Approve_Appointment\n</string>
     <string name="reject_appointment">Reject_Appointment\n</string>
+    <item name="action_set_constraints" type="id" />
     <string-array name="units_array">
         <item>M</item>
         <item>H</item>
