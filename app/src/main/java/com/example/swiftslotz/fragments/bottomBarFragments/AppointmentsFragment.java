@@ -2,6 +2,7 @@ package com.example.swiftslotz.fragments.bottomBarFragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +26,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import java.util.concurrent.TimeUnit;
+import android.os.CountDownTimer;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,6 +46,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import cn.iwgang.countdownview.CountdownView;
+
 public class AppointmentsFragment extends Fragment implements AppointmentsAdapter.OnAppointmentInteractionListener, AppointmentManager.OnAppointmentsFetchedListener {
 
     private List<Appointment> appointments;
@@ -48,6 +55,9 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
     private RecyclerView appointmentsRecyclerView;
     private AppointmentManager appointmentManager;
     private TextView badgeTextView;
+    private CountdownView countdownView;
+    private TextView tvCountdownTimer;
+    private CountDownTimer countDownTimer;
 
     private FirebaseAuth mAuth;
 
@@ -68,6 +78,9 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
 
         appointmentsRecyclerView = view.findViewById(R.id.appointmentsRecyclerView);
         badgeTextView = view.findViewById(R.id.badge_text_view);
+        tvCountdownTimer = view.findViewById(R.id.tvCountdownTimer);
+        Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.segment);
+        tvCountdownTimer.setTypeface(typeface);
         appointments = new ArrayList<>();
         AppointmentManager appointmentManager1 = new AppointmentManager(getActivity());
         appointmentsAdapter = new AppointmentsAdapter(appointments, this, appointmentManager1);
@@ -164,6 +177,35 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
         appointments.clear();
         appointments.addAll(sortedAppointments);
         appointmentsAdapter.notifyDataSetChanged();
+
+        if (!sortedAppointments.isEmpty()) {
+            startCountdownForClosestAppointment(sortedAppointments.get(0));
+        }
+    }
+
+    private void startCountdownForClosestAppointment(Appointment closestAppointment) {
+        long timeToStart = closestAppointment.getTimeToStart();
+
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+
+        countDownTimer = new CountDownTimer(timeToStart * 1000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                tvCountdownTimer.setText(formatMillis(millisUntilFinished));
+            }
+
+            public void onFinish() {
+                tvCountdownTimer.setText("Appointment starting!");
+            }
+        }.start();
+    }
+
+    private String formatMillis(long millis) {
+        long hours = TimeUnit.MILLISECONDS.toHours(millis);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(hours);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis));
+        return String.format(Locale.getDefault(), "%02d :%02d :%02d", hours, minutes, seconds);
     }
 
     private long calculateTimeToStart(Appointment appointment) {
@@ -197,4 +239,6 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
+
 }
