@@ -50,6 +50,11 @@ public class MainActivity extends BaseActivity {
             @Override
             public void run() {
                 if (user != null) {
+                    SharedPreferences sharedPreferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("fragmentToLoad", "AppointmentsFragment");
+                    editor.apply();
+
                     startActivity(new Intent(MainActivity.this, BaseActivity.class));
                 } else {
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));

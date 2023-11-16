@@ -1,5 +1,7 @@
 package com.example.swiftslotz.fragments.bottomBarFragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,15 +27,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class AppointmentsFragment extends Fragment implements AppointmentsAdapter.OnAppointmentInteractionListener {
+public class AppointmentsFragment extends Fragment implements AppointmentsAdapter.OnAppointmentInteractionListener, AppointmentManager.OnAppointmentsFetchedListener {
 
     private List<Appointment> appointments;
     private AppointmentsAdapter appointmentsAdapter;
@@ -42,6 +50,15 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
     private TextView badgeTextView;
 
     private FirebaseAuth mAuth;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getContext() != null) {
+            appointmentManager = new AppointmentManager(getContext(), appointments, appointmentsAdapter);
+            appointmentManager.setOnAppointmentsFetchedListener(this);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,6 +75,7 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
         appointmentsRecyclerView.setAdapter(appointmentsAdapter);
 
         appointmentManager = new AppointmentManager(getActivity(), appointments, appointmentsAdapter);
+        appointmentManager.setOnAppointmentsFetchedListener(this);
 
         FloatingActionButton appointmentButton = view.findViewById(R.id.incomingRequestsAppointmentButton);
         appointmentButton.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +90,18 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
             }
         });
 
-        fetchCountOfRequestedAppointments();
+        appointmentManager.fetchCountOfRequestedAppointments(new AppointmentManager.RequestedAppointmentCountCallback() {
+
+            @Override
+            public void onFetched(int count) {
+                updateBadge(count);
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(getContext(), "Error fetching count of requested appointments: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
         return view;
     }
 
@@ -87,28 +116,26 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
         }
     }
 
-    public void fetchCountOfRequestedAppointments() {
-        DatabaseReference requestedAppointmentsRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(mAuth.getCurrentUser().getUid()).child("RequestedAppointments");
-
-        requestedAppointmentsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int count = (int) dataSnapshot.getChildrenCount();
-                updateBadge(count);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(), "Failed to fetch appointment count: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     @Override
     public void onStart() {
         super.onStart();
+        if (appointments != null) {
+            appointments.clear();
+        }
         appointmentManager.fetchAppointmentsFromDatabase();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences prefs = getActivity().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        boolean refreshNeeded = prefs.getBoolean("refreshNeeded", false);
+        if (refreshNeeded) {
+            appointmentManager.fetchAppointmentsFromDatabase();
+            prefs.edit().remove("refreshNeeded").apply();
+        }
+    }
+
 
     @Override
     public void onEditAppointment(Appointment appointment) {
@@ -119,6 +146,40 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
     public void onDeleteAppointment(Appointment appointment) {
         appointmentManager.deleteAppointment(appointment);
     }
+
+    @Override
+    public void onAppointmentsFetched(List<Appointment> fetchedAppointments) {
+        sortAndDisplayAppointments(fetchedAppointments);
+    }
+
+    private void sortAndDisplayAppointments(List<Appointment> fetchedAppointments) {
+        // Calculate time to start for each appointment and sort
+        List<Appointment> sortedAppointments = new ArrayList<>(fetchedAppointments);
+        for (Appointment appointment : sortedAppointments) {
+            appointment.setTimeToStart(calculateTimeToStart(appointment));
+        }
+        Collections.sort(sortedAppointments, (a1, a2) -> Long.compare(a1.getTimeToStart(), a2.getTimeToStart()));
+
+        // Update the adapter
+        appointments.clear();
+        appointments.addAll(sortedAppointments);
+        appointmentsAdapter.notifyDataSetChanged();
+    }
+
+    private long calculateTimeToStart(Appointment appointment) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        try {
+            Date appointmentDate = sdf.parse(appointment.getDate() + " " + appointment.getTime());
+            if (appointmentDate != null) {
+                long diffInMillis = appointmentDate.getTime() - System.currentTimeMillis();
+                return diffInMillis / 1000; // Convert milliseconds to seconds
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return Long.MAX_VALUE; // Return a large value if parsing fails
+    }
+
 
     public void startModifyAppointmentFragment(int appointmentId, String title, String date, String time, String details, String key) {
         ModifyAppointmentFragment modifyAppointmentFragment = new ModifyAppointmentFragment();

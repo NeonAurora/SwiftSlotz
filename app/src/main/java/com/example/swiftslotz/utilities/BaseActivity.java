@@ -101,6 +101,8 @@ public class BaseActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = preferences.edit();
             editor.remove("fragmentToLoad");
             editor.apply();
+
+            bottomNavigationView.setSelectedItemId(R.id.action_page1);
         }
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.adapters.AppointmentsAdapter;
 import com.example.swiftslotz.adapters.RequestedAppointmentsAdapter;
+import com.example.swiftslotz.fragments.bottomBarFragments.AppointmentsFragment;
 import com.example.swiftslotz.views.charts.CustomPieChart;
 import com.example.swiftslotz.views.charts.Sector;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,6 +52,8 @@ public class AppointmentManager {
     private DatabaseReference userDb,rootRef, globalAppointmentDb;
     private List<Sector> sectors = new ArrayList<>();
     private CustomPieChart customPieChart;
+
+    private OnAppointmentsFetchedListener appointmentsFetchedListener;
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
@@ -109,6 +112,14 @@ public class AppointmentManager {
         return sectors;
     }
 
+    public interface OnAppointmentsFetchedListener {
+        void onAppointmentsFetched(List<Appointment> appointments);
+    }
+
+    public void setOnAppointmentsFetchedListener(OnAppointmentsFetchedListener listener) {
+        this.appointmentsFetchedListener = listener;
+    }
+
     public void fetchAppointmentsFromDatabase() {
         // Fetch appointment keys for the current user
         rootRef.child("appointments").addValueEventListener(new ValueEventListener() {
@@ -121,9 +132,12 @@ public class AppointmentManager {
                         appointmentKeys.add(key);
                     }
                 }
-                // Clear existing appointments
+
+                // Clear existing appointments and sectors
                 appointments.clear();
                 sectors.clear();
+                final int totalAppointments = appointmentKeys.size();
+                final AtomicInteger fetchedAppointmentsCount = new AtomicInteger(0);
 
                 // Fetch actual appointment data using the keys
                 for (String key : appointmentKeys) {
@@ -136,17 +150,15 @@ public class AppointmentManager {
                             if (appointment != null && appointment.getDate().equals(today)) {
                                 appointment.setKey(snapshot.getKey());
                                 appointments.add(appointment);
-                                checkAndUpdateAppointmentStatuses();
-
-                                // Convert the appointment to a sector and add it to the list
                                 Sector sector = AppointmentManager.this.appointmentToSector(appointment);
                                 sectors.add(sector);
                             }
-                            if (appointmentsAdapter != null) {
-                                appointmentsAdapter.notifyDataSetChanged();
-                            }
-                            if (customPieChart != null) {
-                                customPieChart.setSectors(sectors);
+
+                            if (fetchedAppointmentsCount.incrementAndGet() == totalAppointments) {
+                                // All appointments are fetched, notify the listener
+                                if (appointmentsFetchedListener != null) {
+                                    appointmentsFetchedListener.onAppointmentsFetched(new ArrayList<>(appointments));
+                                }
                             }
                         }
 
@@ -164,6 +176,7 @@ public class AppointmentManager {
             }
         });
     }
+
 
     public void updateFCMToken() {
         FirebaseMessaging.getInstance().getToken()
@@ -898,7 +911,25 @@ public class AppointmentManager {
         return minutesUntilAppointment > timeConstraintInMinutes;
     }
 
+    public interface RequestedAppointmentCountCallback {
+        void onFetched(int count);
+        void onError(String error);
+    }
 
+    public void fetchCountOfRequestedAppointments(RequestedAppointmentCountCallback callback) {
+        DatabaseReference requestedAppointmentsRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(mAuth.getCurrentUser().getUid()).child("RequestedAppointments");
 
+        requestedAppointmentsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int count = (int) dataSnapshot.getChildrenCount();
+                callback.onFetched(count);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onError(databaseError.getMessage());
+            }
+        });
+    }
 }

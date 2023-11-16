@@ -24,6 +24,7 @@ public class Appointment implements Serializable {
     public Appointment() {
         imageUrls = new ArrayList<>();
     }
+    private long timeToStart;
     public Appointment( String title, String date, String time, String details) {
 
 
@@ -140,5 +141,11 @@ public class Appointment implements Serializable {
     }
     public void setTimeConstraintInMinutes(Integer timeConstraintInMinutes) {
         this.timeConstraintInMinutes = timeConstraintInMinutes;
+    }
+    public long getTimeToStart() {
+        return timeToStart;
+    }
+    public void setTimeToStart(long timeToStart) {
+        this.timeToStart = timeToStart;
     }
 }
