@@ -95,6 +95,11 @@ public class AppointmentManager {
 
     }
 
+    public AppointmentManager() {
+        mAuth = FirebaseAuth.getInstance();
+        updateFCMToken();
+    }
+
 
     public void setCustomPieChart(CustomPieChart customPieChart) {
         this.customPieChart = customPieChart;
@@ -892,6 +897,7 @@ public class AppointmentManager {
 
         return minutesUntilAppointment > timeConstraintInMinutes;
     }
+
 
 
 
