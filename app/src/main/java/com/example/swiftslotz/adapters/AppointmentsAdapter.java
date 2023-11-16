@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.PopupMenu;
@@ -175,6 +176,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         holder.appointmentDate.setText(appointment.getDate());
         holder.appointmentTime.setText(appointment.getTime());
         holder.appointmentDetails.setText(appointment.getDetails());
+        holder.progressBar.setProgress(appointment.getProgressPercentage());
 
         appointmentManager.getClientNameFromKey(appointment.getRequestingUserFirebaseKey(), new ClientNameCallback() {
             @Override
@@ -226,6 +228,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         TextView acceptedClientName;
 
         TextView appointmentDetails;
+        ProgressBar progressBar;
 
         ImageButton optionsButton, detailsButton;
 
@@ -238,6 +241,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             acceptedClientName = itemView.findViewById(R.id.acceptedClientName);
             optionsButton = itemView.findViewById(R.id.appointmentOptions);
             detailsButton = itemView.findViewById(R.id.details);
+            progressBar = itemView.findViewById(R.id.progressBar);
         }
     }
 }

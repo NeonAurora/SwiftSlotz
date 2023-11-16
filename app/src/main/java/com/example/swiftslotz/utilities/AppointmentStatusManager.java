@@ -28,7 +28,7 @@ public class AppointmentStatusManager {
                     appointmentManager.intervalCheck();
                     appointmentManager.fetchAppointmentsFromDatabase();
                     appointmentManager.checkAndUpdateAppointmentStatuses();
-                    handler.postDelayed(this, 5000);
+                    handler.postDelayed(this, 60000);
                 }
             }
         };

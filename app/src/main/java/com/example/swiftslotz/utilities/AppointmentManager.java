@@ -133,11 +133,18 @@ public class AppointmentManager {
                     }
                 }
 
-                // Clear existing appointments and sectors
-                appointments.clear();
+                // Initialize appointments list if null
+                if (appointments == null) {
+                    appointments = new ArrayList<>();
+                } else {
+                    appointments.clear();
+                }
                 sectors.clear();
                 final int totalAppointments = appointmentKeys.size();
                 final AtomicInteger fetchedAppointmentsCount = new AtomicInteger(0);
+
+                // Create a temporary list to hold fetched appointments
+                List<Appointment> tempAppointments = new ArrayList<>();
 
                 // Fetch actual appointment data using the keys
                 for (String key : appointmentKeys) {
@@ -149,15 +156,17 @@ public class AppointmentManager {
                             String today = sdf.format(new Date());
                             if (appointment != null && appointment.getDate().equals(today)) {
                                 appointment.setKey(snapshot.getKey());
-                                appointments.add(appointment);
+                                tempAppointments.add(appointment);
                                 Sector sector = AppointmentManager.this.appointmentToSector(appointment);
                                 sectors.add(sector);
                             }
 
                             if (fetchedAppointmentsCount.incrementAndGet() == totalAppointments) {
-                                // All appointments are fetched, notify the listener
+                                // All appointments are fetched, update the main list and notify the listener
+                                appointments.clear();
+                                appointments.addAll(tempAppointments);
                                 if (appointmentsFetchedListener != null) {
-                                    appointmentsFetchedListener.onAppointmentsFetched(new ArrayList<>(appointments));
+                                    appointmentsFetchedListener.onAppointmentsFetched(appointments);
                                 }
                             }
                         }
@@ -176,6 +185,7 @@ public class AppointmentManager {
             }
         });
     }
+
 
 
     public void updateFCMToken() {
@@ -402,7 +412,7 @@ public class AppointmentManager {
             involvedUsers.add(currentUserId);  // The host (current user)
             involvedUsers.add(appointment.getRequestingUserFirebaseKey());  // The requesting user
             appointment.setInvolvedUsers(involvedUsers);
-
+            appointment.setCreationTimestamp(System.currentTimeMillis());
             // Write to globalAppointmentDb
             globalAppointmentRef.setValue(appointment).addOnSuccessListener(aVoid -> {
                 // Update the host's appointments node with the global unique key

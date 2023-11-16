@@ -25,6 +25,8 @@ public class Appointment implements Serializable {
         imageUrls = new ArrayList<>();
     }
     private long timeToStart;
+    public int progressPercentage;
+    private long creationTimestamp;
     public Appointment( String title, String date, String time, String details) {
 
 
@@ -147,5 +149,18 @@ public class Appointment implements Serializable {
     }
     public void setTimeToStart(long timeToStart) {
         this.timeToStart = timeToStart;
+    }
+    public int getProgressPercentage() {
+        return progressPercentage;
+    }
+
+    public void setProgressPercentage(int progressPercentage) {
+        this.progressPercentage = progressPercentage;
+    }
+    public long getCreationTimestamp() {
+        return creationTimestamp;
+    }
+    public void setCreationTimestamp(long creationTimestamp) {
+        this.creationTimestamp = creationTimestamp;
     }
 }
