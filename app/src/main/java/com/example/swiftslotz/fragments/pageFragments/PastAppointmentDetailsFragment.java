@@ -18,7 +18,7 @@ import com.example.swiftslotz.adapters.InvolvedUsersAdapter;
 import com.example.swiftslotz.adapters.ImageAdapter;
 import com.example.swiftslotz.utilities.AppointmentManager;
 
-public class AppointmentDetailsFragment extends Fragment {
+public class PastAppointmentDetailsFragment extends Fragment {
 
     private Appointment appointment;
     private RecyclerView involvedUsersRecyclerView, imagesRecyclerView;
@@ -26,8 +26,8 @@ public class AppointmentDetailsFragment extends Fragment {
     private ImageAdapter imageAdapter;
     private AppointmentManager appointmentManager;
 
-    public static AppointmentDetailsFragment newInstance(Appointment appointment, AppointmentManager appointmentManager) {
-        AppointmentDetailsFragment fragment = new AppointmentDetailsFragment();
+    public static PastAppointmentDetailsFragment newInstance(Appointment appointment, AppointmentManager appointmentManager) {
+        PastAppointmentDetailsFragment fragment = new PastAppointmentDetailsFragment();
         Bundle args = new Bundle();
         args.putSerializable("appointment", appointment); // Ensure Appointment is Serializable
         fragment.setAppointmentManager(appointmentManager);

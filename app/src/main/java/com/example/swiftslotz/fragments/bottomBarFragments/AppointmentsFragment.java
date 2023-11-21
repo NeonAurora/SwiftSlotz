@@ -27,6 +27,7 @@ import com.example.swiftslotz.fragments.pageFragments.ModifyAppointmentFragment;
 import com.example.swiftslotz.fragments.pageFragments.RequestedAppointmentsFragment;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
+import com.example.swiftslotz.utilities.AppointmentStatusManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import java.text.ParseException;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class AppointmentsFragment extends Fragment implements AppointmentsAdapter.OnAppointmentInteractionListener, AppointmentManager.OnAppointmentsFetchedListener {
+public class AppointmentsFragment extends Fragment implements AppointmentsAdapter.OnAppointmentInteractionListener, AppointmentManager.OnAppointmentsFetchedListener, AppointmentManager.AppointmentUpdateListener {
 
     private List<Appointment> appointments;
     private AppointmentsAdapter appointmentsAdapter;
@@ -57,7 +58,17 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
         if (getContext() != null) {
             appointmentManager = new AppointmentManager(getContext(), appointments, appointmentsAdapter);
             appointmentManager.setOnAppointmentsFetchedListener(this);
+            appointmentManager.setAppointmentUpdateListener(this);
+//            appointmentManager.checkListener();
+
+            AppointmentStatusManager appointmentStatusManager = AppointmentStatusManager.getInstance(getContext());
+            appointmentStatusManager.setAppointmentUpdateListener(this);
+        } else {
+            Log.e("AppointmentsFragment", "Context is null");
         }
+
+
+
 
         progressUpdateRunnable = new Runnable() {
             @Override
@@ -67,6 +78,8 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
             }
         };
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -128,9 +141,9 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
     @Override
     public void onStart() {
         super.onStart();
-        if (appointments != null) {
-            appointments.clear();
-        }
+//        if (appointments != null) {
+//            appointments.clear();
+//        }
         appointmentManager.fetchAppointmentsFromDatabase();
     }
 
@@ -167,16 +180,25 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
 
     @Override
     public void onAppointmentsFetched(List<Appointment> fetchedAppointments) {
+        appointments.clear();
+        appointments.addAll(fetchedAppointments);
         sortAndDisplayAppointments(fetchedAppointments);
+        appointmentsAdapter.notifyDataSetChanged();
     }
 
     private void updateAppointmentProgress(List<Appointment> appointments) {
         for (Appointment appointment : appointments) {
             long timeToStart = calculateTimeToStart(appointment);
             appointment.setTimeToStart(timeToStart);
-            long totalDuration = getTotalDuration(appointment);
-            int progressPercentage = calculateProgressPercentage(timeToStart, totalDuration);
-            appointment.setProgressPercentage(progressPercentage);
+            if (timeToStart <= 0) {
+                appointment.setProgressVisible(false);
+            } else {
+                long totalDuration = getTotalDuration(appointment);
+                int progressPercentage = calculateProgressPercentage(timeToStart, totalDuration);
+                appointment.setProgressPercentage(progressPercentage);
+                appointment.setProgressVisible(true);
+            }
+
         }
         appointmentsAdapter.notifyDataSetChanged();
     }
@@ -265,6 +287,37 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
         return Long.MAX_VALUE; // Return a large value if parsing fails
     }
 
+    @Override
+    public void onAppointmentsUpdated() {
+        refreshAppointmentsList();
+    }
+    @Override
+    public void onAppointmentExpired(Appointment appointment) {
+        removeExpiredAppointment(appointment.getKey());
+    }
+
+    private void removeExpiredAppointment(String appointmentKey) {
+        for (int i = 0; i < appointments.size(); i++) {
+            if (appointments.get(i).getKey().equals(appointmentKey)) {
+                appointments.remove(i);
+                appointmentsAdapter.notifyItemRemoved(i);
+                return;
+            }
+        }
+    }
+
+    public void refreshAppointmentsList() {
+        if (appointmentManager != null) {
+            appointmentManager.fetchAppointmentsFromDatabase();
+            appointmentsAdapter.notifyDataSetChanged();
+
+            Log.e("AppointmentsFragment", "Appointments list refreshed");
+        } else {
+            Log.e("AppointmentsFragment", "AppointmentManager is null");
+        }
+    }
+
+
     public void startModifyAppointmentFragment(int appointmentId, String title, String date, String time, String details, String key) {
         ModifyAppointmentFragment modifyAppointmentFragment = new ModifyAppointmentFragment();
         Bundle bundle = new Bundle();
@@ -282,3 +335,5 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
         transaction.commit();
     }
 }
+
+

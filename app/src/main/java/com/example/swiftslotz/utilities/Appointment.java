@@ -18,7 +18,7 @@ public class Appointment implements Serializable {
     public String hostUserFirebaseKey;
     private List<String> involvedUsers;
 
-    private Boolean isExpired;
+    private String status;
     public List<String> imageUrls;
     private Integer timeConstraintInMinutes;
     public Appointment() {
@@ -27,6 +27,7 @@ public class Appointment implements Serializable {
     private long timeToStart;
     public int progressPercentage;
     private long creationTimestamp;
+    private boolean progressVisible;
     public Appointment( String title, String date, String time, String details) {
 
 
@@ -47,7 +48,7 @@ public class Appointment implements Serializable {
         this.durationInMinutes = durationInMinutes;
     }
 
-    public Appointment( String title, String date, String time, String details, int durationInMinutes, Boolean isExpired) {
+    public Appointment( String title, String date, String time, String details, int durationInMinutes, String status) {
 
 
         this.title = title;
@@ -55,7 +56,7 @@ public class Appointment implements Serializable {
         this.time = time;
         this.details = details;
         this.durationInMinutes = durationInMinutes;
-        this.isExpired = isExpired;
+        this.status = status;
     }
 
     public int getId() {
@@ -125,12 +126,11 @@ public class Appointment implements Serializable {
     public void setInvolvedUsers(List<String> involvedUsers) {
         this.involvedUsers = involvedUsers;
     }
-
-    public Boolean getIsExpired() {
-        return isExpired;
+    public String getStatus() {
+        return status;
     }
-    public void setIsExpired(Boolean expired) {
-        isExpired = expired;
+    public void setStatus(String status) {
+        this.status = status;
     }
     public List<String> getImageUrls() {
         return imageUrls;
@@ -162,5 +162,11 @@ public class Appointment implements Serializable {
     }
     public void setCreationTimestamp(long creationTimestamp) {
         this.creationTimestamp = creationTimestamp;
+    }
+    public boolean isProgressVisible() {
+        return progressVisible;
+    }
+    public void setProgressVisible(boolean progressVisible) {
+        this.progressVisible = progressVisible;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.swiftslotz.adapters;
 
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -7,6 +8,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -16,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.MenuItem;
 
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,12 +32,15 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
 import com.example.swiftslotz.utilities.ClientNameCallback;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
@@ -108,6 +116,26 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         return currentUserId.equals(appointment.getHostUserFirebaseKey());
     }
 
+    private void changeBackgroundGradient(View view) {
+        Drawable backgroundImage = ContextCompat.getDrawable(view.getContext(), R.drawable.notif_back_image);
+
+        GradientDrawable gradientDrawable = new GradientDrawable(
+                GradientDrawable.Orientation.LEFT_RIGHT,
+                new int[] {
+                        Color.parseColor("#466cdd"), // 100% opacity
+                        Color.parseColor("#8093a9eb"), // 50% opacity
+                        Color.parseColor("#1Ae9eefb")  // 10% opacity
+                }
+        );
+
+        Drawable[] layers = {backgroundImage, gradientDrawable};
+        LayerDrawable layerDrawable = new LayerDrawable(layers);
+
+        view.setBackground(layerDrawable);
+    }
+
+
+
     private void showDialogToSetConstraint(Context context, String appointmentKey) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -169,6 +197,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         return size.x;
     }
 
+    public void updateProgressSmoothly(LinearProgressIndicator progressBar, int newProgress) {
+        ObjectAnimator animation = ObjectAnimator.ofInt(progressBar, "progress", newProgress);
+        animation.setDuration(500); // Set duration in milliseconds (e.g., 200ms)
+        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        animation.start();
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Appointment appointment = appointments.get(position);
@@ -176,7 +211,20 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         holder.appointmentDate.setText(appointment.getDate());
         holder.appointmentTime.setText(appointment.getTime());
         holder.appointmentDetails.setText(appointment.getDetails());
-        holder.progressBar.setProgress(appointment.getProgressPercentage());
+
+        if(appointment.isProgressVisible()){
+            holder.progressBar.setVisibility(View.VISIBLE);
+            updateProgressSmoothly(holder.progressBar, appointment.getProgressPercentage());
+        } else {
+            holder.progressBar.setVisibility(View.GONE);
+        }
+
+        if (appointment.getTimeToStart() <= 0) {
+            changeBackgroundGradient(holder.constraintLayout);
+        } else {
+            // Reset to original background if needed
+            holder.constraintLayout.setBackgroundResource(R.drawable.notify_background);
+        }
 
         appointmentManager.getClientNameFromKey(appointment.getRequestingUserFirebaseKey(), new ClientNameCallback() {
             @Override
@@ -226,9 +274,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         TextView appointmentDate;
         TextView appointmentTime;
         TextView acceptedClientName;
+        ConstraintLayout     constraintLayout;
 
         TextView appointmentDetails;
-        ProgressBar progressBar;
+        ProgressBar progressBar2;
+        LinearProgressIndicator progressBar;
 
         ImageButton optionsButton, detailsButton;
 
@@ -241,7 +291,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             acceptedClientName = itemView.findViewById(R.id.acceptedClientName);
             optionsButton = itemView.findViewById(R.id.appointmentOptions);
             detailsButton = itemView.findViewById(R.id.details);
-            progressBar = itemView.findViewById(R.id.progressBar);
+            progressBar = itemView.findViewById(R.id.material_progress_bar);
+            constraintLayout = itemView.findViewById(R.id.appointmentItemContainer);
         }
     }
 }

@@ -19,5 +19,8 @@
     <color name="btnBack">#F4F4F4</color>
     <color name="btnText">#371414</color>
     <color name="red">#FF0000</color>
+    <color name="gradientStartColor">#ffFF6A1F</color>
+    <color name="gradientCenterColor">#ddFF6A1F</color>
+    <color name="gradientEndColor">#00EE82EE</color>
 
 </resources>

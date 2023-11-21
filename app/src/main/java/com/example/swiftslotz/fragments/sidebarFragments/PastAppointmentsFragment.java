@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.swiftslotz.R;
-import com.example.swiftslotz.fragments.pageFragments.AppointmentDetailsFragment;
+import com.example.swiftslotz.fragments.pageFragments.PastAppointmentDetailsFragment;
 import com.example.swiftslotz.fragments.pageFragments.RemovedAppointmentsFragment;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
@@ -154,11 +154,11 @@ public class PastAppointmentsFragment extends Fragment {
     }
 
     private void navigateToAppointmentDetails(Appointment appointment) {
-        AppointmentDetailsFragment appointmentDetailsFragment = AppointmentDetailsFragment.newInstance(appointment, appointmentManager);
+        PastAppointmentDetailsFragment pastAppointmentDetailsFragment = PastAppointmentDetailsFragment.newInstance(appointment, appointmentManager);
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_frame, appointmentDetailsFragment);
+        fragmentTransaction.replace(R.id.content_frame, pastAppointmentDetailsFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
