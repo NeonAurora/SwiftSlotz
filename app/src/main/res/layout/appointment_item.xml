@@ -30,6 +30,7 @@
             android:id="@+id/acceptedClientName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#000"
             android:layout_marginTop="2dp"
             android:text="Client Name"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="Appointment Date"
+            android:textColor="#000"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/acceptedClientName" />
@@ -73,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="Appointment Time"
+            android:textColor="#000"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/textView4"
             app:layout_constraintTop_toBottomOf="@+id/acceptedClientName" />
@@ -82,6 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:textColor="#000"
             android:text="Appointment Details"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appointmentTitle" />
@@ -94,6 +98,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:text="at"
+            android:textColor="#000"
             app:layout_constraintStart_toEndOf="@+id/appointmentDate"
             app:layout_constraintTop_toBottomOf="@+id/acceptedClientName" />
 
@@ -103,12 +108,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="copy the code to share"
+            android:textColor="#000"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appointmentDate" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/material_progress_bar"
-            android:layout_width="366dp"
+            android:layout_width="match_parent"
             android:layout_height="7dp"
             android:indeterminate="false"
             app:trackThickness="4dp"
