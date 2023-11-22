@@ -13,14 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.swiftslotz.BuildConfig;
+
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.adapters.AppointmentsAdapter;
 import com.example.swiftslotz.fragments.pageFragments.ModifyAppointmentFragment;
@@ -190,15 +190,24 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
         for (Appointment appointment : appointments) {
             long timeToStart = calculateTimeToStart(appointment);
             appointment.setTimeToStart(timeToStart);
-            if (timeToStart <= 0) {
-                appointment.setProgressVisible(false);
-            } else {
-                long totalDuration = getTotalDuration(appointment);
-                int progressPercentage = calculateProgressPercentage(timeToStart, totalDuration);
-                appointment.setProgressPercentage(progressPercentage);
-                appointment.setProgressVisible(true);
-            }
 
+            if (timeToStart <= 0) {
+                // Once the appointment starts, hide the linear progress bar and show the circular progress bar
+                appointment.setLinearProgressVisible(false);
+                long elapsedTimeSinceStart = Math.abs(timeToStart); // Convert to positive value
+                int duration = appointment.getDuration(); // Total duration in minutes
+                long totalDurationInSeconds = duration * 60; // Convert minutes to seconds
+                int circularProgressPercentage = (int) ((elapsedTimeSinceStart * 100) / totalDurationInSeconds);
+                appointment.setCircularProgressPercentage(circularProgressPercentage);
+                appointment.setCircularProgressVisible(true);
+            } else {
+                // Before the appointment starts, only show the linear progress bar
+                long totalDuration = getTotalDuration(appointment);
+                int linearProgressPercentage = calculateProgressPercentage(timeToStart, totalDuration);
+                appointment.setLinearProgressPercentage(linearProgressPercentage);
+                appointment.setLinearProgressVisible(true);
+                appointment.setCircularProgressVisible(false);
+            }
         }
         appointmentsAdapter.notifyDataSetChanged();
     }

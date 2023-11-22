@@ -25,7 +25,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.PopupMenu;
@@ -40,6 +39,7 @@ import com.example.swiftslotz.R;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
 import com.example.swiftslotz.utilities.ClientNameCallback;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -212,11 +212,18 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         holder.appointmentTime.setText(appointment.getTime());
         holder.appointmentDetails.setText(appointment.getDetails());
 
-        if(appointment.isProgressVisible()){
-            holder.progressBar.setVisibility(View.VISIBLE);
-            updateProgressSmoothly(holder.progressBar, appointment.getProgressPercentage());
+        if(appointment.isLinearProgressVisible()){
+            holder.linearProgressBar.setVisibility(View.VISIBLE);
+            updateProgressSmoothly(holder.linearProgressBar, appointment.getLinearProgressPercentage());
         } else {
-            holder.progressBar.setVisibility(View.GONE);
+            holder.linearProgressBar.setVisibility(View.GONE);
+        }
+
+        if(appointment.isCircularProgressVisible()) {
+            holder.circularProgressBar.setVisibility(View.VISIBLE);
+            holder.circularProgressBar.setProgress(appointment.getCircularProgressPercentage());
+        } else {
+            holder.circularProgressBar.setVisibility(View.GONE);
         }
 
         if (appointment.getTimeToStart() <= 0) {
@@ -225,6 +232,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             // Reset to original background if needed
             holder.constraintLayout.setBackgroundResource(R.drawable.notify_background);
         }
+
+
 
         appointmentManager.getClientNameFromKey(appointment.getRequestingUserFirebaseKey(), new ClientNameCallback() {
             @Override
@@ -277,8 +286,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         ConstraintLayout     constraintLayout;
 
         TextView appointmentDetails;
-        ProgressBar progressBar2;
-        LinearProgressIndicator progressBar;
+        LinearProgressIndicator linearProgressBar;
+        CircularProgressIndicator circularProgressBar;
 
         ImageButton optionsButton, detailsButton;
 
@@ -291,7 +300,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             acceptedClientName = itemView.findViewById(R.id.acceptedClientName);
             optionsButton = itemView.findViewById(R.id.appointmentOptions);
             detailsButton = itemView.findViewById(R.id.details);
-            progressBar = itemView.findViewById(R.id.material_progress_bar);
+            linearProgressBar = itemView.findViewById(R.id.material_progress_bar);
+            circularProgressBar = itemView.findViewById(R.id.circular_progress_bar);
             constraintLayout = itemView.findViewById(R.id.appointmentItemContainer);
         }
     }

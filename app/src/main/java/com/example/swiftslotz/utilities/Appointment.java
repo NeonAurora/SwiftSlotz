@@ -25,9 +25,11 @@ public class Appointment implements Serializable {
         imageUrls = new ArrayList<>();
     }
     private long timeToStart;
-    public int progressPercentage;
+    public int linearProgressPercentage;
+    public int circularProgressPercentage;
     private long creationTimestamp;
-    private boolean progressVisible;
+    private boolean linearProgressVisible;
+    private boolean circularProgressVisible;
     public Appointment( String title, String date, String time, String details) {
 
 
@@ -150,12 +152,12 @@ public class Appointment implements Serializable {
     public void setTimeToStart(long timeToStart) {
         this.timeToStart = timeToStart;
     }
-    public int getProgressPercentage() {
-        return progressPercentage;
+    public int getLinearProgressPercentage() {
+        return linearProgressPercentage;
     }
 
-    public void setProgressPercentage(int progressPercentage) {
-        this.progressPercentage = progressPercentage;
+    public void setLinearProgressPercentage(int linearProgressPercentage) {
+        this.linearProgressPercentage = linearProgressPercentage;
     }
     public long getCreationTimestamp() {
         return creationTimestamp;
@@ -163,10 +165,22 @@ public class Appointment implements Serializable {
     public void setCreationTimestamp(long creationTimestamp) {
         this.creationTimestamp = creationTimestamp;
     }
-    public boolean isProgressVisible() {
-        return progressVisible;
+    public boolean isLinearProgressVisible() {
+        return linearProgressVisible;
     }
-    public void setProgressVisible(boolean progressVisible) {
-        this.progressVisible = progressVisible;
+    public void setLinearProgressVisible(boolean linearProgressVisible) {
+        this.linearProgressVisible = linearProgressVisible;
+    }
+    public int getCircularProgressPercentage() {
+        return circularProgressPercentage;
+    }
+    public void setCircularProgressPercentage(int circularProgressPercentage) {
+        this.circularProgressPercentage = circularProgressPercentage;
+    }
+    public boolean isCircularProgressVisible() {
+        return circularProgressVisible;
+    }
+    public void setCircularProgressVisible(boolean circularProgressVisible) {
+        this.circularProgressVisible = circularProgressVisible;
     }
 }

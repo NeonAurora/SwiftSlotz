@@ -1,6 +1,7 @@
 package com.example.swiftslotz.fragments.bottomBarFragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.utilities.User;
 import com.example.swiftslotz.adapters.UserAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +37,8 @@ public class SearchFragment extends Fragment {
     private List<User> searchResults;
     private UserAdapter userAdapter;
     private List<String> firebaseKeys = new ArrayList<>();
+    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    String currentUserId = currentUser != null ? currentUser.getUid() : null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +74,7 @@ public class SearchFragment extends Fragment {
     }
 
     private void searchForUser(String query) {
+        Log.d("SearchFragment", "User ID" + currentUserId);
         usersDb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -76,17 +82,19 @@ public class SearchFragment extends Fragment {
                 firebaseKeys.clear();
                 boolean userFound = false;
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                    User user = userSnapshot.getValue(User.class);
                     String key = userSnapshot.getKey();
-                    boolean cond= user.getUsername().toLowerCase().contains(query) ||
-                            user.getFirstName().toLowerCase().contains(query) ||
-                            user.getLastName().toLowerCase().contains(query) ||
-                            user.getOccupation().toLowerCase().contains(query) ||
-                            user.getAddress().toLowerCase().contains(query) ;
-                    if (user != null && cond ) {
-                        searchResults.add(user);
-                        firebaseKeys.add(key);
-                        userFound = true;
+                    if (!key.equals(currentUserId)) { // Exclude the current user
+                        User user = userSnapshot.getValue(User.class);
+                        boolean cond = user != null && (user.getUsername().toLowerCase().contains(query) ||
+                                user.getFirstName().toLowerCase().contains(query) ||
+                                user.getLastName().toLowerCase().contains(query) ||
+                                user.getOccupation().toLowerCase().contains(query) ||
+                                user.getAddress().toLowerCase().contains(query));
+                        if (cond) {
+                            searchResults.add(user);
+                            firebaseKeys.add(key);
+                            userFound = true;
+                        }
                     }
                 }
                 if (!userFound) {
@@ -102,6 +110,7 @@ public class SearchFragment extends Fragment {
         });
     }
 
+
     private void getAllUser() {
         usersDb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -109,10 +118,12 @@ public class SearchFragment extends Fragment {
                 searchResults.clear();
                 firebaseKeys.clear();
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                    User user = userSnapshot.getValue(User.class);
-                    String key = userSnapshot.getKey();
-                    searchResults.add(user);
-                    firebaseKeys.add(key);
+                    if (!userSnapshot.getKey().equals(currentUserId)) {
+                        User user = userSnapshot.getValue(User.class);
+                        String key = userSnapshot.getKey();
+                        searchResults.add(user);
+                        firebaseKeys.add(key);
+                    }
 
                 }
                 userAdapter.notifyDataSetChanged();
