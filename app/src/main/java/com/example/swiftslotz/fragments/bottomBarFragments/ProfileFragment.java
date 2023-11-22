@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +32,7 @@ import com.google.firebase.storage.StorageReference;
 
 public class ProfileFragment extends Fragment {
 
-    private TextView firstName, lastName, username, email, phone, occupation, address;
+    private EditText firstName, lastName, username, email, phone, occupation, address;
     private ImageView profileImage;
     private Button uploadPhotoButton, logoutButton;
 
