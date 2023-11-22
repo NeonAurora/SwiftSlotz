@@ -112,7 +112,7 @@ public class AddAppointmentFragment extends Fragment {
             public void onClick(View v) {
                 String appointmentTitle = appointmentTitleEditText.getText().toString();
                 String appointmentText = appointmentEditText.getText().toString();
-                String selectedTimeString = selectedTimeTextView.getText().toString().replace("Selected Time: ", "");
+                String selectedTimeString = selectTimeButton.getText().toString().replace("Selected Time: ", "");
                 String selectedDateString = sdf.format(selectedDate.getTime());
                 int appointmentDuration = Integer.parseInt(appointmentDurationEditText.getText().toString());
                 String unit = unitSpinner.getSelectedItem().toString();
@@ -181,7 +181,7 @@ public class AddAppointmentFragment extends Fragment {
                 int hour = materialTimePicker.getHour();
                 int minute = materialTimePicker.getMinute();
                 String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
-                selectedTimeTextView.setText("Selected Time: " + formattedTime);
+                selectTimeButton.setText("Selected Time: " + formattedTime);
             }
         });
 

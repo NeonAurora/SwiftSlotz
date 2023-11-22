@@ -164,7 +164,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
-            tools:listitem="@layout/item_image"/>
+            tools:layout_editor_absoluteX="0dp"
+            tools:listitem="@layout/item_image" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
