@@ -2,8 +2,13 @@ package com.example.swiftslotz.fragments.bottomBarFragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -41,6 +47,8 @@ public class ProfileFragment extends Fragment {
     private DatabaseReference userDb;
     private StorageReference storageReference;
 
+    private final long TEXT_WATCHER_DELAY = 500;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,6 +66,8 @@ public class ProfileFragment extends Fragment {
         uploadPhotoButton = view.findViewById(R.id.uploadPhotoButton);
         logoutButton = view.findViewById(R.id.logoutButton);
         updateInfoButton = view.findViewById(R.id.updateInfoButton);
+        updateInfoButton.setEnabled(false);
+        updateInfoButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.fadedButton));
 
         mAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -82,8 +92,23 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
+        updateInfoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateUserInfo();
+            }
+        });
+
+        setupTextWatchers();
         return view;
     }
+
+    private void enableUpdateButton() {
+        updateInfoButton.setEnabled(true);
+        int tomatoColor = ContextCompat.getColor(getContext(), R.color.tomato);
+        updateInfoButton.setBackgroundColor(tomatoColor); // Or any other color indicating it's enabled
+    }
+
 
     private void fetchUserDetails() {
         userDb.addValueEventListener(new ValueEventListener() {
@@ -143,4 +168,60 @@ public class ProfileFragment extends Fragment {
             })).addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
         }
     }
+
+    private void updateUserInfo() {
+        String updatedFirstName = firstName.getText().toString().trim();
+        String updatedLastName = lastName.getText().toString().trim();
+        String updatedEmail = email.getText().toString().trim();
+        String updatedPhone = phone.getText().toString().trim();
+        String updatedOccupation = occupation.getText().toString().trim();
+        String updatedAddress = address.getText().toString().trim();
+
+        // Check if first name or last name is empty
+        if (updatedFirstName.isEmpty() || updatedLastName.isEmpty()) {
+            Toast.makeText(getActivity(), "First name and last name cannot be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (mAuth.getCurrentUser() != null) {
+            String userId = mAuth.getCurrentUser().getUid();
+            userDb.child("firstName").setValue(updatedFirstName);
+            userDb.child("lastName").setValue(updatedLastName);
+            userDb.child("email").setValue(updatedEmail);
+            userDb.child("phone").setValue(updatedPhone);
+            userDb.child("occupation").setValue(updatedOccupation);
+            userDb.child("address").setValue(updatedAddress);
+
+            Toast.makeText(getActivity(), "Profile updated", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "Failed to update profile", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setupTextWatchers() {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            TextWatcher textWatcher = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    enableUpdateButton();
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) { }
+            };
+
+            firstName.addTextChangedListener(textWatcher);
+            lastName.addTextChangedListener(textWatcher);
+            email.addTextChangedListener(textWatcher);
+            phone.addTextChangedListener(textWatcher);
+            occupation.addTextChangedListener(textWatcher);
+            address.addTextChangedListener(textWatcher);
+        }, TEXT_WATCHER_DELAY);
+    }
+
+
+
 }
