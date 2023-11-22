@@ -32,7 +32,7 @@ import com.google.firebase.storage.StorageReference;
 
 public class ProfileFragment extends Fragment {
 
-    private EditText firstName, lastName, username, email, phone, occupation, address;
+    private TextView firstName, lastName, username, email, phone, occupation, address;
     private ImageView profileImage;
     private Button uploadPhotoButton, logoutButton;
 
