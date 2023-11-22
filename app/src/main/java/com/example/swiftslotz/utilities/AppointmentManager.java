@@ -168,11 +168,18 @@ public class AppointmentManager {
                                 if (appointment != null) {
                                     appointment.setKey(appointmentKey);
                                     appointments.add(appointment);
+
+                                    Sector sector = AppointmentManager.this.appointmentToSector(appointment);
+                                    sectors.add(sector);
                                 }
 
                                 // Notify listener after all appointments have been fetched and added to the list
                                 if (appointmentsFetchedListener != null) {
                                     appointmentsFetchedListener.onAppointmentsFetched(new ArrayList<>(appointments));
+                                }
+
+                                if(customPieChart != null) {
+                                    customPieChart.setSectors(sectors);
                                 }
                             }
 
@@ -392,12 +399,13 @@ public class AppointmentManager {
         startAngle -= 90;
 
         // Use a default color for now. You can change this to use different colors for different appointments.
-        int color = Color.RED;
+        int colorAM = Color.RED;
+        int colorPM = Color.CYAN;
 
         String title = appointment.getTitle();
         String time = appointment.getTime();
         // Create and return the new Sector object.
-        return new Sector(startAngle, sweepAngle, color, title, time);
+        return new Sector(startAngle, sweepAngle, colorAM, colorPM, title, time);
     }
 
     // Method to approve an appointment

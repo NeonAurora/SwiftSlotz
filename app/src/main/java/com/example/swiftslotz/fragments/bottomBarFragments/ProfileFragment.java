@@ -32,9 +32,10 @@ import com.google.firebase.storage.StorageReference;
 
 public class ProfileFragment extends Fragment {
 
-    private TextView firstName, lastName, username, email, phone, occupation, address;
+    private EditText firstName, lastName, email, phone, occupation, address;
+    private TextView username;
     private ImageView profileImage;
-    private Button uploadPhotoButton, logoutButton;
+    private Button uploadPhotoButton, logoutButton, updateInfoButton;
 
     private FirebaseAuth mAuth;
     private DatabaseReference userDb;
@@ -46,16 +47,17 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         // Initialize UI components
-        firstName = view.findViewById(R.id.user_firstName);
-        lastName = view.findViewById(R.id.user_lastName);
+        firstName = view.findViewById(R.id.profileEditFirstName);
+        lastName = view.findViewById(R.id.profileEditLastName);
         username = view.findViewById(R.id.user_username);
-        email = view.findViewById(R.id.user_email);
-        phone = view.findViewById(R.id.user_phone);
-        occupation = view.findViewById(R.id.user_occupation);
-        address = view.findViewById(R.id.user_address);
-        profileImage = view.findViewById(R.id.profile_image);
-        uploadPhotoButton = view.findViewById(R.id.upload_photo_button);
-        logoutButton = view.findViewById(R.id.logout_button);
+        email = view.findViewById(R.id.profileEditEmail);
+        phone = view.findViewById(R.id.profileEditPhoneNumber);
+        occupation = view.findViewById(R.id.profileEditCompany);
+        address = view.findViewById(R.id.profileEditAddress);
+        profileImage = view.findViewById(R.id.profileImage);
+        uploadPhotoButton = view.findViewById(R.id.uploadPhotoButton);
+        logoutButton = view.findViewById(R.id.logoutButton);
+        updateInfoButton = view.findViewById(R.id.updateInfoButton);
 
         mAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();

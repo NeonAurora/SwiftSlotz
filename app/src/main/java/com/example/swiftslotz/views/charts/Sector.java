@@ -3,14 +3,16 @@ package com.example.swiftslotz.views.charts;
 public class Sector {
     private float startAngle;
     private float sweepAngle;
-    private int color;
+    private int colorAM;
+    private int colorPM;
     private String title;
     private String time;
 
-    public Sector(float startAngle, float sweepAngle, int color, String title, String time) {
+    public Sector(float startAngle, float sweepAngle, int colorAM, int colorPM, String title, String time) {
         this.startAngle = startAngle;
         this.sweepAngle = sweepAngle;
-        this.color = color;
+        this.colorAM = colorAM;
+        this.colorPM = colorPM;
         this.title = title;
         this.time = time;
     }
@@ -23,8 +25,12 @@ public class Sector {
         return sweepAngle;
     }
 
-    public int getColor() {
-        return color;
+    public int getColorAM() {
+        return colorAM;
+    }
+
+    public int getColorPM() {
+        return colorPM;
     }
 
     public String getTitle() { return title; }

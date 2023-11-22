@@ -74,7 +74,7 @@ public class CustomPieChart extends View {
         for (Sector sector : sectorsAM) {
             Log.d("Circular value of Cx", String.valueOf(cx));
             Log.d("Circular value of Cy", String.valueOf(cy));
-            paint.setColor(sector.getColor());
+            paint.setColor(sector.getColorAM());
             canvas.drawArc(cx - outerRadius, cy - outerRadius, cx + outerRadius, cy + outerRadius,
                     sector.getStartAngle(), sector.getSweepAngle(), true, paint);
         }
@@ -82,7 +82,7 @@ public class CustomPieChart extends View {
         for (Sector sector : sectorsPM) {
             Log.d("Circular value of Cx", String.valueOf(cx));
             Log.d("Circular value of Cy", String.valueOf(cy));
-            paint.setColor(sector.getColor());
+            paint.setColor(sector.getColorPM());
             canvas.drawArc(cx - innerRadius, cy - innerRadius, cx + innerRadius, cy + innerRadius,
                     sector.getStartAngle(), sector.getSweepAngle(), true, paint);
         }

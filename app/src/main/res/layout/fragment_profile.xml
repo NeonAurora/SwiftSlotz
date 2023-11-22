@@ -9,19 +9,18 @@
 
 
     <Button
-        android:id="@+id/update_button"
+        android:id="@+id/updateInfoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/user_address"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="20dp"
         android:text="Update"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText4" />
+        app:layout_constraintTop_toBottomOf="@+id/profileEditCompany" />
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/profileEditPhoneNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -33,10 +32,10 @@
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/upload_photo_button" />
+        app:layout_constraintTop_toBottomOf="@+id/uploadPhotoButton" />
 
     <EditText
-        android:id="@+id/editTextText2"
+        android:id="@+id/profileEditEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -49,11 +48,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+        app:layout_constraintTop_toBottomOf="@+id/profileEditPhoneNumber" />
 
 
     <EditText
-        android:id="@+id/editTextText3"
+        android:id="@+id/profileEditAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -66,13 +65,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.35"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
+        app:layout_constraintTop_toBottomOf="@+id/profileEditEmail" />
 
     <Button
-        android:id="@+id/upload_photo_button"
+        android:id="@+id/uploadPhotoButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/user_address"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="5dp"
@@ -83,15 +81,15 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout8" />
 
     <Button
-        android:id="@+id/logout_button"
+        android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/upload_photo_button"
+        android:layout_below="@id/uploadPhotoButton"
         android:layout_centerHorizontal="true"
         android:layout_marginRight="30dp"
         android:text="Log Out"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/update_button" />
+        app:layout_constraintTop_toBottomOf="@+id/updateInfoButton" />
 
     <LinearLayout
         android:id="@+id/linearLayout8"
@@ -106,7 +104,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/profile_image"
+            android:id="@+id/profileImage"
             android:layout_width="163dp"
             android:layout_height="159dp" />
 
@@ -121,12 +119,11 @@
                 android:id="@+id/user_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/user_lastName"
                 android:text="Username"
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/editTextText"
+                android:id="@+id/profileEditFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -134,7 +131,7 @@
                 android:inputType="text" />
 
             <EditText
-                android:id="@+id/editTextText2"
+                android:id="@+id/profileEditLastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -144,68 +141,8 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/user_lastName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/user_firstName"
-        android:text="Last Name"
-        android:textSize="18sp"
-        tools:layout_editor_absoluteX="193dp"
-        tools:layout_editor_absoluteY="615dp" />
-
-    <TextView
-        android:id="@+id/user_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/user_username"
-        android:text="Email"
-        android:textSize="18sp"
-        tools:layout_editor_absoluteX="201dp"
-        tools:layout_editor_absoluteY="668dp" />
-
-    <TextView
-        android:id="@+id/user_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/user_email"
-        android:text="Phone"
-        android:textSize="18sp"
-        tools:layout_editor_absoluteX="306dp"
-        tools:layout_editor_absoluteY="635dp" />
-
-    <TextView
-        android:id="@+id/user_occupation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/user_phone"
-        android:text="Company"
-        android:textSize="18sp"
-        tools:layout_editor_absoluteX="271dp"
-        tools:layout_editor_absoluteY="668dp" />
-
-    <TextView
-        android:id="@+id/user_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/user_occupation"
-        android:text="Address"
-        android:textSize="18sp"
-        tools:layout_editor_absoluteX="287dp"
-        tools:layout_editor_absoluteY="595dp" />
-
-    <TextView
-        android:id="@+id/user_firstName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/profile_image"
-        android:text="First Name"
-        android:textSize="18sp"
-        tools:layout_editor_absoluteX="67dp"
-        tools:layout_editor_absoluteY="679dp" />
-
     <EditText
-        android:id="@+id/editTextText4"
+        android:id="@+id/profileEditCompany"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -216,6 +153,6 @@
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText3" />
+        app:layout_constraintTop_toBottomOf="@+id/profileEditAddress" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
