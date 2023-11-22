@@ -50,7 +50,6 @@ public class AddAppointmentFragment extends Fragment {
         appointmentEditText = view.findViewById(R.id.appointmentEditText);
         addAppointmentButton = view.findViewById(R.id.addAppointmentButton);
         selectTimeButton = view.findViewById(R.id.selectTimeButton);
-        selectedTimeTextView = view.findViewById(R.id.selectedTimeTextView);
         appointmentDurationEditText = view.findViewById(R.id.appointmentDurationEditText);
         unitSpinner = view.findViewById(R.id.unitSpinner);
         scrollLeftButton = view.findViewById(R.id.scrollLeftButton);  // New initialization
