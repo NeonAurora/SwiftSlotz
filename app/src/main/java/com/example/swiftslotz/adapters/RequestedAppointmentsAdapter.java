@@ -1,5 +1,7 @@
 package com.example.swiftslotz.adapters;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +21,18 @@ import java.util.List;
 
 public class RequestedAppointmentsAdapter extends RecyclerView.Adapter<RequestedAppointmentsAdapter.ViewHolder> {
 
+    public interface OnLastAppointmentApprovedListener {
+        void onLastAppointmentApproved();
+    }
+
+
     private List<Appointment> requestedAppointments;
     AppointmentManager appointmentManager;
+    private Context context;
+    private OnLastAppointmentApprovedListener listener;
 
-    public RequestedAppointmentsAdapter(List<Appointment> requestedAppointments, AppointmentManager appointmentManager) {
+    public RequestedAppointmentsAdapter(Context context, List<Appointment> requestedAppointments, AppointmentManager appointmentManager) {
+        this.context = context;
         this.requestedAppointments = requestedAppointments;
         this.appointmentManager = appointmentManager;
     }
@@ -32,6 +42,10 @@ public class RequestedAppointmentsAdapter extends RecyclerView.Adapter<Requested
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.requested_appointment_item, parent, false);
         return new ViewHolder(view);
+    }
+
+    public void setOnLastAppointmentApprovedListener(OnLastAppointmentApprovedListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -56,14 +70,23 @@ public class RequestedAppointmentsAdapter extends RecyclerView.Adapter<Requested
         });
 
         // Approve button click listener
+        // Approve button click listener
         holder.approveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Appointment appointment = requestedAppointments.get(position);
                 String appointmentKey = appointment.getKey();
                 appointmentManager.approveAppointment(appointment, appointmentKey);  // Using rootRef here
+
+                // Check if this is the last appointment and notify the listener
+                if (requestedAppointments.size() == 1 && listener != null) {
+                    listener.onLastAppointmentApproved();
+                }
+                SharedPreferences prefs = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+                prefs.edit().putBoolean("refreshNeeded", true).apply();
             }
         });
+
 
         // Reject button click listener
         holder.rejectButton.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +94,9 @@ public class RequestedAppointmentsAdapter extends RecyclerView.Adapter<Requested
             public void onClick(View v) {
                 String appointmentKey = requestedAppointments.get(position).getKey();
                 appointmentManager.rejectAppointment(appointmentKey);  // Using rootRef here
+                if (requestedAppointments.size() == 1 && listener != null) {
+                    listener.onLastAppointmentApproved();
+                }
             }
         });
     }

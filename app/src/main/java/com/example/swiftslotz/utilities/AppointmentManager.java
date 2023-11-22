@@ -8,10 +8,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.swiftslotz.BuildConfig;
+import com.example.swiftslotz.R;
 import com.example.swiftslotz.adapters.AppointmentsAdapter;
 import com.example.swiftslotz.adapters.RequestedAppointmentsAdapter;
+import com.example.swiftslotz.fragments.bottomBarFragments.AppointmentsFragment;
 import com.example.swiftslotz.views.charts.CustomPieChart;
 import com.example.swiftslotz.views.charts.Sector;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,11 +36,16 @@ import com.google.firebase.storage.StorageReference;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AppointmentManager {
@@ -48,6 +57,10 @@ public class AppointmentManager {
     private DatabaseReference userDb,rootRef, globalAppointmentDb;
     private List<Sector> sectors = new ArrayList<>();
     private CustomPieChart customPieChart;
+
+    private OnAppointmentsFetchedListener appointmentsFetchedListener;
+
+    private AppointmentUpdateListener updateListener;
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
@@ -92,6 +105,11 @@ public class AppointmentManager {
 
     }
 
+    public AppointmentManager() {
+        mAuth = FirebaseAuth.getInstance();
+        updateFCMToken();
+    }
+
 
     public void setCustomPieChart(CustomPieChart customPieChart) {
         this.customPieChart = customPieChart;
@@ -101,52 +119,69 @@ public class AppointmentManager {
         return sectors;
     }
 
+    public interface OnAppointmentsFetchedListener {
+        void onAppointmentsFetched(List<Appointment> appointments);
+    }
+
+    public void setOnAppointmentsFetchedListener(OnAppointmentsFetchedListener listener) {
+        this.appointmentsFetchedListener = listener;
+    }
+
+
+    public interface AppointmentUpdateListener {
+        void onAppointmentsUpdated();
+        void onAppointmentExpired(Appointment appointment);
+    }
+
+
+    public void setAppointmentUpdateListener(AppointmentUpdateListener listener) {
+        this.updateListener = listener;
+    }
+
+    public void checkListener() {
+        if (updateListener != null) {
+            Log.e("AppointmentManager", "Update listener is not null");
+        } else {
+            Log.e("AppointmentManager", "Update listener is null");
+        }
+    }
+
     public void fetchAppointmentsFromDatabase() {
-        // Fetch appointment keys for the current user
         rootRef.child("appointments").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<String> appointmentKeys = new ArrayList<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String key = snapshot.getKey();
-                    if (key != null) {
-                        appointmentKeys.add(key);
-                    }
+                // Clear existing appointments list
+                if (appointments == null) {
+                    appointments = new ArrayList<>();
+                } else {
+                    appointments.clear();
                 }
-                // Clear existing appointments
-                appointments.clear();
-                sectors.clear();
 
-                // Fetch actual appointment data using the keys
-                for (String key : appointmentKeys) {
-                    globalAppointmentDb.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            Appointment appointment = snapshot.getValue(Appointment.class);
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                            String today = sdf.format(new Date());
-                            if (appointment != null && appointment.getDate().equals(today)) {
-                                appointment.setKey(snapshot.getKey());
-                                appointments.add(appointment);
-                                checkAndUpdateAppointmentStatuses();
+                // Iterate over the appointment keys and fetch details from globalAppointmentDb
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    final String appointmentKey = snapshot.getKey();
+                    if (appointmentKey != null) {
+                        globalAppointmentDb.child(appointmentKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot appointmentSnapshot) {
+                                Appointment appointment = appointmentSnapshot.getValue(Appointment.class);
+                                if (appointment != null) {
+                                    appointment.setKey(appointmentKey);
+                                    appointments.add(appointment);
+                                }
 
-                                // Convert the appointment to a sector and add it to the list
-                                Sector sector = AppointmentManager.this.appointmentToSector(appointment);
-                                sectors.add(sector);
+                                // Notify listener after all appointments have been fetched and added to the list
+                                if (appointmentsFetchedListener != null) {
+                                    appointmentsFetchedListener.onAppointmentsFetched(new ArrayList<>(appointments));
+                                }
                             }
-                            if (appointmentsAdapter != null) {
-                                appointmentsAdapter.notifyDataSetChanged();
-                            }
-                            if (customPieChart != null) {
-                                customPieChart.setSectors(sectors);
-                            }
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            // Handle error
-                        }
-                    });
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                // Handle error
+                            }
+                        });
+                    }
                 }
             }
 
@@ -156,6 +191,9 @@ public class AppointmentManager {
             }
         });
     }
+
+
+
 
     public void updateFCMToken() {
         FirebaseMessaging.getInstance().getToken()
@@ -276,26 +314,30 @@ public class AppointmentManager {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Appointment globalAppointment = snapshot.getValue(Appointment.class);
                     if (globalAppointment != null) {
-                        // Step 2: Save the fetched appointment details under the user's PastAppointments node
-                        DatabaseReference pastAppointmentsRef = rootRef.child("RemovedAppointments");
-                        pastAppointmentsRef.child(appointment.getKey()).setValue(globalAppointment)
-                                .addOnSuccessListener(aVoid -> {
-                                    // Step 3: Remove the appointment from the user's appointments node
-                                    userDb.child(appointment.getKey()).removeValue()
-                                            .addOnSuccessListener(aVoid2 -> {
-                                                // Step 4: Remove the user's ID from the involvedUsers list in the global appointment collection
-                                                List<String> involvedUsers = globalAppointment.getInvolvedUsers();
-                                                if (involvedUsers != null) {
-                                                    involvedUsers.remove(mAuth.getCurrentUser().getUid());
-                                                    globalAppointmentDb.child(appointment.getKey()).child("involvedUsers").setValue(involvedUsers)
-                                                            .addOnSuccessListener(aVoid3 -> Toast.makeText(context, "Appointment moved to history and user removed from involved users successfully", Toast.LENGTH_SHORT).show())
-                                                            .addOnFailureListener(e -> Toast.makeText(context, "Failed to remove user from involved users: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                                                    appointmentsAdapter.notifyDataSetChanged();
-                                                }
-                                            })
-                                            .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                                })
-                                .addOnFailureListener(e -> Toast.makeText(context, "Failed to move appointment to history: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                        if (canDeleteAppointment(globalAppointment)) {
+                            // Step 2: Save the fetched appointment details under the user's PastAppointments node
+                            DatabaseReference pastAppointmentsRef = rootRef.child("RemovedAppointments");
+                            pastAppointmentsRef.child(appointment.getKey()).setValue(globalAppointment)
+                                    .addOnSuccessListener(aVoid -> {
+                                        // Step 3: Remove the appointment from the user's appointments node
+                                        userDb.child(appointment.getKey()).removeValue()
+                                                .addOnSuccessListener(aVoid2 -> {
+                                                    // Step 4: Remove the user's ID from the involvedUsers list in the global appointment collection
+                                                    List<String> involvedUsers = globalAppointment.getInvolvedUsers();
+                                                    if (involvedUsers != null) {
+                                                        involvedUsers.remove(mAuth.getCurrentUser().getUid());
+                                                        globalAppointmentDb.child(appointment.getKey()).child("involvedUsers").setValue(involvedUsers)
+                                                                .addOnSuccessListener(aVoid3 -> Toast.makeText(context, "Appointment moved to history and user removed from involved users successfully", Toast.LENGTH_SHORT).show())
+                                                                .addOnFailureListener(e -> Toast.makeText(context, "Failed to remove user from involved users: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                                                        appointmentsAdapter.notifyDataSetChanged();
+                                                    }
+                                                })
+                                                .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                                    })
+                                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to move appointment to history: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                        } else {
+                            Toast.makeText(context, "Cannot delete the appointment due to time constraint", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(context, "Failed to fetch appointment details from global collection", Toast.LENGTH_SHORT).show();
                     }
@@ -320,7 +362,7 @@ public class AppointmentManager {
                     String clientName = dataSnapshot.child("username").getValue(String.class);
                     if (clientName != null) {
                         callback.onClientNameReceived(clientName);
-                        Log.e("Client Name", clientName);
+                        Log.d("Client Name", clientName);
                     } else {
                         callback.onError("Client name is null");
                     }
@@ -367,30 +409,35 @@ public class AppointmentManager {
         String globalAppointmentKey = globalAppointmentRef.getKey();
 
         if (globalAppointmentKey != null) {
+            String currentUserId = mAuth.getCurrentUser().getUid();
+
+            // Set the current user's Firebase key as the host user Firebase key
+            appointment.setHostUserFirebaseKey(currentUserId);
+
             // Add involved users to the appointment object
             List<String> involvedUsers = new ArrayList<>();
-            involvedUsers.add(mAuth.getCurrentUser().getUid());  // Boss
-            involvedUsers.add(appointment.getRequestingUserFirebaseKey());  // Underling
+            involvedUsers.add(currentUserId);  // The host (current user)
+            involvedUsers.add(appointment.getRequestingUserFirebaseKey());  // The requesting user
             appointment.setInvolvedUsers(involvedUsers);
-
-            // Step 1: Write to globalAppointmentDb
+            appointment.setCreationTimestamp(System.currentTimeMillis());
+            // Write to globalAppointmentDb
             globalAppointmentRef.setValue(appointment).addOnSuccessListener(aVoid -> {
-                // Step 2: Update the boss's appointments node with the global unique key
+                // Update the host's appointments node with the global unique key
                 userDb.child(globalAppointmentKey).setValue(true);
 
-                // Step 3: Update the underling's appointments node with the global unique key
-                DatabaseReference underlingDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                // Update the requesting user's appointments node with the global unique key
+                DatabaseReference requestingUserDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
                         .getReference("users")
                         .child(appointment.getRequestingUserFirebaseKey())
                         .child("appointments");
-                underlingDb.child(globalAppointmentKey).setValue(true);
+                requestingUserDb.child(globalAppointmentKey).setValue(true);
 
-                // Step 4: Delete from RequestedAppointments
+                // Delete from RequestedAppointments
                 requestedAppointmentsRef.removeValue();
                 Toast.makeText(context, "Appointment approved successfully", Toast.LENGTH_SHORT).show();
 
-                // Step 5: Send a notification to the requesting user
-                sendApprovalNotification(appointment.getRequestingUserFirebaseKey(), mAuth.getCurrentUser().getUid());
+                // Send a notification to the requesting user
+                sendApprovalNotification(appointment.getRequestingUserFirebaseKey(), currentUserId);
 
             }).addOnFailureListener(e -> {
                 Log.e("ApproveAppointmentError", "Error writing to globalAppointmentDb: " + e.getMessage());
@@ -399,6 +446,7 @@ public class AppointmentManager {
             Log.e("ApproveAppointmentError", "Global appointment key is null");
         }
     }
+
 
     private void sendApprovalNotification(String requestingUserFirebaseKey, String approverFirebaseKey) {
         DatabaseReference requestingUserRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
@@ -610,65 +658,99 @@ public class AppointmentManager {
 
     public void checkAndUpdateAppointmentStatuses() {
         String currentDateTime = SDF.format(new Date());
-        Log.d("Check Update Function", "Function called");
 
         for (Appointment appointment : appointments) {
-            Log.d("Appointments", "For loop running");
-            if (isAppointmentExpired(appointment.getDate(), appointment.getTime(), currentDateTime)) {
-                Log.d("IF cycle", "IF block executed");
-                appointment.setIsExpired(true);
-                Log.d("IsExpired", "Set to True");
-                updateAppointmentStatus(appointment);
-            }
+            String status = getAppointmentStatus(appointment.getDate(), appointment.getTime(), appointment.getDuration(), currentDateTime);
+            appointment.setStatus(status);
+            updateAppointmentStatus(appointment);
+            Log.d("Appointment Status", status);
         }
     }
 
+
+
     // Helper method to determine if an appointment is expired
-    private boolean isAppointmentExpired(String appointmentDate, String appointmentTime, String currentDateTime) {
+    private String getAppointmentStatus(String appointmentDate, String appointmentTime, int durationInMinutes, String currentDateTime) {
         String appointmentDateTime = appointmentDate + " " + appointmentTime;
         try {
             Date appointmentDateObj = SDF.parse(appointmentDateTime);
             Date currentDateObj = SDF.parse(currentDateTime);
-            return currentDateObj.after(appointmentDateObj);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(appointmentDateObj);
+            calendar.add(Calendar.MINUTE, durationInMinutes);
+            Date appointmentEndDateTime = calendar.getTime();
+
+            if (currentDateObj.before(appointmentDateObj)) {
+                return "upcoming";
+            } else if (currentDateObj.equals(appointmentDateObj) || (currentDateObj.after(appointmentDateObj) && currentDateObj.before(appointmentEndDateTime))) {
+                return "running";
+            } else if (currentDateObj.after(appointmentEndDateTime) || currentDateObj.equals(appointmentEndDateTime)) {
+                return "expired";
+            } else {
+                Log.e("StatusError", "Status is undefined");
+                return "undefined";
+            }
         } catch (ParseException e) {
             Log.e("AppointmentManager", "Error parsing dates", e);
-            return false;
+            return "error";
         }
     }
+
+
+
 
     // Method to update the appointment status in the database
     private void updateAppointmentStatus(Appointment appointment) {
         if (appointment.getKey() != null) {
-            // Reference to the current appointment in AppointmentCollection
             DatabaseReference appointmentRef = globalAppointmentDb.child(appointment.getKey());
 
-            // Set the appointment as expired
-            appointmentRef.child("isExpired").setValue(true)
-                    .addOnSuccessListener(aVoid -> {
-                        Log.d("AppointmentManager", "Appointment status updated successfully");
+            switch (appointment.getStatus()) {
+                case "running":
+                    // Set the appointment as currently running
+                    appointmentRef.child("status").setValue("running")
+                            .addOnSuccessListener(aVoid -> Log.d("AppointmentManager", "Appointment status set to currently running successfully"))
+                            .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to set appointment as currently running", e));
+                    break;
 
-                        // Move the appointment to ExpiredAppointmentsCollection
-                        DatabaseReference expiredRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
-                                .getReference("ExpiredAppointmentsCollection")
-                                .child(appointment.getKey());
-                        expiredRef.setValue(appointment)
-                                .addOnSuccessListener(aVoid1 -> {
-                                    Log.d("AppointmentManager", "Appointment moved to ExpiredAppointmentsCollection successfully");
+                case "expired":
+                    // Set the appointment as expired and move it to ExpiredAppointmentsCollection
+                    appointmentRef.child("status").setValue("expired")
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d("AppointmentManager", "Appointment status set to expired successfully");
+                                moveAppointmentToExpiredCollection(appointment, appointmentRef);
+                            })
+                            .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to set appointment as expired", e));
+                    break;
 
-                                    // Remove the appointment from AppointmentCollection
-                                    appointmentRef.removeValue()
-                                            .addOnSuccessListener(aVoid2 -> {
-                                                Log.d("AppointmentManager", "Appointment removed from AppointmentCollection successfully");
-
-                                                // Notify involved users and update their lists
-                                                updateUsersAppointmentLists(appointment);
-                                            })
-                                            .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to remove appointment from AppointmentCollection", e));
-                                })
-                                .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to move appointment to ExpiredAppointmentsCollection", e));
-                    })
-                    .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to update appointment status", e));
+                case "upcoming":
+                    // For upcoming appointments, no action is needed in this method
+                    break;
+            }
         }
+    }
+
+    private void moveAppointmentToExpiredCollection(Appointment appointment, DatabaseReference appointmentRef) {
+        DatabaseReference expiredRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                .getReference("ExpiredAppointmentsCollection")
+                .child(appointment.getKey());
+        expiredRef.setValue(appointment)
+                .addOnSuccessListener(aVoid1 -> {
+                    Log.d("AppointmentManager", "Appointment moved to ExpiredAppointmentsCollection successfully");
+                    appointmentRef.removeValue()
+                            .addOnSuccessListener(aVoid2 -> {
+                                Log.d("AppointmentManager", "Appointment removed from AppointmentCollection successfully");
+                                updateUsersAppointmentLists(appointment);
+                                if (updateListener != null) {
+                                    updateListener.onAppointmentsUpdated();
+                                    updateListener.onAppointmentExpired(appointment);
+                                } else {
+                                    Log.e("AppointmentManager", "Update listener is null");
+                                }
+                            })
+                            .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to remove appointment from AppointmentCollection", e));
+                })
+                .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to move appointment to ExpiredAppointmentsCollection", e));
     }
 
     private void updateUsersAppointmentLists(Appointment appointment) {
@@ -851,5 +933,54 @@ public class AppointmentManager {
         void onError(String error);
     }
 
+    public void setAppointmentTimeConstraint(String appointmentKey, int durationInMinutes) {
+        DatabaseReference appointmentRef = globalAppointmentDb.child(appointmentKey);
 
+        appointmentRef.child("timeConstraintInMinutes").setValue(durationInMinutes)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("TimeConstraint", "Time constraint updated successfully");
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure (e.g., show an error message)
+                    Log.e("TimeConstraint", "Failed to update time constraint: " + e.getMessage());
+                });
+    }
+
+    private boolean canDeleteAppointment(Appointment appointment) {
+        Integer timeConstraintInMinutes = appointment.getTimeConstraintInMinutes();
+        if (timeConstraintInMinutes == null) {
+            return true; // No constraint set
+        }
+
+        String appointmentDateTimeString = appointment.getDate() + " " + appointment.getTime();
+        LocalDateTime appointmentDateTime = LocalDateTime.parse(appointmentDateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        // Calculate the time difference in minutes
+        long minutesUntilAppointment = ChronoUnit.MINUTES.between(currentTime, appointmentDateTime);
+
+        return minutesUntilAppointment > timeConstraintInMinutes;
+    }
+
+    public interface RequestedAppointmentCountCallback {
+        void onFetched(int count);
+        void onError(String error);
+    }
+
+    public void fetchCountOfRequestedAppointments(RequestedAppointmentCountCallback callback) {
+        DatabaseReference requestedAppointmentsRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(mAuth.getCurrentUser().getUid()).child("RequestedAppointments");
+
+        requestedAppointmentsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int count = (int) dataSnapshot.getChildrenCount();
+                callback.onFetched(count);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onError(databaseError.getMessage());
+            }
+        });
+    }
 }

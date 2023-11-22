@@ -56,7 +56,7 @@ public class JoinAppointmentFragment extends Fragment {
         TextView timeView = view.findViewById(R.id.appointment_time);
         TextView detailsView = view.findViewById(R.id.appointment_details);
         TextView durationView = view.findViewById(R.id.appointment_duration);
-//        TextView requestingUserView = view.findViewById(R.id.appointment_requesting_user);
+        TextView hostUserView = view.findViewById(R.id.hosted_by_user_textview);
         involvedUsersRecyclerView = view.findViewById(R.id.involved_users_recyclerview);
         involvedUsersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         involvedUsersAdapter = new InvolvedUsersAdapter(getContext(), new ArrayList<>());
@@ -79,9 +79,9 @@ public class JoinAppointmentFragment extends Fragment {
                 durationView.setText(String.valueOf(fetchedAppointment.getDuration())+" minutes");
 
                 // Fetch and set the requesting user's name
-//                appointmentManager.getUserNameFromFirebaseKey(fetchedAppointment.getRequestingUserFirebaseKey(), userName -> {
-//                    requestingUserView.setText(userName);
-//                });
+                appointmentManager.getUserNameFromFirebaseKey(fetchedAppointment.getHostUserFirebaseKey(), userName -> {
+                    hostUserView.setText(userName);
+                });
 
                 // Update the RecyclerView
                 involvedUsersAdapter.updateInvolvedUsers(fetchedAppointment.getInvolvedUsers());

@@ -25,10 +25,10 @@ public class AppointmentStatusManager {
                     if (appointmentManager == null) {
                         initializeAppointmentManager();
                     }
-                    appointmentManager.intervalCheck();
+//                    appointmentManager.checkListener();
                     appointmentManager.fetchAppointmentsFromDatabase();
                     appointmentManager.checkAndUpdateAppointmentStatuses();
-                    handler.postDelayed(this, 5000);
+                    handler.postDelayed(this, 1000);
                 }
             }
         };
@@ -46,6 +46,12 @@ public class AppointmentStatusManager {
             instance = new AppointmentStatusManager(context);
         }
         return instance;
+    }
+
+    public void setAppointmentUpdateListener(AppointmentManager.AppointmentUpdateListener listener) {
+        if (appointmentManager != null) {
+            appointmentManager.setAppointmentUpdateListener(listener);
+        }
     }
 
     public void start() {

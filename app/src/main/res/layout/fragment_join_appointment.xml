@@ -92,6 +92,25 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/hosted_by_textview"
+        android:text="Host User is: "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+
+    <TextView
+        android:id="@+id/hosted_by_user_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toEndOf="@id/hosted_by_textview"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout4"/>
+
+    <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -99,7 +118,7 @@
         android:layout_marginTop="15dp"
         android:text="Appointed users are :"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+        app:layout_constraintTop_toBottomOf="@+id/hosted_by_textview" />
 
     <LinearLayout
         android:layout_width="wrap_content"

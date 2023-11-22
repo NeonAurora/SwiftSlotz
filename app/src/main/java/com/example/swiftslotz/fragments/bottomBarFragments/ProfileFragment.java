@@ -86,7 +86,7 @@ public class ProfileFragment extends Fragment {
         userDb.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
+                if (dataSnapshot.exists() && isAdded()) {
                     // Set user details from the database to the TextViews
                     firstName.setText(dataSnapshot.child("firstName").getValue(String.class));
                     lastName.setText(dataSnapshot.child("lastName").getValue(String.class));
@@ -96,12 +96,14 @@ public class ProfileFragment extends Fragment {
                     occupation.setText(dataSnapshot.child("occupation").getValue(String.class));
                     address.setText(dataSnapshot.child("address").getValue(String.class));
 
-                    // Load profile image if it exists in the database
+                     //Load profile image if it exists in the database
                     if (dataSnapshot.hasChild("profileImageUrl")) {
                         String imageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
-                        Glide.with(ProfileFragment.this).load(imageUrl).into(profileImage);
+                        if (getActivity() != null) {
+                            Glide.with(getActivity()).load(imageUrl).into(profileImage);
+                        }
                     }
-                } else {
+                } else if(isAdded()) {
                     Toast.makeText(getActivity(), "Failed to load user details", Toast.LENGTH_SHORT).show();
                 }
             }
