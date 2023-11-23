@@ -30,10 +30,7 @@ public class RequestedAppointmentsFragment extends Fragment {
         requestedAppointmentsAdapter.setOnLastAppointmentApprovedListener(new RequestedAppointmentsAdapter.OnLastAppointmentApprovedListener() {
             @Override
             public void onLastAppointmentApproved() {
-                // Navigate to AppointmentsFragment
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.content_frame, new AppointmentsFragment());
-                transaction.commit();
+
             }
         });
     }

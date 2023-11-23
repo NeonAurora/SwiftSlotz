@@ -82,8 +82,8 @@ public class RequestedAppointmentsAdapter extends RecyclerView.Adapter<Requested
                 if (requestedAppointments.size() == 1 && listener != null) {
                     listener.onLastAppointmentApproved();
                 }
-                SharedPreferences prefs = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
-                prefs.edit().putBoolean("refreshNeeded", true).apply();
+//                SharedPreferences prefs = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+//                prefs.edit().putBoolean("refreshNeeded", true).apply();
             }
         });
 

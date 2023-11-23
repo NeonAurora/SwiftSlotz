@@ -95,7 +95,7 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
     private void setupViews(View view) {
         badgeTextView = view.findViewById(R.id.badge_text_view);
         tvCountdownTimer = view.findViewById(R.id.tvCountdownTimer);
-        Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.segment);
+        Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.silverballbold);
         tvCountdownTimer.setTypeface(typeface);
     }
 
@@ -298,7 +298,7 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
 
     @Override
     public void onAppointmentsUpdated() {
-        refreshAppointmentsList();
+//        refreshAppointmentsList();
     }
     @Override
     public void onAppointmentExpired(Appointment appointment) {
