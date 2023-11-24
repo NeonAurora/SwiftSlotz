@@ -16,18 +16,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <TextView
         android:id="@+id/tvCountdownTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textColor="@color/black"
-        android:text="HH:MM:SS"
-        android:textSize="20sp"
+        android:layout_marginTop="56dp"
         android:padding="10dp"
-        app:layout_constraintStart_toEndOf="@+id/timerText"
+        android:text="Looking for appointments..."
+        android:letterSpacing="0.2"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/appointmentsRecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/appointmentsRecyclerView"
@@ -61,8 +65,8 @@
             android:background="@drawable/badge_background"
             android:elevation="7dp"
             android:gravity="center"
-            android:textColor="@color/white"
             android:padding="5dp"
+            android:textColor="@color/white"
             android:textSize="@dimen/text.size.small"
             android:visibility="gone"
             tools:text="10" />

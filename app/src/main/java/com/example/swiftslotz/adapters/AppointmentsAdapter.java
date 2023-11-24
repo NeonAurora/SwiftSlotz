@@ -122,9 +122,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         GradientDrawable gradientDrawable = new GradientDrawable(
                 GradientDrawable.Orientation.LEFT_RIGHT,
                 new int[] {
-                        Color.parseColor("#466cdd"), // 100% opacity
+                        Color.parseColor("#aa466cdd"), // 100% opacity
                         Color.parseColor("#8093a9eb"), // 50% opacity
-                        Color.parseColor("#1Ae9eefb")  // 10% opacity
+                        Color.parseColor("#00e9eefb")  // 10% opacity
                 }
         );
 
@@ -221,9 +221,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
         if(appointment.isCircularProgressVisible()) {
             holder.circularProgressBar.setVisibility(View.VISIBLE);
+            holder.circularProgressIndicator2.setVisibility(View.VISIBLE);
             holder.circularProgressBar.setProgress(appointment.getCircularProgressPercentage());
         } else {
             holder.circularProgressBar.setVisibility(View.GONE);
+            holder.circularProgressIndicator2.setVisibility(View.GONE);
         }
 
         if (appointment.getTimeToStart() <= 0) {
@@ -287,7 +289,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
         TextView appointmentDetails;
         LinearProgressIndicator linearProgressBar;
-        CircularProgressIndicator circularProgressBar;
+        CircularProgressIndicator circularProgressBar, circularProgressIndicator2;
 
         ImageButton optionsButton, detailsButton;
 
@@ -302,6 +304,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             detailsButton = itemView.findViewById(R.id.details);
             linearProgressBar = itemView.findViewById(R.id.material_progress_bar);
             circularProgressBar = itemView.findViewById(R.id.circular_progress_bar);
+            circularProgressIndicator2 = itemView.findViewById(R.id.circular_progress_bar2);
             constraintLayout = itemView.findViewById(R.id.appointmentItemContainer);
         }
     }

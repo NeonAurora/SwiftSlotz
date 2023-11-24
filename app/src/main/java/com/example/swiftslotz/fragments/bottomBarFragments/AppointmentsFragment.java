@@ -244,7 +244,7 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
             }
 
             public void onFinish() {
-                tvCountdownTimer.setText("Appointment starting!");
+                tvCountdownTimer.setText("Appointment Running!");
             }
         }.start();
     }

@@ -25,5 +25,6 @@
     <color name="gradientCenterColor">#ddFF6A1F</color>
     <color name="gradientEndColor">#00EE82EE</color>
     <color name="fadedButton">#f7d9ca</color>
+    <color name="circularPIcolor">#ff9966</color>
 
 </resources>

@@ -34,6 +34,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -59,6 +62,7 @@ public class AppointmentManager {
     private CustomPieChart customPieChart;
 
     private OnAppointmentsFetchedListener appointmentsFetchedListener;
+    private OnRequestedAppointmentsFetchedListener requestedAppointmentsFetchedListener;
 
     private AppointmentUpdateListener updateListener;
 
@@ -144,6 +148,9 @@ public class AppointmentManager {
         } else {
             Log.e("AppointmentManager", "Update listener is null");
         }
+    }
+    public interface OnRequestedAppointmentsFetchedListener {
+        void onRequestedAppointmentsFetched(List<Appointment> appointments);
     }
 
     public void fetchAppointmentsFromDatabase() {
@@ -236,14 +243,16 @@ public class AppointmentManager {
                         appointments.add(appointment);
                     }
                 }
-                String isFlag;
                 if (requestedAppointmentsAdapter != null) {
                     requestedAppointmentsAdapter.notifyDataSetChanged();
-                    isFlag="true";
                 } else {
-                    isFlag = "False";
+                    Log.e("RequestedAppointments", "Adapter is null");
                 }
-                Log.e("IsFLAG", isFlag);
+                if (requestedAppointmentsFetchedListener != null) {
+                    requestedAppointmentsFetchedListener.onRequestedAppointmentsFetched(appointments);
+                } else {
+                    Log.e("RequestedAppointments", "Listener is null");
+                }
             }
 
             @Override
@@ -285,7 +294,15 @@ public class AppointmentManager {
                                         @Override
                                         public void onUserNameReceived(String userName) {
                                             // Send FCM notification with the username
-                                            NotificationManager.sendFCMNotification(userFcmToken, userName);
+                                            JSONObject additionalData = new JSONObject();
+                                            try {
+                                                additionalData.put("username", userName);
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                                // Handle the error or throw a custom exception
+                                            }
+
+                                            NotificationManager.sendFCMNotification(userFcmToken, "New Appointment Request", "You have a new appointment request ", additionalData);
                                         }
                                     });
                                 }
@@ -472,7 +489,15 @@ public class AppointmentManager {
                         @Override
                         public void onUserNameReceived(String approverUserName) {
                             // Send FCM notification with the approver's username
-                            NotificationManager.sendApprovalFCMNotification(requestingUserFcmToken, approverUserName, "Your appointment request has been approved.");
+                            JSONObject additionalData = new JSONObject();
+                            try {
+                                additionalData.put("username", approverUserName);
+                                additionalData.put("appointmentDetails","Your Appointment has been improved");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                // Handle the error or throw a custom exception
+                            }
+                            NotificationManager.sendFCMNotification(requestingUserFcmToken,"Appointment Approved", "Your Request with " + approverUserName + " has been approved.", additionalData);
                         }
 
                         public void onError(String error) {
@@ -538,7 +563,15 @@ public class AppointmentManager {
                         @Override
                         public void onUserNameReceived(String rejectorUserName) {
                             // Send FCM notification with the rejector's username
-                            NotificationManager.sendRejectionFCMNotification(requestingUserFcmToken, rejectorUserName, "Your appointment request has been rejected.");
+                            JSONObject additionalData = new JSONObject();
+                            try {
+                                additionalData.put("username", rejectorUserName);
+                                additionalData.put("appointmentDetails","Your Appointment has been rejected");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                // Handle the error or throw a custom exception
+                            }
+                            NotificationManager.sendFCMNotification(requestingUserFcmToken, "Appointment Rejected", "Your appointment request with " + rejectorUserName + " has been rejected.", additionalData);
                         }
                         public void onError(String error) {
                             Log.e("NotificationError", "Error fetching username for notification: " + error);
@@ -766,11 +799,11 @@ public class AppointmentManager {
         List<String> userIds = appointment.getInvolvedUsers();
         for (String userId : userIds) {
             // Reference to the user's appointments
-            DatabaseReference userAppointmentsRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+            DatabaseReference userRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
                     .getReference("users")
-                    .child(userId)
-                    .child("appointments")
-                    .child(appointment.getKey());
+                    .child(userId);
+            DatabaseReference userAppointmentsRef = userRef.child("appointments").child(appointment.getKey());
+            DatabaseReference userDeviceRef = userRef.child("device_token");
 
             // Remove the appointment from the user's list
             userAppointmentsRef.removeValue()
@@ -778,16 +811,42 @@ public class AppointmentManager {
                         Log.d("AppointmentManager", "Appointment removed from user's list successfully");
 
                         // Add only the appointment key with a value of true to the user's ExpiredAppointments list
-                        DatabaseReference userExpiredAppointmentsRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
-                                .getReference("users")
-                                .child(userId)
-                                .child("ExpiredAppointments")
-                                .child(appointment.getKey());
+                        DatabaseReference userExpiredAppointmentsRef = userRef.child("ExpiredAppointments").child(appointment.getKey());
                         userExpiredAppointmentsRef.setValue(true) // Set the value to true instead of setting the whole appointment object
                                 .addOnSuccessListener(aVoid1 -> Log.d("AppointmentManager", "Appointment key added to user's ExpiredAppointments list successfully"))
                                 .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to add appointment key to user's ExpiredAppointments list", e));
                     })
                     .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to remove appointment from user's list", e));
+
+            // Fetch the user's FCM token and send a notification
+            userDeviceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String userFcmToken = dataSnapshot.getValue(String.class);
+                    if (userFcmToken != null) {
+                        getUserNameFromFirebaseKey(userId, new UserNameCallback() {
+                            @Override
+                            public void onUserNameReceived(String userName) {
+                                JSONObject additionalData = new JSONObject();
+                                try {
+                                    additionalData.put("username", userName);
+                                    additionalData.put("appointmentDetails","Your Appointment has been expired");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    // Handle the error or throw a custom exception
+                                }
+                                Log.e("AppointmentManager", "Sending notification to user: " + userName);
+                                NotificationManager.sendFCMNotification(userFcmToken, "Appointment Expired", "Your appointment " + appointment.getTitle() + " has expired.", additionalData);
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("AppointmentManager", "Failed to fetch user's FCM token: " + databaseError.getMessage());
+                }
+            });
         }
     }
 
