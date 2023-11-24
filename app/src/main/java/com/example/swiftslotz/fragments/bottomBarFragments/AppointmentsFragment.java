@@ -3,6 +3,7 @@ package com.example.swiftslotz.fragments.bottomBarFragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -196,12 +197,22 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
                 appointment.setLinearProgressVisible(false);
                 long elapsedTimeSinceStart = Math.abs(timeToStart); // Convert to positive value
                 int duration = appointment.getDuration(); // Total duration in minutes
-                long totalDurationInSeconds = duration * 60; // Convert minutes to seconds
+                long totalDurationInSeconds = duration * 60; //convert to seconds
+                if (timeToStart == 0) {
+                    playSound(R.raw.ding_dong);
+                }
+
+                if ((totalDurationInSeconds - elapsedTimeSinceStart) == 0) {
+                    playSound(R.raw.interface_hint);
+                }
                 int circularProgressPercentage = (int) ((elapsedTimeSinceStart * 100) / totalDurationInSeconds);
                 appointment.setCircularProgressPercentage(circularProgressPercentage);
                 appointment.setCircularProgressVisible(true);
             } else {
                 // Before the appointment starts, only show the linear progress bar
+//                if (timeToStart == 0) {
+//                    playSound(R.raw.ding_dong);
+//                }
                 long totalDuration = getTotalDuration(appointment);
                 int linearProgressPercentage = calculateProgressPercentage(timeToStart, totalDuration);
                 appointment.setLinearProgressPercentage(linearProgressPercentage);
@@ -210,6 +221,12 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
             }
         }
         appointmentsAdapter.notifyDataSetChanged();
+    }
+
+    private void playSound(int soundResourceId) {
+        MediaPlayer mediaPlayer = MediaPlayer.create(getContext(), soundResourceId);
+        mediaPlayer.setOnCompletionListener(MediaPlayer::release);
+        mediaPlayer.start();
     }
 
     private void sortAndDisplayAppointments(List<Appointment> fetchedAppointments) {

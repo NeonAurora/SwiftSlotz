@@ -1,5 +1,7 @@
 package com.example.swiftslotz.utilities;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

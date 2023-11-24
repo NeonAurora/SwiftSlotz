@@ -706,9 +706,7 @@ public class AppointmentManager {
             if(!status.equals(previousStatus)) {
                 appointment.setStatus(status);
                 updateAppointmentStatus(appointment);
-                Log.d("AppointmentManager", "Appointment Status Updated");
             }
-            Log.d("AppointmentManager", "Appointment Status" + status);
         }
     }
 
@@ -747,7 +745,9 @@ public class AppointmentManager {
 
     // Method to update the appointment status in the database
     private void updateAppointmentStatus(Appointment appointment) {
+
         if (appointment.getKey() != null) {
+
             DatabaseReference appointmentRef = globalAppointmentDb.child(appointment.getKey());
 
             switch (appointment.getStatus()) {
@@ -756,6 +756,7 @@ public class AppointmentManager {
                     appointmentRef.child("status").setValue("running")
                             .addOnSuccessListener(aVoid -> Log.d("AppointmentManager", "Appointment status set to currently running successfully"))
                             .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to set appointment as currently running", e));
+                    Log.e("AppointmentManager", "Notification sending");
                     notifyUsersAppointmentRunning(appointment);
 
                     break;
@@ -771,7 +772,9 @@ public class AppointmentManager {
                     break;
 
                 case "upcoming":
-                    // For upcoming appointments, no action is needed in this method
+                    appointmentRef.child("status").setValue("upcoming")
+                            .addOnSuccessListener(aVoid -> Log.d("AppointmentManager", "Appointment status set to upcoming successfully"))
+                            .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to set appointment as upcoming", e));
                     break;
             }
         }
