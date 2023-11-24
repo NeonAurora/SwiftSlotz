@@ -32,6 +32,7 @@ public class Appointment implements Serializable {
     private long creationTimestamp;
     private boolean linearProgressVisible;
     private boolean circularProgressVisible;
+    private boolean animated = false;
     public Appointment( String title, String date, String time, String details) {
 
 
@@ -184,5 +185,12 @@ public class Appointment implements Serializable {
     }
     public void setCircularProgressVisible(boolean circularProgressVisible) {
         this.circularProgressVisible = circularProgressVisible;
+    }
+    public boolean isAnimated() {
+        return animated;
+    }
+    public void setAnimated(boolean animated) {
+        Log.d("Appointment", "setAnimated: is called");
+        this.animated = animated;
     }
 }

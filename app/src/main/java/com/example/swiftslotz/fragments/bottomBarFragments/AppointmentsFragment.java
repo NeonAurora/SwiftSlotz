@@ -75,7 +75,7 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
             @Override
             public void run() {
                 updateAppointmentProgress(appointments);
-                progressUpdateHandler.postDelayed(this, 1000); // Schedule the next execution
+                progressUpdateHandler.postDelayed(this, 2000); // Schedule the next execution
             }
         };
     }
@@ -103,8 +103,8 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
     private void setupRecyclerView(View view) {
         appointmentsRecyclerView = view.findViewById(R.id.appointmentsRecyclerView);
         appointments = new ArrayList<>();
-        appointmentsAdapter = new AppointmentsAdapter(appointments, this, appointmentManager);
         appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        appointmentsAdapter = new AppointmentsAdapter(appointments, this, appointmentManager, getContext(), appointmentsRecyclerView);
         appointmentsRecyclerView.setAdapter(appointmentsAdapter);
     }
 
@@ -288,7 +288,6 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
             if (appointmentDateTime != null) {
                 // The total duration is the difference between the appointment start time and its creation time
                 long totalDurationInMillis = appointmentDateTime.getTime() - creationTimestamp;
-                Log.d("TotalDuration", "Total duration for appointment " + appointment.getTitle() + " is " + totalDurationInMillis / 1000 + " seconds");
                 return Math.max(totalDurationInMillis / 1000, 0); // Convert to seconds and ensure it's not negative
             }
         } catch (ParseException e) {
@@ -304,7 +303,6 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
             Date appointmentDate = sdf.parse(appointment.getDate() + " " + appointment.getTime());
             if (appointmentDate != null) {
                 long diffInMillis = appointmentDate.getTime() - System.currentTimeMillis();
-                Log.d("TimeToStart", "Time to start for appointment " + appointment.getTitle() + " is " + diffInMillis / 1000 + " seconds");
                 return diffInMillis / 1000; // Convert milliseconds to seconds
             }
         } catch (ParseException e) {
@@ -325,8 +323,9 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
     private void removeExpiredAppointment(String appointmentKey) {
         for (int i = 0; i < appointments.size(); i++) {
             if (appointments.get(i).getKey().equals(appointmentKey)) {
-                appointments.remove(i);
-                appointmentsAdapter.notifyItemRemoved(i);
+//                appointments.remove(i);
+//                appointmentsAdapter.notifyItemRemoved(i);
+                appointmentsAdapter.removeItemWithAnimation(i);
                 return;
             }
         }

@@ -11,6 +11,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -21,6 +23,8 @@ import android.view.MenuItem;
 
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,12 +56,16 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     AppointmentManager appointmentManager;
     private FirebaseAuth mAuth;
     private String appointmentKey;
+    private Context context;
+    private RecyclerView appointmentsRecyclerView;
 
-    public AppointmentsAdapter(List<Appointment> appointments, OnAppointmentInteractionListener listener, AppointmentManager appointmentManager) {
+    public AppointmentsAdapter(List<Appointment> appointments, OnAppointmentInteractionListener listener, AppointmentManager appointmentManager, Context context, RecyclerView appointmentsRecyclerView) {
         mAuth = FirebaseAuth.getInstance();
         this.appointments = appointments;
         this.listener = listener;
         this.appointmentManager = appointmentManager;
+        this.context = context;
+        this.appointmentsRecyclerView = appointmentsRecyclerView;
     }
 
     public interface OnAppointmentInteractionListener {
@@ -134,6 +142,37 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         view.setBackground(layerDrawable);
     }
 
+    public void removeItemWithAnimation(int position) {
+        ViewHolder holder = (ViewHolder) this.appointmentsRecyclerView.findViewHolderForAdapterPosition(position);
+        if (holder != null) {
+            Log.d("AppointmentsAdapter", "removeItemWithAnimation: holder != null");
+            Animation anim = AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.slide_out_right);
+            anim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    // Do nothing
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    appointments.remove(position);
+                    notifyItemRemoved(position);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                    // Do nothing
+                }
+            });
+            holder.itemView.startAnimation(anim);
+        } else {
+            appointments.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+
+
 
 
     private void showDialogToSetConstraint(Context context, String appointmentKey) {
@@ -206,11 +245,27 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Appointment appointment = appointments.get(position);
+        Appointment appointment = appointments.get(holder.getAdapterPosition());
         holder.appointmentTitle.setText(appointment.getTitle());
         holder.appointmentDate.setText(appointment.getDate());
         holder.appointmentTime.setText(appointment.getTime());
         holder.appointmentDetails.setText(appointment.getDetails());
+
+        Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.slide_in_left);
+        long startOffset = 200 + (holder.getAdapterPosition() * 100);
+        animation.setStartOffset(startOffset);
+
+        if (!appointment.isAnimated()) {
+
+            holder.itemView.startAnimation(animation);
+
+            new Handler(Looper.getMainLooper()).postDelayed(() -> appointment.setAnimated(true), 50);
+        }
+
+//        Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.slide_in_left);
+//        long startOffset = 500 + (position * 100);
+//        animation.setStartOffset(startOffset);
+//        holder.itemView.startAnimation(animation);
 
         if(appointment.isLinearProgressVisible()){
             holder.linearProgressBar.setVisibility(View.VISIBLE);
@@ -261,7 +316,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         holder.detailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String appointmentKey = appointments.get(position).getKey();
+                String appointmentKey = appointments.get(holder.getAdapterPosition()).getKey();
 
                 ClipboardManager clipboard = (ClipboardManager) view.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("appointmentKey", appointmentKey);

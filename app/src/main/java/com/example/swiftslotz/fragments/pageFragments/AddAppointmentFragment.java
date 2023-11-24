@@ -22,6 +22,7 @@ import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -121,6 +122,16 @@ public class AddAppointmentFragment extends Fragment {
                     return;
                 }
 
+                SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+                SimpleDateFormat displayFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                try {
+                    Date date = parseFormat.parse(selectedTimeString);
+                    selectedTimeString = displayFormat.format(date);
+                } catch (ParseException e) {
+                    Toast.makeText(getActivity(), "Invalid time format", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 int durationInMinutes;
                 try {
                     if (unit.equals("H")) {
@@ -168,7 +179,7 @@ public class AddAppointmentFragment extends Fragment {
      */
     private void showTimePicker() {
         MaterialTimePicker materialTimePicker = new MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setTimeFormat(TimeFormat.CLOCK_12H)
                 .setHour(12)
                 .setMinute(0)
                 .setTitleText("Select Appointment Time")
@@ -179,7 +190,10 @@ public class AddAppointmentFragment extends Fragment {
             public void onClick(View view) {
                 int hour = materialTimePicker.getHour();
                 int minute = materialTimePicker.getMinute();
-                String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+                String amPm = hour < 12 ? "AM" : "PM";
+                if (hour > 12) hour -= 12;
+                else if (hour == 0) hour = 12;
+                String formattedTime = String.format(Locale.getDefault(), "%02d:%02d %s", hour, minute, amPm);
                 selectTimeButton.setText("Selected Time: " + formattedTime);
             }
         });
