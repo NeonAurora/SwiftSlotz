@@ -701,10 +701,14 @@ public class AppointmentManager {
         String currentDateTime = SDF.format(new Date());
 
         for (Appointment appointment : appointments) {
+            String previousStatus = appointment.getStatus();
             String status = getAppointmentStatus(appointment.getDate(), appointment.getTime(), appointment.getDuration(), currentDateTime);
-            appointment.setStatus(status);
-            updateAppointmentStatus(appointment);
-            Log.d("Appointment Status", status);
+            if(!status.equals(previousStatus)) {
+                appointment.setStatus(status);
+                updateAppointmentStatus(appointment);
+                Log.d("AppointmentManager", "Appointment Status Updated");
+            }
+            Log.d("AppointmentManager", "Appointment Status" + status);
         }
     }
 
@@ -752,6 +756,8 @@ public class AppointmentManager {
                     appointmentRef.child("status").setValue("running")
                             .addOnSuccessListener(aVoid -> Log.d("AppointmentManager", "Appointment status set to currently running successfully"))
                             .addOnFailureListener(e -> Log.e("AppointmentManager", "Failed to set appointment as currently running", e));
+                    notifyUsersAppointmentRunning(appointment);
+
                     break;
 
                 case "expired":
@@ -770,6 +776,46 @@ public class AppointmentManager {
             }
         }
     }
+
+    private void notifyUsersAppointmentRunning(Appointment appointment) {
+        List<String> userIds = appointment.getInvolvedUsers();
+        for (String userId : userIds) {
+            DatabaseReference userRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                    .getReference("users")
+                    .child(userId);
+            DatabaseReference userDeviceRef = userRef.child("device_token");
+
+            // Fetch the user's FCM token and send a notification
+            userDeviceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String userFcmToken = dataSnapshot.getValue(String.class);
+                    if (userFcmToken != null) {
+                        getUserNameFromFirebaseKey(userId, new UserNameCallback() {
+                            @Override
+                            public void onUserNameReceived(String userName) {
+                                JSONObject additionalData = new JSONObject();
+                                try {
+                                    additionalData.put("username", "Unknown User");
+                                    additionalData.put("appointmentDetails", "Your Appointment is now running");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Log.e("AppointmentManager", "Sending notification to user: " + userName);
+                                NotificationManager.sendFCMNotification(userFcmToken, "Appointment Running", "Your appointment " + appointment.getTitle() + " is now running.", additionalData);
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("AppointmentManager", "Failed to fetch user's FCM token: " + databaseError.getMessage());
+                }
+            });
+        }
+    }
+
 
     private void moveAppointmentToExpiredCollection(Appointment appointment, DatabaseReference appointmentRef) {
         DatabaseReference expiredRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
@@ -829,13 +875,12 @@ public class AppointmentManager {
                             public void onUserNameReceived(String userName) {
                                 JSONObject additionalData = new JSONObject();
                                 try {
-                                    additionalData.put("username", userName);
+                                    additionalData.put("username", "Unknown User");
                                     additionalData.put("appointmentDetails","Your Appointment has been expired");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     // Handle the error or throw a custom exception
                                 }
-                                Log.e("AppointmentManager", "Sending notification to user: " + userName);
                                 NotificationManager.sendFCMNotification(userFcmToken, "Appointment Expired", "Your appointment " + appointment.getTitle() + " has expired.", additionalData);
                             }
                         });

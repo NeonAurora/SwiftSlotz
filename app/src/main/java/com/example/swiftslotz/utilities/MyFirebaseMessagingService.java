@@ -24,8 +24,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String title = data.get("title") != null ? data.get("title") : "Default Title";
             String username = data.get("username") != null ? data.get("username") : "Unknown User";
             String bodyMessage = data.get("body") != null ? data.get("body") : "Default Body";
+            String body;
 
-            String body = "From " + username + ": " + bodyMessage;
+            if(username.equals("Unknown User")) {
+                body = bodyMessage;
+                Log.e("Caution", "Username is Unknown User");
+            } else {
+                body = "From " + username + ": " + bodyMessage;
+            }
 
             // Display the notification
             NotificationDisplay.displayNotification(getApplicationContext(), title, body);
