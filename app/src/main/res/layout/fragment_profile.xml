@@ -21,7 +21,7 @@
             android:hint="Phone Number"
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="parea -m nt"
             app:layout_constraintTop_toBottomOf="@+id/uploadPhotoButton" />
 
         <EditText
