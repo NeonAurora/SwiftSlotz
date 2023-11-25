@@ -12,6 +12,7 @@ public class User implements Serializable {
     private String occupation;
     private String address;
     private UserAppointments appointments;
+    private String profileImageUrl;
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -101,6 +102,14 @@ public class User implements Serializable {
 
     public void setAppointments(UserAppointments appointments) {
         this.appointments = appointments;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 }
 

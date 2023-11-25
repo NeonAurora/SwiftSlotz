@@ -136,10 +136,8 @@ public class AddAppointmentFragment extends Fragment {
                 try {
                     if (unit.equals("H")) {
                         durationInMinutes = appointmentDuration * 60;
-                        Toast.makeText(getActivity(), "Hour format inserted", Toast.LENGTH_SHORT).show();
                     } else {
                         durationInMinutes = appointmentDuration;
-                        Toast.makeText(getActivity(), "Inserted format: " + unit, Toast.LENGTH_SHORT).show();
                     }
                 } catch (NumberFormatException e) {
                     Toast.makeText(getActivity(), "Invalid duration", Toast.LENGTH_SHORT).show();

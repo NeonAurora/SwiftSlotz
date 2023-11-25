@@ -190,7 +190,6 @@ public class Appointment implements Serializable {
         return animated;
     }
     public void setAnimated(boolean animated) {
-        Log.d("Appointment", "setAnimated: is called");
         this.animated = animated;
     }
 }

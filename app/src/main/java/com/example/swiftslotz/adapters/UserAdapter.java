@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.fragments.pageFragments.AddAppointmentFragment;
+import com.example.swiftslotz.fragments.pageFragments.ProfileViewFragment;
 import com.example.swiftslotz.utilities.User;
 
 import java.util.List;
@@ -83,6 +84,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.content_frame, addAppointmentFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ProfileViewFragment profileViewFragment = ProfileViewFragment.newInstance(firebaseGeneratedKey);
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.content_frame, profileViewFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }

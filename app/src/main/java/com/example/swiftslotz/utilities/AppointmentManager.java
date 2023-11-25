@@ -227,42 +227,6 @@ public class AppointmentManager {
     }
 
 
-    public void fetchRequestedAppointmentsFromDatabase() {
-        userDb.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                appointments.clear();
-                sectors.clear();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                String today = sdf.format(new Date());
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Appointment appointment = snapshot.getValue(Appointment.class);
-                    if (appointment != null) {
-                        appointment.setKey(snapshot.getKey());
-                        appointments.add(appointment);
-                    }
-                }
-                if (requestedAppointmentsAdapter != null) {
-                    requestedAppointmentsAdapter.notifyDataSetChanged();
-                } else {
-                    Log.e("RequestedAppointments", "Adapter is null");
-                }
-                if (requestedAppointmentsFetchedListener != null) {
-                    requestedAppointmentsFetchedListener.onRequestedAppointmentsFetched(appointments);
-                } else {
-                    Log.e("RequestedAppointments", "Listener is null");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(context, "Failed to fetch data: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
 
     public void addAppointmentRequest(Appointment appointment, String firebaseKey) {
         DatabaseReference specificUserDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
@@ -276,7 +240,7 @@ public class AppointmentManager {
 
             specificUserDb.child(key).setValue(appointment)
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(context, "Appointment added successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Appointment Request Sent Successfully", Toast.LENGTH_SHORT).show();
 
                         // Fetch the FCM token of the user to whom you're sending the appointment request
                         DatabaseReference userRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
@@ -386,7 +350,6 @@ public class AppointmentManager {
                     String clientName = dataSnapshot.child("username").getValue(String.class);
                     if (clientName != null) {
                         callback.onClientNameReceived(clientName);
-                        Log.d("Client Name", clientName);
                     } else {
                         callback.onError("Client name is null");
                     }
