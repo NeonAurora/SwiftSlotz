@@ -1,6 +1,7 @@
 package com.example.swiftslotz.fragments.bottomBarFragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -9,11 +10,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,25 +52,30 @@ public class ProfileFragment extends Fragment {
 
     private final long TEXT_WATCHER_DELAY = 500;
 
+    private ImageButton facebookButton, linkedinButton, instagramButton;
+
+    private ImageButton editFacebookButton, cancelFacebookButton;
+    private EditText facebookLink;
+    private ImageButton editLinkedinButton, cancelLinkedinButton;
+    private EditText linkedinLink;
+    private ImageButton editInstagramButton, cancelInstagramButton;
+    private EditText instagramLink;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         // Initialize UI components
-        firstName = view.findViewById(R.id.profileEditFirstName);
-        lastName = view.findViewById(R.id.profileEditLastName);
-        username = view.findViewById(R.id.user_username);
-        email = view.findViewById(R.id.profileEditEmail);
-        phone = view.findViewById(R.id.profileEditPhoneNumber);
-        occupation = view.findViewById(R.id.profileEditCompany);
-        address = view.findViewById(R.id.profileEditAddress);
-        profileImage = view.findViewById(R.id.profileImage);
-        uploadPhotoButton = view.findViewById(R.id.uploadPhotoButton);
-        logoutButton = view.findViewById(R.id.logoutButton);
-        updateInfoButton = view.findViewById(R.id.updateInfoButton);
-        updateInfoButton.setEnabled(false);
-        updateInfoButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.fadedButton));
+        initializeViews(view);
+        buttonOnClick(facebookButton, facebookLink);
+        buttonOnClick(linkedinButton, linkedinLink);
+        buttonOnClick(instagramButton, instagramLink);
+
+        setupSocialMediaEditCancel(editFacebookButton, cancelFacebookButton, facebookLink);
+        setupSocialMediaEditCancel(editLinkedinButton, cancelLinkedinButton, linkedinLink);
+        setupSocialMediaEditCancel(editInstagramButton, cancelInstagramButton, instagramLink);
+
 
         mAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -123,6 +131,9 @@ public class ProfileFragment extends Fragment {
                     phone.setText(dataSnapshot.child("phone").getValue(String.class));
                     occupation.setText(dataSnapshot.child("occupation").getValue(String.class));
                     address.setText(dataSnapshot.child("address").getValue(String.class));
+                    facebookLink.setText(dataSnapshot.child("facebook").getValue(String.class));
+                    linkedinLink.setText(dataSnapshot.child("linkedin").getValue(String.class));
+                    instagramLink.setText(dataSnapshot.child("instagram").getValue(String.class));
 
                      //Load profile image if it exists in the database
                     if (dataSnapshot.hasChild("profileImageUrl")) {
@@ -140,6 +151,43 @@ public class ProfileFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(getActivity(), "Failed to load user details: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
+        });
+    }
+
+    public void buttonOnClick(ImageButton button, EditText linkEditText) {
+        button.setOnClickListener(v -> {
+            String link = linkEditText.getText().toString().trim();
+            if(!link.isEmpty()) {
+                openWebPage(link);
+            } else {
+                Toast.makeText(getActivity(), "Link is empty", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    public void openWebPage(String url) {
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            url = "http://" + url;
+        }
+        Uri webpage = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(webpage);
+        startActivity(intent);
+    }
+
+
+
+
+    private void setupSocialMediaEditCancel(ImageButton editButton, ImageButton cancelButton, EditText linkEditText) {
+        editButton.setOnClickListener(v -> {
+            linkEditText.setVisibility(View.VISIBLE);
+            cancelButton.setVisibility(View.VISIBLE);
+            editButton.setVisibility(View.GONE);
+        });
+
+        cancelButton.setOnClickListener(v -> {
+            linkEditText.setVisibility(View.GONE);
+            cancelButton.setVisibility(View.GONE);
+            editButton.setVisibility(View.VISIBLE);
         });
     }
 
@@ -176,6 +224,9 @@ public class ProfileFragment extends Fragment {
         String updatedPhone = phone.getText().toString().trim();
         String updatedOccupation = occupation.getText().toString().trim();
         String updatedAddress = address.getText().toString().trim();
+        String updatedFacebook = facebookLink.getText().toString().trim();
+        String updatedLinkedin = linkedinLink.getText().toString().trim();
+        String updatedInstagram = instagramLink.getText().toString().trim();
 
         // Check if first name or last name is empty
         if (updatedFirstName.isEmpty() || updatedLastName.isEmpty()) {
@@ -191,11 +242,44 @@ public class ProfileFragment extends Fragment {
             userDb.child("phone").setValue(updatedPhone);
             userDb.child("occupation").setValue(updatedOccupation);
             userDb.child("address").setValue(updatedAddress);
+            userDb.child("facebook").setValue(updatedFacebook);
+            userDb.child("linkedin").setValue(updatedLinkedin);
+            userDb.child("instagram").setValue(updatedInstagram);
 
             Toast.makeText(getActivity(), "Profile updated", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to update profile", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void initializeViews(View view) {
+        firstName = view.findViewById(R.id.profileEditFirstName);
+        lastName = view.findViewById(R.id.profileEditLastName);
+        username = view.findViewById(R.id.user_username);
+        email = view.findViewById(R.id.profileEditEmail);
+        phone = view.findViewById(R.id.profileEditPhoneNumber);
+        occupation = view.findViewById(R.id.profileEditCompany);
+        address = view.findViewById(R.id.profileEditAddress);
+        profileImage = view.findViewById(R.id.profileImage);
+        uploadPhotoButton = view.findViewById(R.id.uploadPhotoButton);
+        logoutButton = view.findViewById(R.id.logoutButton);
+        updateInfoButton = view.findViewById(R.id.updateInfoButton);
+        updateInfoButton.setEnabled(false);
+        updateInfoButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.fadedButton));
+
+        facebookButton = view.findViewById(R.id.facebookButton);
+        linkedinButton = view.findViewById(R.id.linkedinButton);
+        instagramButton = view.findViewById(R.id.instagramButton);
+
+        editFacebookButton = view.findViewById(R.id.editFacebookButton);
+        cancelFacebookButton = view.findViewById(R.id.editCancelFacebookButton);
+        facebookLink = view.findViewById(R.id.facebookLink);
+        editLinkedinButton = view.findViewById(R.id.editLinkedinButton);
+        cancelLinkedinButton = view.findViewById(R.id.editCancelLinkedinButton);
+        linkedinLink = view.findViewById(R.id.linkedinLink);
+        editInstagramButton = view.findViewById(R.id.editInstagramButton);
+        cancelInstagramButton = view.findViewById(R.id.editCancelInstagramButton);
+        instagramLink = view.findViewById(R.id.instagramLink);
     }
 
     private void setupTextWatchers() {
@@ -219,6 +303,9 @@ public class ProfileFragment extends Fragment {
             phone.addTextChangedListener(textWatcher);
             occupation.addTextChangedListener(textWatcher);
             address.addTextChangedListener(textWatcher);
+            facebookLink.addTextChangedListener(textWatcher);
+            linkedinLink.addTextChangedListener(textWatcher);
+            instagramLink.addTextChangedListener(textWatcher);
         }, TEXT_WATCHER_DELAY);
     }
 
