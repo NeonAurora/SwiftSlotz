@@ -65,6 +65,7 @@
             android:layout_marginLeft="40dp"
             android:layout_marginTop="5dp"
             android:layout_marginRight="40dp"
+            android:backgroundTint="#cc5519"
             android:text="Upload Photo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -142,10 +143,10 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="40dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:text="Update"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profileEditCompany" />
+            app:layout_constraintTop_toBottomOf="@+id/socialMediaLayout" />
 
         <Button
             android:id="@+id/logoutButton"
@@ -162,25 +163,22 @@
             android:id="@+id/socialMediaLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="68dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/updateInfoButton"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintTop_toBottomOf="@id/profileEditCompany">
 
             <!-- Social Media Layout 1: Facebook -->
             <RelativeLayout
                 android:id="@+id/facebookLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_width="match_parentt"
+                android:layout_height="56dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/social_media_box_background"
                 app:layout_constraintBottom_toTopOf="@id/linkedinLayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"> <!-- Replace with your box drawable -->
 
@@ -213,7 +211,8 @@
                         android:layout_marginLeft="41dp"
                         android:layout_marginBottom="28dp"
                         android:background="@null"
-                        android:src="@drawable/ic_edit" />
+                        android:src="@drawable/ic_edit"
+                        android:visibility="gone" />
 
 
                 </RelativeLayout>
@@ -227,9 +226,9 @@
                     android:layout_alignParentTop="true"
                     android:layout_margin="5dp"
                     android:background="@null"
-                    android:src="@drawable/ic_cross"
                     android:elevation="7dp"
-                    android:visibility="gone"/>
+                    android:src="@drawable/ic_cross"
+                    android:visibility="gone" />
 
                 <EditText
                     android:id="@+id/facebookLink"
@@ -240,18 +239,17 @@
                     android:layout_marginTop="8dp"
                     android:layout_toRightOf="@id/facebookAdjustiveLayout"
                     android:hint="Facebook link"
-                    android:visibility="gone"/>
+                    />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/linkedinLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/social_media_box_background"
                 app:layout_constraintBottom_toTopOf="@id/instagramLayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/facebookLayout"> <!-- Replace with your box drawable -->
 
@@ -284,7 +282,8 @@
                         android:layout_marginLeft="41dp"
                         android:layout_marginBottom="28dp"
                         android:background="@null"
-                        android:src="@drawable/ic_edit" />
+                        android:src="@drawable/ic_edit"
+                        android:visibility="gone" />
 
 
                 </RelativeLayout>
@@ -311,20 +310,19 @@
                     android:layout_marginTop="8dp"
                     android:layout_toRightOf="@id/linkedinAdjustiveLayout"
                     android:hint="Linked In link"
-                    android:visibility="gone" />
+                     />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/instagramLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/social_media_box_background"
-                app:layout_constraintTop_toBottomOf="@id/linkedinLayout"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.05">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linkedinLayout">
 
                 <RelativeLayout
                     android:id="@+id/instagramAdjustiveLayout"
@@ -352,7 +350,8 @@
                         android:layout_marginLeft="41dp"
                         android:layout_marginBottom="28dp"
                         android:background="@null"
-                        android:src="@drawable/ic_edit" />
+                        android:src="@drawable/ic_edit"
+                        android:visibility="gone" />
 
 
                 </RelativeLayout>
@@ -378,8 +377,7 @@
                     android:layout_marginLeft="0dp"
                     android:layout_marginTop="8dp"
                     android:layout_toRightOf="@id/instagramAdjustiveLayout"
-                    android:hint="Instagram link"
-                    android:visibility="gone" />
+                    android:hint="Instagram link" />
 
 
             </RelativeLayout>
