@@ -1,158 +1,391 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.bottomBarFragments.ProfileFragment">
-
-    <!-- Replace with your placeholder image -->
-
-
-    <Button
-        android:id="@+id/updateInfoButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="20dp"
-        android:text="Update"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileEditCompany" />
-
-    <EditText
-        android:id="@+id/profileEditPhoneNumber"
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:drawableLeft="@drawable/add_call_24"
-        android:ems="10"
-        android:hint="Phone Number"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uploadPhotoButton" />
+        android:layout_height="wrap_content" >
 
-    <EditText
-        android:id="@+id/profileEditEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:drawableLeft="@drawable/attach_email"
-        android:ems="10"
-        android:hint="Email"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileEditPhoneNumber" />
+        <EditText
+            android:id="@+id/profileEditPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:drawableLeft="@drawable/add_call_24"
+            android:ems="10"
+            android:hint="Phone Number"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/uploadPhotoButton" />
+
+        <EditText
+            android:id="@+id/profileEditEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:drawableLeft="@drawable/attach_email"
+            android:ems="10"
+            android:hint="Email"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileEditPhoneNumber" />
 
 
-    <EditText
-        android:id="@+id/profileEditAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:drawableLeft="@drawable/add_location_alt"
-        android:ems="10"
-        android:hint="Address"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.35"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileEditEmail" />
+        <EditText
+            android:id="@+id/profileEditAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:drawableLeft="@drawable/add_location_alt"
+            android:ems="10"
+            android:hint="Address"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.35"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileEditEmail" />
 
-    <Button
-        android:id="@+id/uploadPhotoButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="40dp"
-        android:text="Upload Photo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout8" />
+        <Button
+            android:id="@+id/uploadPhotoButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="40dp"
+            android:text="Upload Photo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout8" />
 
-    <Button
-        android:id="@+id/logoutButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/uploadPhotoButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginRight="30dp"
-        android:text="Log Out"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/updateInfoButton" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/profileImage"
-            android:layout_width="163dp"
-            android:layout_height="159dp" />
 
         <LinearLayout
+            android:id="@+id/linearLayout8"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
-            android:orientation="vertical">
+            android:layout_marginRight="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/user_username"
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="163dp"
+                android:layout_height="159dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/user_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Username"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/profileEditFirstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="First Name"
+                    android:inputType="text" />
+
+                <EditText
+                    android:id="@+id/profileEditLastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Last Name"
+                    android:inputType="text" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/profileEditCompany"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:ems="10"
+            android:hint="Company"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileEditAddress" />
+
+        <Button
+            android:id="@+id/updateInfoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:text="Update"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileEditCompany" />
+
+        <Button
+            android:id="@+id/logoutButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/uploadPhotoButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginRight="30dp"
+            android:text="Log Out"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/updateInfoButton" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/socialMediaLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="68dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/updateInfoButton"
+            app:layout_constraintVertical_bias="1.0">
+
+            <!-- Social Media Layout 1: Facebook -->
+            <RelativeLayout
+                android:id="@+id/facebookLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Username"
-                android:textSize="18sp" />
+                android:layout_margin="10dp"
+                android:background="@drawable/social_media_box_background"
+                app:layout_constraintBottom_toTopOf="@id/linkedinLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.05"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"> <!-- Replace with your box drawable -->
 
-            <EditText
-                android:id="@+id/profileEditFirstName"
-                android:layout_width="match_parent"
+                <!-- Replace with your Facebook icon drawable -->
+
+                <!-- Replace with your edit icon drawable -->
+                <RelativeLayout
+                    android:id="@+id/facebookAdjustiveLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageButton
+                        android:id="@+id/facebookButton"
+                        android:layout_width="57dp"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:src="@drawable/ic_facebook"
+                        app:layout_constraintVertical_bias="0.5" />
+
+                    <ImageButton
+                        android:id="@+id/editFacebookButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@id/facebookButton"
+                        android:layout_alignBottom="@id/facebookButton"
+                        android:layout_marginLeft="41dp"
+                        android:layout_marginBottom="28dp"
+                        android:background="@null"
+                        android:src="@drawable/ic_edit" />
+
+
+                </RelativeLayout>
+
+
+                <ImageButton
+                    android:id="@+id/editCancelFacebookButton"
+                    android:layout_width="19dp"
+                    android:layout_height="16dp"
+                    android:layout_alignRight="@id/facebookLink"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="5dp"
+                    android:background="@null"
+                    android:src="@drawable/ic_cross"
+                    android:elevation="7dp"
+                    android:visibility="gone"/>
+
+                <EditText
+                    android:id="@+id/facebookLink"
+                    android:layout_width="296dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/facebookAdjustiveLayout"
+                    android:hint="Facebook link"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/linkedinLayout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="First Name"
-                android:inputType="text" />
+                android:layout_margin="10dp"
+                android:background="@drawable/social_media_box_background"
+                app:layout_constraintBottom_toTopOf="@id/instagramLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.05"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/facebookLayout"> <!-- Replace with your box drawable -->
 
-            <EditText
-                android:id="@+id/profileEditLastName"
-                android:layout_width="match_parent"
+                <!-- Replace with your Facebook icon drawable -->
+
+                <!-- Replace with your edit icon drawable -->
+                <RelativeLayout
+                    android:id="@+id/linkedinAdjustiveLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageButton
+                        android:id="@+id/linkedinButton"
+                        android:layout_width="57dp"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:src="@drawable/ic_linkedin"
+                        app:layout_constraintVertical_bias="0.5" />
+
+                    <ImageButton
+                        android:id="@+id/editLinkedinButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@id/linkedinButton"
+                        android:layout_alignBottom="@id/linkedinButton"
+                        android:layout_marginLeft="41dp"
+                        android:layout_marginBottom="28dp"
+                        android:background="@null"
+                        android:src="@drawable/ic_edit" />
+
+
+                </RelativeLayout>
+
+
+                <ImageButton
+                    android:id="@+id/editCancelLinkedinButton"
+                    android:layout_width="19dp"
+                    android:layout_height="16dp"
+                    android:layout_alignRight="@id/linkedinLink"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="5dp"
+                    android:background="@null"
+                    android:elevation="7dp"
+                    android:src="@drawable/ic_cross"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/linkedinLink"
+                    android:layout_width="296dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/linkedinAdjustiveLayout"
+                    android:hint="Linked In link"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/instagramLayout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Last Name"
-                android:inputType="text" />
+                android:layout_margin="10dp"
+                android:background="@drawable/social_media_box_background"
+                app:layout_constraintTop_toBottomOf="@id/linkedinLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.05">
 
-        </LinearLayout>
-    </LinearLayout>
+                <RelativeLayout
+                    android:id="@+id/instagramAdjustiveLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/profileEditCompany"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:ems="10"
-        android:hint="Company"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileEditAddress" />
+                    <ImageButton
+                        android:id="@+id/instagramButton"
+                        android:layout_width="57dp"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:src="@drawable/ic_instagram"
+                        app:layout_constraintVertical_bias="0.5" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                    <ImageButton
+                        android:id="@+id/editInstagramButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@id/instagramButton"
+                        android:layout_alignBottom="@id/instagramButton"
+                        android:layout_marginLeft="41dp"
+                        android:layout_marginBottom="28dp"
+                        android:background="@null"
+                        android:src="@drawable/ic_edit" />
+
+
+                </RelativeLayout>
+
+
+                <ImageButton
+                    android:id="@+id/editCancelInstagramButton"
+                    android:layout_width="19dp"
+                    android:layout_height="16dp"
+                    android:layout_alignRight="@id/instagramLink"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="5dp"
+                    android:background="@null"
+                    android:elevation="7dp"
+                    android:src="@drawable/ic_cross"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/instagramLink"
+                    android:layout_width="296dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/instagramAdjustiveLayout"
+                    android:hint="Instagram link"
+                    android:visibility="gone" />
+
+
+            </RelativeLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

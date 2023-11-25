@@ -1,10 +1,15 @@
 package com.example.swiftslotz.fragments.pageFragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,11 +30,12 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ProfileViewFragment extends Fragment {
 
-    private String userKey;
+    private String userKey, facebook, instagram, linkedin;
     private DatabaseReference userDb;
     private TextView usernameTextView, firstNameTextView, lastNameTextView, emailTextView, phoneTextView, occupationTextView, addressTextView;
     private ImageView profileImageView;
     Button seekAppointmentButton;
+    ImageButton facebookViewButton, instagramViewButton, linkedinViewButton;
 
     public ProfileViewFragment() {
         // Required empty public constructor
@@ -57,6 +63,7 @@ public class ProfileViewFragment extends Fragment {
         initializeViews(view);
         fetchUserDetails();
 
+
         seekAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +84,29 @@ public class ProfileViewFragment extends Fragment {
         addressTextView = view.findViewById(R.id.profileViewEditAddress);
         profileImageView = view.findViewById(R.id.profileViewImage);
         seekAppointmentButton = view.findViewById(R.id.seekAppointmentButton);
+        facebookViewButton = view.findViewById(R.id.facebookViewButton);
+        instagramViewButton = view.findViewById(R.id.instagramViewButton);
+        linkedinViewButton = view.findViewById(R.id.linkedinViewButton);
+
+    }
+
+    public void buttonOnClick(ImageButton button, String url) {
+        button.setOnClickListener(v -> {
+            if(!url.isEmpty()) {
+                openWebPage(url);
+            } else {
+                Toast.makeText(getActivity(), "Link is empty", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    public void openWebPage(String url) {
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            url = "http://" + url;
+        }
+        Uri webpage = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(webpage);
+        startActivity(intent);
     }
 
     private void fetchUserDetails() {
@@ -122,6 +152,15 @@ public class ProfileViewFragment extends Fragment {
         phoneTextView.setText(user.getPhone());
         occupationTextView.setText(user.getOccupation());
         addressTextView.setText(user.getAddress());
+
+        facebook = user.getFacebook();
+        instagram = user.getInstagram();
+        linkedin = user.getLinkedin();
+        Log.d("ProfileViewFragment", "displayUserData: " + facebook + instagram + linkedin);
+
+        buttonOnClick(facebookViewButton, facebook);
+        buttonOnClick(instagramViewButton, instagram);
+        buttonOnClick(linkedinViewButton, linkedin);
 
         if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
             Glide.with(this).load(user.getProfileImageUrl()).into(profileImageView);
