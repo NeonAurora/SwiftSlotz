@@ -64,6 +64,7 @@
             android:paddingEnd="24dp"
             android:paddingBottom="12dp"
             android:text="Select Time"
+            android:backgroundTint="#cc5519"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"

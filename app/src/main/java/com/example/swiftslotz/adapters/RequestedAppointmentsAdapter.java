@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -112,7 +113,7 @@ public class RequestedAppointmentsAdapter extends RecyclerView.Adapter<Requested
         TextView appointmentDate;
         TextView appointmentTime;
         TextView appointmentDetails;
-        ImageButton approveButton, rejectButton;
+        Button approveButton, rejectButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
