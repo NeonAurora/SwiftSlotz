@@ -65,7 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="40dp"
         android:layout_marginRight="20dp"
         android:drawableLeft="@drawable/add_call_24"
         android:ems="10"
@@ -133,10 +133,10 @@
         android:id="@+id/socialMediaBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profileViewEditCompany"
-        app:layout_constraintBottom_toBottomOf="@+id/seekAppointmentButton">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileViewEditCompany">
 
         <ImageButton
             android:id="@+id/facebookViewButton"
@@ -175,11 +175,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="112dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginBottom="212dp"
+        android:layout_marginTop="25dp"
         android:text="Seek Appointment"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/socialMediaBox" />
 

@@ -173,7 +173,7 @@
             <!-- Social Media Layout 1: Facebook -->
             <RelativeLayout
                 android:id="@+id/facebookLayout"
-                android:layout_width="match_parentt"
+                android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
