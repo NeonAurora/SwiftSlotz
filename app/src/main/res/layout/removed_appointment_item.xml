@@ -26,6 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:textColor="@color/black"
             android:text="Appointment Date"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/removedAppointmentTitle" />
@@ -36,6 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="88dp"
             android:layout_marginTop="8dp"
+            android:textColor="@color/black"
             android:text="Appointment Time"
             app:layout_constraintStart_toEndOf="@id/removedAppointmentDate"
             app:layout_constraintTop_toBottomOf="@id/removedAppointmentDate" />
@@ -45,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:textColor="@color/black"
             android:text="Appointment Details"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/removedAppointmentDate" />

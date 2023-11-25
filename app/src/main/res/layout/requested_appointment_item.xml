@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    app:cardElevation="4dp"
+    android:padding="5dp"
+    >
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+
 
         <TextView
             android:id="@+id/appointmentTitle"
@@ -28,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Client Name"
+            android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appointmentTitle" />
 
@@ -36,38 +36,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:textColor="@color/black"
             android:text="Appointment Date"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/requestingClientName" />
-
-        <ImageButton
-            android:id="@+id/approveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="@string/approve_appointment"
-            android:src="@android:drawable/ic_menu_add"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/rejectButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="44dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="@string/reject_appointment"
-            android:src="@android:drawable/ic_delete"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@id/approveButton"
-            app:layout_constraintTop_toBottomOf="@id/approveButton" />
 
         <TextView
             android:id="@+id/appointmentTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
+            android:textColor="@color/black"
             android:text="Appointment Time"
             app:layout_constraintStart_toEndOf="@id/appointmentDate"
             app:layout_constraintTop_toTopOf="@+id/appointmentDate" />
@@ -77,10 +56,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+
+            android:textColor="@color/black"
             android:text="Appointment Details"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appointmentDate" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appointmentDetails">
 
-</androidx.cardview.widget.CardView>
+                <Button
+                    android:id="@+id/approveButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Approve" />
+
+                <Button
+                    android:id="@+id/rejectButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="reject" />
+        </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

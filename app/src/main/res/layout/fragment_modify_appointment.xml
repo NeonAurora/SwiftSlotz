@@ -10,6 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/appointment_title"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -19,6 +20,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/appointment_details"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/modify_appointment_title" />
@@ -28,6 +30,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/appointment_date"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/modify_appointment_details" />
@@ -37,6 +40,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/appointment_time"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/modify_appointment_date" />
@@ -45,6 +49,7 @@
         android:id="@+id/update_appointment_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text="@string/update_appointment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

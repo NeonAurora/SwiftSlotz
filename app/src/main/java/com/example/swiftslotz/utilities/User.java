@@ -4,13 +4,7 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    private String firstName;
-    private String lastName;
-    private String username;
-    private String email;
-    private String phone;
-    private String occupation;
-    private String address;
+    private String firstName, lastName, username, email, phone, occupation, address, facebook, instagram, linkedin;
     private UserAppointments appointments;
     private String profileImageUrl;
 
@@ -110,6 +104,30 @@ public class User implements Serializable {
 
     public void setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public String getFacebook() {
+        return facebook;
+    }
+
+    public void setFacebook(String facebook) {
+        this.facebook = facebook;
+    }
+
+    public String getInstagram() {
+        return instagram;
+    }
+
+    public void setInstagram(String instagram) {
+        this.instagram = instagram;
+    }
+
+    public String getLinkedin() {
+        return linkedin;
+    }
+
+    public void setLinkedin(String linkedin) {
+        this.linkedin = linkedin;
     }
 }
 
