@@ -7,12 +7,15 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -87,11 +90,34 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
         Appointment appointment = appointments.get(position);
         appointmentKey = appointment.getKey();
-        Log.d("isCurrentUserHost", isCurrentUserHost(appointment) + "");
+        Log.d("isCurrentUserHost", isCurrentUserHost(appointment) + "" );
         if (isCurrentUserHost(appointment)) {
             popupMenu.getMenu().add(Menu.NONE, R.id.action_set_constraints, Menu.NONE, "Set Constraints");
             popupMenu.getMenu().add(Menu.NONE, R.id.action_delete, Menu.NONE, "Delete");
             popupMenu.getMenu().removeItem(R.id.action_leave);
+        }
+
+
+        Menu menu = popupMenu.getMenu();
+
+        // Modify text color for all items
+        int textColor = 0; // Replace with your color resource
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            textColor = context.getColor(R.color.tomato);
+        }
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+
+            SpannableString spanString = new SpannableString(item.getTitle().toString());
+            spanString.setSpan(new ForegroundColorSpan(textColor), 0, spanString.length(), 0);
+            item.setTitle(spanString);
+
+            // Modify icon tint for all items
+            Drawable icon = item.getIcon();
+            if (icon != null) {
+                icon.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
+                item.setIcon(icon);
+            }
         }
 
 

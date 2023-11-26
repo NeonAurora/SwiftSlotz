@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-</selector>
+    <!-- The gradient on top of the image -->
+    <item>
+        <shape>
+            <corners android:bottomLeftRadius="10dp">
+
+            </corners>
+            <gradient
+                android:type="linear"
+                android:angle="0"
+                android:endColor="#cc5519"
+                android:startColor="#ff7935" />
+        </shape>
+    </item>
+</layer-list>

@@ -11,13 +11,12 @@
         android:id="@+id/tvCountdownTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="#fdf6e4"
+        android:background="@drawable/timer_background"
         android:elevation="10dp"
         android:letterSpacing="0.2"
         android:padding="10dp"
         android:text="Searching"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/appointmentsRecyclerView"
@@ -47,8 +46,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            app:backgroundTint="#93a9eb"
             android:contentDescription="@string/incoming_requests_appointment"
-            android:src="@drawable/ic_requests" />
+            android:src="@drawable/ic_requests"
+             />
 
         <TextView
             android:id="@+id/badge_text_view"

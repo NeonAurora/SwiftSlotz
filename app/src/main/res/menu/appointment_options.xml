@@ -2,8 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_edit"
+        android:icon="@drawable/icon_edit"
         android:title="@string/edit_appointment" />
     <item
         android:id="@+id/action_leave"
+        android:icon="@drawable/icon_leave"
         android:title="@string/leave_appointment" />
 </menu>
