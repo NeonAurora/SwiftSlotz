@@ -26,4 +26,10 @@
     <style name="MyActionBar" parent="Widget.AppCompat.ActionBar">
         <item name="background">@color/tomato</item>
     </style>
+
+    <style name="TomatoText" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColorPrimary">@color/tomato</item>
+        <item name="android:textColorSecondary">@color/tomato</item>
+        <item name="android:textColor">@color/tomato</item>
+    </style>
 </resources>
