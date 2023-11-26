@@ -65,15 +65,15 @@ public class BaseActivity extends AppCompatActivity {
                     case R.id.drawer_item2:
                         selectedFragment = new PastAppointmentsFragment();
                         break;
-                    case R.id.drawer_item3:
-                        selectedFragment = new Item3Fragment();
-                        break;
-                    case R.id.drawer_item4:
-                        selectedFragment = new Item4Fragment();
-                        break;
-                    case R.id.drawer_item5:
-                        selectedFragment = new Item5Fragment();
-                        break;
+//                    case R.id.drawer_item3:
+//                        selectedFragment = new Item3Fragment();
+//                        break;
+//                    case R.id.drawer_item4:
+//                        selectedFragment = new Item4Fragment();
+//                        break;
+//                    case R.id.drawer_item5:
+//                        selectedFragment = new Item5Fragment();
+//                        break;
                 }
 
                 if (selectedFragment != null) {

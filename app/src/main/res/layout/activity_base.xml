@@ -22,11 +22,13 @@
             app:menu="@menu/bottom_navigation_menu" />
 
     </RelativeLayout>
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:itemIconTint="@color/tomato"
         app:itemTextColor="@color/tomato"
         app:menu="@menu/drawer_menu" />
 
