@@ -70,7 +70,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
     public interface OnAppointmentInteractionListener {
         void onEditAppointment(Appointment appointment);
-        void onDeleteAppointment(Appointment appointment);
+        void onLeaveAppointment(Appointment appointment, int position);
+        void onDeleteAppointment(String appointmentKey);
     }
 
     @NonNull
@@ -89,6 +90,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         Log.d("isCurrentUserHost", isCurrentUserHost(appointment) + "");
         if (isCurrentUserHost(appointment)) {
             popupMenu.getMenu().add(Menu.NONE, R.id.action_set_constraints, Menu.NONE, "Set Constraints");
+            popupMenu.getMenu().add(Menu.NONE, R.id.action_delete, Menu.NONE, "Delete");
+            popupMenu.getMenu().removeItem(R.id.action_leave);
         }
 
 
@@ -103,13 +106,18 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             listener.onEditAppointment(appointment);
                         }
                         return true;
-                    case R.id.action_delete:
+                    case R.id.action_leave:
                         if (listener != null) {
-                            listener.onDeleteAppointment(appointment);
+                            listener.onLeaveAppointment(appointment,position);
+                            removeItemWithAnimation(position);
                         }
                         return true;
                     case R.id.action_set_constraints:
                         showDialogToSetConstraint(view.getContext(), appointmentKey);
+                        return true;
+                    case R.id.action_delete:
+                        listener.onDeleteAppointment(appointmentKey);
+                        removeItemWithAnimation(position);
                         return true;
                     default:
                     return false;

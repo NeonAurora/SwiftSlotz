@@ -3,7 +3,7 @@
     <string name="add_appointment">Add Appointment</string>
     <string name="incoming_requests_appointment">Incoming Requests</string>
     <string name="edit_appointment">Edit</string>
-    <string name="delete_appointment">Delete</string>
+    <string name="leave_appointment">Leave</string>
     <string name="appointment_options">Appointment Options</string>
     <string name="appointment_title">Enter New Title Here</string>
     <string name="appointment_date">Enter New Date Here</string>
@@ -26,8 +26,9 @@
     <string name="approve_appointment">Approve_Appointment\n</string>
     <string name="reject_appointment">Reject_Appointment\n</string>
     <item name="action_set_constraints" type="id" />
+    <item name="action_delete" type="id" />
     <string-array name="units_array">
-        <item>M</item>
-        <item>H</item>
+        <item>Minute</item>
+        <item>Hour</item>
     </string-array>
 </resources>

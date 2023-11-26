@@ -134,7 +134,7 @@ public class AddAppointmentFragment extends Fragment {
 
                 int durationInMinutes;
                 try {
-                    if (unit.equals("H")) {
+                    if (unit.equals("Hour")) {
                         durationInMinutes = appointmentDuration * 60;
                     } else {
                         durationInMinutes = appointmentDuration;

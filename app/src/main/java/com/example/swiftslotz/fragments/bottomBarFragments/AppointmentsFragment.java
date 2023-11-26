@@ -175,8 +175,12 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
     }
 
     @Override
-    public void onDeleteAppointment(Appointment appointment) {
-        appointmentManager.deleteAppointment(appointment);
+    public void onLeaveAppointment(Appointment appointment, int position) {
+        appointmentManager.leaveAppointment(appointment, position);
+    }
+
+    public void onDeleteAppointment(String appointmentKey) {
+        appointmentManager.deleteAppointment(appointmentKey);
     }
 
     @Override

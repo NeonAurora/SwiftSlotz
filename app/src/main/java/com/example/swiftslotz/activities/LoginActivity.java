@@ -151,7 +151,7 @@ public class LoginActivity extends BaseActivity {
                                 editor.putBoolean("rememberMe", rememberMeCheckbox.isChecked());
                                 editor.putString("fragmentToLoad", "AppointmentsFragment");
                                 editor.apply();
-
+                                finish();
                                 startActivity(new Intent(LoginActivity.this, BaseActivity.class));
                             } else {
                                 Toast.makeText(LoginActivity.this, "Please verify your email before logging in.",

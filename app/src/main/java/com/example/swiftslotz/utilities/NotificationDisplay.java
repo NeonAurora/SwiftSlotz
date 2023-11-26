@@ -33,6 +33,8 @@ public class NotificationDisplay {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
-        notificationManager.notify(1, builder.build());
+        int notificationId = (int) System.currentTimeMillis();
+        notificationManager.notify(notificationId, builder.build());
+
     }
 }

@@ -3,19 +3,14 @@ package com.example.swiftslotz.utilities;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.swiftslotz.BuildConfig;
-import com.example.swiftslotz.R;
 import com.example.swiftslotz.adapters.AppointmentsAdapter;
 import com.example.swiftslotz.adapters.RequestedAppointmentsAdapter;
-import com.example.swiftslotz.fragments.bottomBarFragments.AppointmentsFragment;
 import com.example.swiftslotz.views.charts.CustomPieChart;
 import com.example.swiftslotz.views.charts.Sector;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -48,7 +43,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AppointmentManager {
@@ -294,7 +288,7 @@ public class AppointmentManager {
         }
     }
 
-    public void deleteAppointment(Appointment appointment) {
+    public void leaveAppointment(Appointment appointment, int position) {
         if (appointment.getKey() != null) {
             // Step 1: Fetch the appointment details from the global collection
             globalAppointmentDb.child(appointment.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -317,7 +311,6 @@ public class AppointmentManager {
                                                         globalAppointmentDb.child(appointment.getKey()).child("involvedUsers").setValue(involvedUsers)
                                                                 .addOnSuccessListener(aVoid3 -> Toast.makeText(context, "Appointment moved to history and user removed from involved users successfully", Toast.LENGTH_SHORT).show())
                                                                 .addOnFailureListener(e -> Toast.makeText(context, "Failed to remove user from involved users: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                                                        appointmentsAdapter.notifyDataSetChanged();
                                                     }
                                                 })
                                                 .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
@@ -338,6 +331,44 @@ public class AppointmentManager {
             });
         }
     }
+
+    public void deleteAppointment(String appointmentKey) {
+        if (appointmentKey != null) {
+            globalAppointmentDb.child(appointmentKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Appointment globalAppointment = snapshot.getValue(Appointment.class);
+                    if (globalAppointment != null) {
+                        List<String> involvedUsers = globalAppointment.getInvolvedUsers();
+                        if (involvedUsers != null && !involvedUsers.isEmpty()) {
+                            // Remove the appointment key from each user's appointment list
+                            for (String userId : involvedUsers) {
+                                DatabaseReference userAppointmentsRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId).child("appointments");
+                                userAppointmentsRef.child(appointmentKey).removeValue()
+                                        .addOnSuccessListener(aVoid -> Log.d("DeleteAppointment", "Appointment removed from user's list successfully"))
+                                        .addOnFailureListener(e -> Log.e("DeleteAppointment", "Failed to remove appointment from user's list: " + e.getMessage()));
+                            }
+
+                            // Delete the appointment from the global appointment collection
+                            globalAppointmentDb.child(appointmentKey).removeValue()
+                                    .addOnSuccessListener(aVoid -> Toast.makeText(context, "Appointment deleted successfully", Toast.LENGTH_SHORT).show())
+                                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                        } else {
+                            Toast.makeText(context, "No involved users found for the appointment", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(context, "Failed to fetch appointment details from global collection", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(context, "Failed to fetch appointment details: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
 
 
 

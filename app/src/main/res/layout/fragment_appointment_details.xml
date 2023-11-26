@@ -167,7 +167,6 @@
             tools:layout_editor_absoluteX="0dp"
             tools:listitem="@layout/item_image" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
