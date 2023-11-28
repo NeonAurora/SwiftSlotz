@@ -11,18 +11,28 @@
         android:icon="@drawable/icon_history"
         android:title="@string/drawer_item2" />
 
-<!--    <item-->
-<!--        android:id="@+id/drawer_item3"-->
-<!--        android:icon="@drawable/ic_drawer_item3"-->
-<!--        android:title="@string/drawer_item3" />-->
+    <item
+        android:id="@+id/drawer_item3"
+        android:icon="@drawable/icon_delete_document"
+        android:title="Deleted Appointments" />
 
-<!--    <item-->
-<!--        android:id="@+id/drawer_item4"-->
-<!--        android:icon="@drawable/ic_drawer_item4"-->
-<!--        android:title="@string/drawer_item4" />-->
+    <item
+        android:id="@+id/drawer_item4"
+        android:icon="@drawable/icon_password_reset"
+        android:title="Edit Password" />
 
-<!--    <item-->
-<!--        android:id="@+id/drawer_item5"-->
-<!--        android:icon="@drawable/ic_drawer_item5"-->
-<!--        android:title="@string/drawer_item5" />-->
+    <item
+        android:id="@+id/drawer_item5"
+        android:icon="@drawable/icon_logout"
+        android:title="Logout" />
+
+    <item
+        android:id="@+id/drawer_item6"
+        android:icon="@drawable/icon_about_us"
+        android:title="About Us" />
+
+    <item
+        android:id="@+id/drawer_item7"
+        android:icon="@drawable/icon_send_feedback"
+        android:title="Send Feedback" />
 </menu>
