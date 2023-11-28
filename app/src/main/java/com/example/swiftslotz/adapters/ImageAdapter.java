@@ -92,6 +92,34 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         });
     }
 
+//    private void showPreviewDialog(Context context, String imageUrl) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+//
+//        LayoutInflater inflater = LayoutInflater.from(context);
+//        View dialogView = inflater.inflate(R.layout.preview_image, null);
+//
+//        ImageView ivPreview = dialogView.findViewById(R.id.iv_preview_image);
+//        ImageButton btnClose = dialogView.findViewById(R.id.close_preview);
+//
+//        Glide.with(context).load(imageUrl).into(ivPreview);
+//
+//        builder.setView(dialogView);
+//        AlertDialog dialog = builder.create();
+//
+//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        // Set other window properties as required
+//
+//        btnClose.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                dialog.dismiss();
+//            }
+//        });
+//
+//        dialog.show();
+//    }
+
+
     @Override
     public int getItemCount() {
         return imageUrls.size();
