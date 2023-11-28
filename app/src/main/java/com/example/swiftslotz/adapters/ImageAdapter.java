@@ -1,9 +1,13 @@
 package com.example.swiftslotz.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.annotation.NonNull;
@@ -41,6 +45,33 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         Glide.with(context)
                 .load(imageUrl)
                 .into(holder.imageView);
+
+
+
+        final Dialog nagDialog = new Dialog(context,android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+        nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        nagDialog.setCancelable(false);
+        nagDialog.setContentView(R.layout.preview_image);
+        ImageButton btnClose = (ImageButton) nagDialog.findViewById(R.id.close_preview);
+        ImageView ivPreview = (ImageView)nagDialog.findViewById(R.id.iv_preview_image);
+        Glide.with(context)
+                .load(imageUrl)
+                .into(ivPreview);
+
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                nagDialog.show();
+            }
+        });
+
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nagDialog.dismiss();
+            }
+        });
+
 
         holder.deleteButton.setOnClickListener(v -> {
             // Delete the image from Firebase Storage and update the imgUrl list

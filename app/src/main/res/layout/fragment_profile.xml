@@ -87,6 +87,8 @@
 
             <ImageView
                 android:id="@+id/profileImage"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
                 android:layout_width="163dp"
                 android:layout_height="159dp" />
 

@@ -22,7 +22,9 @@
         <ImageView
             android:id="@+id/profileViewImage"
             android:layout_width="163dp"
-            android:layout_height="159dp" />
+            android:layout_height="159dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
 
         <LinearLayout
             android:layout_width="match_parent"
