@@ -1,7 +1,10 @@
 package com.example.swiftslotz.adapters;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,27 +51,32 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
 
 
-        final Dialog nagDialog = new Dialog(context,android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
-        nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        nagDialog.setCancelable(false);
-        nagDialog.setContentView(R.layout.preview_image);
-        ImageButton btnClose = (ImageButton) nagDialog.findViewById(R.id.close_preview);
-        ImageView ivPreview = (ImageView)nagDialog.findViewById(R.id.iv_preview_image);
-        Glide.with(context)
-                .load(imageUrl)
-                .into(ivPreview);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View dialogView = inflater.inflate(R.layout.preview_image, null);
+
+        ImageView ivPreview = dialogView.findViewById(R.id.iv_preview_image);
+        ImageButton btnClose = dialogView.findViewById(R.id.close_preview);
+
+        Glide.with(context).load(imageUrl).into(ivPreview);
+
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                nagDialog.show();
+                dialog.show();
             }
         });
 
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nagDialog.dismiss();
+                dialog.dismiss();
             }
         });
 
@@ -93,20 +101,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     }
 
 //    private void showPreviewDialog(Context context, String imageUrl) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
-//
-//        LayoutInflater inflater = LayoutInflater.from(context);
-//        View dialogView = inflater.inflate(R.layout.preview_image, null);
-//
-//        ImageView ivPreview = dialogView.findViewById(R.id.iv_preview_image);
-//        ImageButton btnClose = dialogView.findViewById(R.id.close_preview);
-//
-//        Glide.with(context).load(imageUrl).into(ivPreview);
-//
-//        builder.setView(dialogView);
-//        AlertDialog dialog = builder.create();
-//
-//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
 //        // Set other window properties as required
 //
 //        btnClose.setOnClickListener(new View.OnClickListener() {
