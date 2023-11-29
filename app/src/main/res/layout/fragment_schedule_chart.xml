@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.bottomBarFragments.ScheduleChartFragment">
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/clock" />
+
     <com.example.swiftslotz.views.charts.CustomPieChart
         android:id="@+id/custom_pie_chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:elevation="70dp"
         />
+
+
 
 
 </FrameLayout>

@@ -92,7 +92,7 @@ public class CustomPieChart extends View {
 //        canvas.drawCircle(cx, cy, innerRadius, paint);
 
         // Draw the legend
-        drawLegend(canvas, cx, cy*1.02f, outerRadius+40);
+        //drawLegend(canvas, cx, cy*1.02f, outerRadius+40);
         Log.d("Canvas Size", String.valueOf(canvas.getHeight()));// adjust these coordinates as needed
     }
 
