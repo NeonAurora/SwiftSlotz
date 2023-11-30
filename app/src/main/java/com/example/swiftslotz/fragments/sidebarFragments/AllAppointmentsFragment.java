@@ -84,19 +84,11 @@ public class AllAppointmentsFragment extends Fragment implements AppointmentsAda
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_appointments, container, false);
+        View view = inflater.inflate(R.layout.fragment_all_appointments, container, false);
         mAuth = FirebaseAuth.getInstance();
-        setupViews(view);
         setupRecyclerView(view);
         setupAppointmentFetching();
         return view;
-    }
-
-    private void setupViews(View view) {
-        badgeTextView = view.findViewById(R.id.badge_text_view);
-        tvCountdownTimer = view.findViewById(R.id.tvCountdownTimer);
-        Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.silverballbold);
-        tvCountdownTimer.setTypeface(typeface);
     }
 
     private void setupRecyclerView(View view) {
@@ -249,16 +241,6 @@ public class AllAppointmentsFragment extends Fragment implements AppointmentsAda
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
-
-        countDownTimer = new CountDownTimer(timeToStart * 1000, 1000) {
-            public void onTick(long millisUntilFinished) {
-                tvCountdownTimer.setText(formatMillis(millisUntilFinished));
-            }
-
-            public void onFinish() {
-                tvCountdownTimer.setText("Appointment Running!");
-            }
-        }.start();
     }
 
     private String formatMillis(long millis) {
