@@ -17,6 +17,11 @@
         android:title="Deleted Appointments" />
 
     <item
+        android:id="@+id/drawer_item8"
+        android:icon="@drawable/icon_delete_document"
+        android:title="All Appointments" />
+
+    <item
         android:id="@+id/drawer_item4"
         android:icon="@drawable/icon_password_reset"
         android:title="Edit Password" />
