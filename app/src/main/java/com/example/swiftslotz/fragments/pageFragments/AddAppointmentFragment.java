@@ -35,7 +35,7 @@ public class AddAppointmentFragment extends Fragment {
     EditText appointmentEditText;
     Button addAppointmentButton;
     Button selectTimeButton;
-    TextView selectedTimeTextView, monthTextView, yearTextView;
+    TextView monthTextView, yearTextView;
     EditText appointmentDurationEditText;
     Spinner unitSpinner;
     String firebaseKey;

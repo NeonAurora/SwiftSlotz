@@ -1,12 +1,16 @@
 package com.example.swiftslotz.utilities;
 
 import java.io.Serializable;
+import java.util.Set;
 
 public class User implements Serializable {
 
     private String firstName, lastName, username, email, phone, occupation, address, facebook, instagram, linkedin;
     private UserAppointments appointments;
     private String profileImageUrl;
+    private Set<String> activeDays;
+    private String activeHoursStart;
+    private String activeHoursEnd;
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -31,6 +35,20 @@ public class User implements Serializable {
         this.occupation = occupation;
         this.address = address;
         this.appointments = appointments;  // Include this line to initialize the appointments field
+    }
+
+    public User(String firstName, String lastName, String username, String email, String phone, String occupation, String address, UserAppointments appointments, Set<String> activeDays, String activeHoursStart, String activeHoursEnd) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.email = email;
+        this.phone = phone;
+        this.occupation = occupation;
+        this.address = address;
+        this.appointments = appointments;
+        this.activeDays = activeDays;
+        this.activeHoursStart = activeHoursStart;
+        this.activeHoursEnd = activeHoursEnd;
     }
 
     public void setFirstName(String firstName) {
@@ -129,5 +147,13 @@ public class User implements Serializable {
     public void setLinkedin(String linkedin) {
         this.linkedin = linkedin;
     }
+    public Set<String> getActiveDays() { return activeDays; }
+    public void setActiveDays(Set<String> activeDays) { this.activeDays = activeDays; }
+
+    public String getActiveHoursStart() { return activeHoursStart; }
+    public void setActiveHoursStart(String activeHoursStart) { this.activeHoursStart = activeHoursStart; }
+
+    public String getActiveHoursEnd() { return activeHoursEnd; }
+    public void setActiveHoursEnd(String activeHoursEnd) { this.activeHoursEnd = activeHoursEnd; }
 }
 

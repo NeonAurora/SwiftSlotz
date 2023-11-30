@@ -485,7 +485,7 @@
                         android:gravity="center"
                         android:text="Su" />
 
-                    <RadioButton
+                    <CheckBox
                         android:id="@+id/sun"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
@@ -504,7 +504,7 @@
                         android:gravity="center"
                         android:text="Mo" />
 
-                    <RadioButton
+                    <CheckBox
                         android:id="@+id/mon"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
@@ -523,7 +523,7 @@
                         android:gravity="center"
                         android:text="Tu" />
 
-                    <RadioButton
+                    <CheckBox
                         android:id="@+id/tue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
@@ -542,7 +542,7 @@
                         android:gravity="center"
                         android:text="We" />
 
-                    <RadioButton
+                    <CheckBox
                         android:id="@+id/wed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
@@ -561,7 +561,7 @@
                         android:gravity="center"
                         android:text="Th" />
 
-                    <RadioButton
+                    <CheckBox
                         android:id="@+id/thu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
@@ -580,7 +580,7 @@
                         android:gravity="center"
                         android:text="Fr" />
 
-                    <RadioButton
+                    <CheckBox
                         android:id="@+id/fri"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
@@ -599,7 +599,7 @@
                         android:gravity="center"
                         android:text="Sa" />
 
-                    <RadioButton
+                    <CheckBox
                         android:id="@+id/sat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />

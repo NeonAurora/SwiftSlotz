@@ -15,12 +15,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -32,14 +36,27 @@ import com.bumptech.glide.Glide;
 import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.activities.LogoutActivity;
+import com.example.swiftslotz.utilities.User;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 public class ProfileFragment extends Fragment {
 
@@ -62,6 +79,8 @@ public class ProfileFragment extends Fragment {
     private EditText linkedinLink;
     private ImageButton editInstagramButton, cancelInstagramButton;
     private EditText instagramLink;
+    private Button fromActiveHour, toActiveHour;
+    private CheckBox sunday, monday, tuesday, wednesday, thursday, friday, saturday;
 
     @Nullable
     @Override
@@ -114,6 +133,22 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        fromActiveHour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("ProfileFragment", "onClick: fromActiveHour");
+                showTimePicker(fromActiveHour);
+            }
+        });
+
+        toActiveHour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("ProfileFragment", "onClick: toActiveHour");
+                showTimePicker(toActiveHour);
+            }
+        });
+
         setupTextWatchers();
         return view;
     }
@@ -141,6 +176,40 @@ public class ProfileFragment extends Fragment {
                     facebookLink.setText(dataSnapshot.child("facebook").getValue(String.class));
                     linkedinLink.setText(dataSnapshot.child("linkedin").getValue(String.class));
                     instagramLink.setText(dataSnapshot.child("instagram").getValue(String.class));
+
+                    String activeHoursStart = dataSnapshot.child("activeHoursStart").getValue(String.class);
+                    String activeHoursEnd = dataSnapshot.child("activeHoursEnd").getValue(String.class);
+                    if (activeHoursStart != null) { fromActiveHour.setText(activeHoursStart); }
+                    if (activeHoursEnd != null) { toActiveHour.setText(activeHoursEnd); }
+
+                    List<String> activeDays = dataSnapshot.child("activeDays").getValue(new GenericTypeIndicator<List<String>>() {});
+                    if(activeDays != null) {
+                        for (String day : activeDays) {
+                            switch (day) {
+                                case "Sunday":
+                                    sunday.setChecked(true);
+                                    break;
+                                case "Monday":
+                                    monday.setChecked(true);
+                                    break;
+                                case "Tuesday":
+                                    tuesday.setChecked(true);
+                                    break;
+                                case "Wednesday":
+                                    wednesday.setChecked(true);
+                                    break;
+                                case "Thursday":
+                                    thursday.setChecked(true);
+                                    break;
+                                case "Friday":
+                                    friday.setChecked(true);
+                                    break;
+                                case "Saturday":
+                                    saturday.setChecked(true);
+                                    break;
+                            }
+                        }
+                    }
 
                      //Load profile image if it exists in the database
                     if (dataSnapshot.hasChild("profileImageUrl")) {
@@ -234,11 +303,39 @@ public class ProfileFragment extends Fragment {
         String updatedFacebook = facebookLink.getText().toString().trim();
         String updatedLinkedin = linkedinLink.getText().toString().trim();
         String updatedInstagram = instagramLink.getText().toString().trim();
+        String updatedActiveHoursStart = fromActiveHour.getText().toString().trim();
+        String updatedActiveHoursEnd = toActiveHour.getText().toString().trim();
+        Set<String> updatedActiveDays = new HashSet<>();
+        if (sunday.isChecked()) { updatedActiveDays.add("Sunday"); }
+        if (monday.isChecked()) { updatedActiveDays.add("Monday"); }
+        if (tuesday.isChecked()) { updatedActiveDays.add("Tuesday"); }
+        if (wednesday.isChecked()) { updatedActiveDays.add("Wednesday"); }
+        if (thursday.isChecked()) { updatedActiveDays.add("Thursday"); }
+        if (friday.isChecked()) { updatedActiveDays.add("Friday"); }
+        if (saturday.isChecked()) { updatedActiveDays.add("Saturday"); }
+        List<String> updatedActiveDaysList = new ArrayList<>(updatedActiveDays);
+
 
         // Check if first name or last name is empty
         if (updatedFirstName.isEmpty() || updatedLastName.isEmpty()) {
             Toast.makeText(getActivity(), "First name and last name cannot be empty", Toast.LENGTH_SHORT).show();
             return;
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        try {
+            Date startTime = sdf.parse(updatedActiveHoursStart);
+            Date endTime = sdf.parse(updatedActiveHoursEnd);
+
+            // Check if start time is before end time
+            if (startTime != null && endTime != null && !startTime.before(endTime)) {
+                Toast.makeText(getActivity(), "Start time must be before end time", Toast.LENGTH_SHORT).show();
+                return; // Early return if the time is not valid
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(getActivity(), "Invalid time format", Toast.LENGTH_SHORT).show();
+            return; // Early return if the time format is invalid
         }
 
         if (mAuth.getCurrentUser() != null) {
@@ -252,6 +349,9 @@ public class ProfileFragment extends Fragment {
             userDb.child("facebook").setValue(updatedFacebook);
             userDb.child("linkedin").setValue(updatedLinkedin);
             userDb.child("instagram").setValue(updatedInstagram);
+            userDb.child("activeDays").setValue(updatedActiveDaysList).addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to update active days", Toast.LENGTH_SHORT).show());
+            userDb.child("activeHoursStart").setValue(updatedActiveHoursStart);
+            userDb.child("activeHoursEnd").setValue(updatedActiveHoursEnd);
 
             Toast.makeText(getActivity(), "Profile updated", Toast.LENGTH_SHORT).show();
         } else {
@@ -287,6 +387,17 @@ public class ProfileFragment extends Fragment {
         editInstagramButton = view.findViewById(R.id.editInstagramButton);
         cancelInstagramButton = view.findViewById(R.id.editCancelInstagramButton);
         instagramLink = view.findViewById(R.id.instagramLink);
+
+        fromActiveHour = view.findViewById(R.id.fromAH);
+        toActiveHour = view.findViewById(R.id.toAH);
+
+        sunday = view.findViewById(R.id.sun);
+        monday = view.findViewById(R.id.mon);
+        tuesday = view.findViewById(R.id.tue);
+        wednesday = view.findViewById(R.id.wed);
+        thursday = view.findViewById(R.id.thu);
+        friday = view.findViewById(R.id.fri);
+        saturday = view.findViewById(R.id.sat);
     }
 
     private void setupTextWatchers() {
@@ -313,9 +424,42 @@ public class ProfileFragment extends Fragment {
             facebookLink.addTextChangedListener(textWatcher);
             linkedinLink.addTextChangedListener(textWatcher);
             instagramLink.addTextChangedListener(textWatcher);
+
+            CompoundButton.OnCheckedChangeListener checkboxListener = (buttonView, isChecked) -> enableUpdateButton();
+            sunday.setOnCheckedChangeListener(checkboxListener);
+            monday.setOnCheckedChangeListener(checkboxListener);
+            tuesday.setOnCheckedChangeListener(checkboxListener);
+            wednesday.setOnCheckedChangeListener(checkboxListener);
+            thursday.setOnCheckedChangeListener(checkboxListener);
+            friday.setOnCheckedChangeListener(checkboxListener);
+            saturday.setOnCheckedChangeListener(checkboxListener);
+
         }, TEXT_WATCHER_DELAY);
     }
 
+    private void showTimePicker(final Button timeButton) {
+        MaterialTimePicker materialTimePicker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_12H)
+                .setHour(12)
+                .setMinute(0)
+                .setTitleText("Select Time")
+                .build();
 
+        materialTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int hour = materialTimePicker.getHour();
+                int minute = materialTimePicker.getMinute();
+                String amPm = hour < 12 ? "AM" : "PM";
+                if (hour > 12) hour -= 12;
+                else if (hour == 0) hour = 12;
+                String formattedTime = String.format(Locale.getDefault(), "%02d:%02d %s", hour, minute, amPm);
+                timeButton.setText(formattedTime);
+                enableUpdateButton(); // Call this to enable the update button
+            }
+        });
+
+        materialTimePicker.show(getParentFragmentManager(), "MATERIAL_TIME_PICKER");
+    }
 
 }
