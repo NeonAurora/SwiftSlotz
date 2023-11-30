@@ -1,30 +1,45 @@
 package com.example.swiftslotz.utilities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.example.swiftslotz.R;
+import com.example.swiftslotz.activities.LogoutActivity;
 import com.example.swiftslotz.fragments.bottomBarFragments.ProfileFragment;
 import com.example.swiftslotz.fragments.bottomBarFragments.ScheduleChartFragment;
 import com.example.swiftslotz.fragments.bottomBarFragments.SearchFragment;
 import com.example.swiftslotz.fragments.bottomBarFragments.AppointmentsFragment;
+import com.example.swiftslotz.fragments.sidebarFragments.AboutUsFragment;
+import com.example.swiftslotz.fragments.sidebarFragments.AllAppointmentsFragment;
+import com.example.swiftslotz.fragments.sidebarFragments.EditPasswordFragment;
+import com.example.swiftslotz.fragments.sidebarFragments.RemovedAppointmentsFragment;
 import com.example.swiftslotz.fragments.sidebarFragments.PastAppointmentsFragment;
 import com.example.swiftslotz.fragments.sidebarFragments.SearchExistingAppointmentFragment;
-import com.example.swiftslotz.fragments.sidebarFragments.Item3Fragment;
-import com.example.swiftslotz.fragments.sidebarFragments.Item4Fragment;
-import com.example.swiftslotz.fragments.sidebarFragments.Item5Fragment;
+import com.example.swiftslotz.fragments.sidebarFragments.SendFeedbackFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
-
+import android.content.Intent;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 public class BaseActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
@@ -48,6 +63,7 @@ public class BaseActivity extends AppCompatActivity {
 
         // Set up the navigation view.
         NavigationView navigationView = findViewById(R.id.nav_view);
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -58,22 +74,28 @@ public class BaseActivity extends AppCompatActivity {
                 Fragment selectedFragment = null;
 
                 switch (id) {
-                    case R.id.drawer_item1:
+                    case R.id.search:
                         // Replace with your actual fragments
                         selectedFragment = new SearchExistingAppointmentFragment();
                         break;
-                    case R.id.drawer_item2:
+                    case R.id.history:
                         selectedFragment = new PastAppointmentsFragment();
                         break;
-//                    case R.id.drawer_item3:
-//                        selectedFragment = new Item3Fragment();
-//                        break;
-//                    case R.id.drawer_item4:
-//                        selectedFragment = new Item4Fragment();
-//                        break;
-//                    case R.id.drawer_item5:
-//                        selectedFragment = new Item5Fragment();
-//                        break;
+                    case R.id.deletedAppointments:
+                        selectedFragment = new RemovedAppointmentsFragment();
+                        break;
+                    case R.id.allAppointments:
+                        selectedFragment = new AllAppointmentsFragment();
+                        break;
+                    case R.id.editPassword:
+                        selectedFragment = new EditPasswordFragment();
+                        break;
+                    case R.id.aboutUs:
+                        selectedFragment = new AboutUsFragment();
+                        break;
+                    case R.id.sendFeedback:
+                        selectedFragment = new SendFeedbackFragment();
+                        break;
                 }
 
                 if (selectedFragment != null) {
@@ -82,9 +104,42 @@ public class BaseActivity extends AppCompatActivity {
                     transaction.commit();
                 }
 
+
                 // Close the drawer.
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
+            }
+        });
+
+        LinearLayout logoutBtn  = findViewById(R.id.logoutLayout);
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View myView = LayoutInflater.from(view.getContext()).inflate(R.layout.logout_alert, null);
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(view.getContext()).setView(myView);
+                alertDialog.setCancelable(false);
+
+                final AlertDialog dialog = alertDialog.show();
+
+                Button posLogout = myView.findViewById(R.id.posLogout),
+                        negLogout = myView.findViewById(R.id.negLogout);
+
+                posLogout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(BaseActivity.this, LogoutActivity.class);
+                        startActivity(intent);
+                        dialog.dismiss();
+                        finish();
+                    }
+                });
+
+                negLogout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
 

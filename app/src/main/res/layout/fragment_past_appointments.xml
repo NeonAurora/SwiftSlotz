@@ -14,16 +14,4 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/past_appointment_item"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_removed_appointments"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        app:backgroundTint="#93a9eb"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_removed_appointments" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

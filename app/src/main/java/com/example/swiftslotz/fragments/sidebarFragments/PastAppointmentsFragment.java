@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.fragments.pageFragments.PastAppointmentDetailsFragment;
-import com.example.swiftslotz.fragments.pageFragments.RemovedAppointmentsFragment;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
 import com.example.swiftslotz.adapters.PastAppointmentsAdapter;
@@ -64,7 +63,7 @@ public class PastAppointmentsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_past_appointments, container, false);
 
         pastAppointmentsRecyclerView = view.findViewById(R.id.pastAppointmentsRecyclerView);
-        fabRemovedAppointments = view.findViewById(R.id.fab_removed_appointments);
+//        fabRemovedAppointments = view.findViewById(R.id.fab_removed_appointments);
         pastAppointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         pastAppointmentsList = new ArrayList<>();
@@ -72,26 +71,26 @@ public class PastAppointmentsFragment extends Fragment {
         pastAppointmentsRecyclerView.setAdapter(adapter);
         appointmentManager = new AppointmentManager(getContext());
         Fragment selectedFragment = null;
-        fabRemovedAppointments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Create a new instance of RemovedAppointmentsFragment
-                RemovedAppointmentsFragment removedAppointmentsFragment = new RemovedAppointmentsFragment();
-
-                // Use FragmentManager and FragmentTransaction to replace the current fragment
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                // Replace the current fragment with the RemovedAppointmentsFragment instance
-                fragmentTransaction.replace(R.id.content_frame, removedAppointmentsFragment);
-
-                // Add the transaction to the back stack if you want to navigate back
-                fragmentTransaction.addToBackStack(null);
-
-                // Commit the transaction
-                fragmentTransaction.commit();
-            }
-        });
+//        fabRemovedAppointments.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // Create a new instance of RemovedAppointmentsFragment
+//                RemovedAppointmentsFragment removedAppointmentsFragment = new RemovedAppointmentsFragment();
+//
+//                // Use FragmentManager and FragmentTransaction to replace the current fragment
+//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//
+//                // Replace the current fragment with the RemovedAppointmentsFragment instance
+//                fragmentTransaction.replace(R.id.content_frame, removedAppointmentsFragment);
+//
+//                // Add the transaction to the back stack if you want to navigate back
+//                fragmentTransaction.addToBackStack(null);
+//
+//                // Commit the transaction
+//                fragmentTransaction.commit();
+//            }
+//        });
 
         mGetContent = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), results -> {
             if (results != null && results.size() > 0) {

@@ -2,42 +2,39 @@
 
 
     <item
-        android:id="@+id/drawer_item1"
+        android:id="@+id/search"
         android:icon="@drawable/icon_search"
         android:title="@string/drawer_item1" />
 
     <item
-        android:id="@+id/drawer_item2"
+        android:id="@+id/history"
         android:icon="@drawable/icon_history"
         android:title="@string/drawer_item2" />
 
     <item
-        android:id="@+id/drawer_item3"
+        android:id="@+id/deletedAppointments"
         android:icon="@drawable/icon_delete_document"
         android:title="Deleted Appointments" />
 
     <item
-        android:id="@+id/drawer_item8"
-        android:icon="@drawable/icon_delete_document"
+        android:id="@+id/allAppointments"
+        android:icon="@drawable/icon_select_all"
         android:title="All Appointments" />
 
     <item
-        android:id="@+id/drawer_item4"
+        android:id="@+id/editPassword"
         android:icon="@drawable/icon_password_reset"
         android:title="Edit Password" />
 
-    <item
-        android:id="@+id/drawer_item5"
-        android:icon="@drawable/icon_logout"
-        android:title="Logout" />
+
 
     <item
-        android:id="@+id/drawer_item6"
+        android:id="@+id/aboutUs"
         android:icon="@drawable/icon_about_us"
         android:title="About Us" />
 
     <item
-        android:id="@+id/drawer_item7"
+        android:id="@+id/sendFeedback"
         android:icon="@drawable/icon_send_feedback"
         android:title="Send Feedback" />
 </menu>
