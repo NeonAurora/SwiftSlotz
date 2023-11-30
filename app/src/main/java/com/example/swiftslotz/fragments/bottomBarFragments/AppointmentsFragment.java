@@ -75,7 +75,7 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
             @Override
             public void run() {
                 updateAppointmentProgress(appointments);
-                progressUpdateHandler.postDelayed(this, 2000); // Schedule the next execution
+                progressUpdateHandler.postDelayed(this, 1000); // Schedule the next execution
             }
         };
     }
@@ -194,6 +194,7 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
     private void updateAppointmentProgress(List<Appointment> appointments) {
         for (Appointment appointment : appointments) {
             long timeToStart = calculateTimeToStart(appointment);
+            Log.d("AppointmentsFragment", "Time to start: " + timeToStart);
             appointment.setTimeToStart(timeToStart);
 
             if (timeToStart <= 0) {
@@ -209,7 +210,21 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
                 if ((totalDurationInSeconds - elapsedTimeSinceStart) == 0) {
                     playSound(R.raw.interface_hint);
                 } else {
-                    appointment.setRemainingTime(totalDurationInSeconds - elapsedTimeSinceStart);
+                    long remainingTimeInSeconds = totalDurationInSeconds - elapsedTimeSinceStart;
+                    Log.d("AppointmentsFragment", "Remaining time: " + remainingTimeInSeconds);
+
+                    // Check and format the remaining time
+                    String formattedTime;
+                    if (remainingTimeInSeconds >= 3600) { // More than or equal to an hour
+                        float hours = remainingTimeInSeconds / 3600.0f;
+                        formattedTime = String.format("%.1f H", hours);
+                    } else if (remainingTimeInSeconds >= 60) { // Less than an hour but more than a minute
+                        long minutes = remainingTimeInSeconds / 60;
+                        formattedTime = minutes + " M";
+                    } else { // Less than a minute
+                        formattedTime = remainingTimeInSeconds + " S";
+                    }
+                    appointment.setRemainingTime(formattedTime);
                 }
 
                 int circularProgressPercentage = (int) ((elapsedTimeSinceStart * 100) / totalDurationInSeconds);

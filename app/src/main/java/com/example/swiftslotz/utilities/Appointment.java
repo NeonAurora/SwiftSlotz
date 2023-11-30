@@ -28,7 +28,7 @@ public class Appointment implements Serializable {
     public int linearProgressPercentage;
     public int circularProgressPercentage;
     private long creationTimestamp;
-    private float remainingTime;
+    private String remainingTime;
     private boolean linearProgressVisible;
     private boolean circularProgressVisible;
     private boolean animated = false;
@@ -191,10 +191,10 @@ public class Appointment implements Serializable {
     public void setAnimated(boolean animated) {
         this.animated = animated;
     }
-    public float getRemainingTime() {
+    public String getRemainingTime() {
         return remainingTime;
     }
-    public void setRemainingTime(float remainingTime) {
+    public void setRemainingTime(String remainingTime) {
         this.remainingTime = remainingTime;
     }
 }

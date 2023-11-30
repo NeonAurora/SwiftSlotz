@@ -144,7 +144,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"
             app:indicatorSize="40dp"
-            app:trackThickness="20dp"/>
+            app:trackThickness="20dp"
+            android:visibility="gone"/>
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/circular_progress_bar2"
@@ -173,7 +174,8 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@id/circular_progress_bar"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.903" />
+            app:layout_constraintVertical_bias="0.903"
+            android:visibility="gone"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

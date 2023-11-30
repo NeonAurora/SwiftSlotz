@@ -312,7 +312,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             holder.circularProgressBar.setVisibility(View.VISIBLE);
             holder.circularProgressIndicator2.setVisibility(View.VISIBLE);
             holder.durationTextView.setVisibility(View.VISIBLE);
-            holder.durationTextView.setText(appointment.getRemainingTime() + " min");
+            holder.durationTextView.setText(appointment.getRemainingTime());
             holder.circularProgressBar.setProgress(appointment.getCircularProgressPercentage());
         } else {
             holder.circularProgressBar.setVisibility(View.GONE);
