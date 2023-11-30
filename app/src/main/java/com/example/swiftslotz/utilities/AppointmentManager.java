@@ -147,7 +147,9 @@ public class AppointmentManager {
         void onRequestedAppointmentsFetched(List<Appointment> appointments);
     }
 
-    public void fetchAppointmentsFromDatabase() {
+    public void fetchAppointmentsFromDatabase(int mode) {
+        final String todayDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
         rootRef.child("appointments").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -158,7 +160,7 @@ public class AppointmentManager {
                     appointments.clear();
                 }
 
-                // Iterate over the appointment keys and fetch details from globalAppointmentDb
+                // Iterate over the appointment keys
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     final String appointmentKey = snapshot.getKey();
                     if (appointmentKey != null) {
@@ -168,10 +170,14 @@ public class AppointmentManager {
                                 Appointment appointment = appointmentSnapshot.getValue(Appointment.class);
                                 if (appointment != null) {
                                     appointment.setKey(appointmentKey);
-                                    appointments.add(appointment);
 
-                                    Sector sector = AppointmentManager.this.appointmentToSector(appointment);
-                                    sectors.add(sector);
+                                    // Check if the appointment is for today (if mode is 1)
+                                    if (mode == 0 || (mode == 1 && todayDate.equals(appointment.getDate()))) {
+                                        appointments.add(appointment);
+
+                                        Sector sector = AppointmentManager.this.appointmentToSector(appointment);
+                                        sectors.add(sector);
+                                    }
                                 }
 
                                 // Notify listener after all appointments have been fetched and added to the list

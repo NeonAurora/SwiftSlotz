@@ -1,66 +1,112 @@
 package com.example.swiftslotz.fragments.sidebarFragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RatingBar;
+import android.widget.Spinner;
+import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
+import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SendFeedbackFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class SendFeedbackFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public SendFeedbackFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SendFeedback.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SendFeedbackFragment newInstance(String param1, String param2) {
-        SendFeedbackFragment fragment = new SendFeedbackFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private RatingBar ratingBar;
+    private EditText featureRequestEditText, generalFeedbackEditText, improvementSuggestionsEditText, contactInfoEditText;
+    private Button submitButton;
+    Spinner usabilitySpinner, userEngagementSpinner;
+    CheckBox checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7, checkBox8, checkBox9, checkBox10;
+    // Add other UI components as needed
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_send_feedback, container, false);
+
+        // Initialize UI components
+        ratingBar = view.findViewById(R.id.ratingBar);
+        usabilitySpinner = view.findViewById(R.id.spinner_usability);
+        checkBox1 = view.findViewById(R.id.checkbox_feature1);
+        checkBox2 = view.findViewById(R.id.checkbox_feature2);
+        checkBox3 = view.findViewById(R.id.checkbox_feature3);
+        checkBox4 = view.findViewById(R.id.checkbox_feature4);
+        featureRequestEditText = view.findViewById(R.id.et_feature_request);
+        generalFeedbackEditText = view.findViewById(R.id.et_general_feedback);
+        improvementSuggestionsEditText = view.findViewById(R.id.et_improvement_suggestions);
+        userEngagementSpinner = view.findViewById(R.id.spinner_user_engagement);
+        contactInfoEditText = view.findViewById(R.id.et_contact_info);
+        submitButton = view.findViewById(R.id.btn_submit_feedback);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.usability_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        usabilitySpinner.setAdapter(adapter);
+
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getActivity(), R.array.user_engagement_array, android.R.layout.simple_spinner_item);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        userEngagementSpinner.setAdapter(adapter2);
+        // Initialize other components here
+
+        // Set up button click listener
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitFeedback();
+            }
+        });
+
+        return view;
+    }
+
+    private void submitFeedback() {
+        float userRating = ratingBar.getRating();
+        String usabilityFeedback = usabilitySpinner.getSelectedItem().toString();
+        String featureRequest = featureRequestEditText.getText().toString().trim();
+        String generalFeedback = generalFeedbackEditText.getText().toString().trim();
+        String improvementSuggestions = improvementSuggestionsEditText.getText().toString().trim();
+        String userEngagement = userEngagementSpinner.getSelectedItem().toString();
+        String contactInfo = contactInfoEditText.getText().toString().trim();
+
+        // Collecting which features are found useful
+        List<String> usefulFeatures = new ArrayList<>();
+        if (checkBox1.isChecked()) usefulFeatures.add(checkBox1.getText().toString());
+        if (checkBox2.isChecked()) usefulFeatures.add(checkBox2.getText().toString());
+        if (checkBox3.isChecked()) usefulFeatures.add(checkBox3.getText().toString());
+        if (checkBox4.isChecked()) usefulFeatures.add(checkBox4.getText().toString());
+
+        // Create a map to store the feedback data
+        Map<String, Object> feedbackData = new HashMap<>();
+        feedbackData.put("userRating", userRating);
+        feedbackData.put("usabilityFeedback", usabilityFeedback);
+        feedbackData.put("usefulFeatures", usefulFeatures);
+        feedbackData.put("featureRequest", featureRequest);
+        feedbackData.put("generalFeedback", generalFeedback);
+        feedbackData.put("improvementSuggestions", improvementSuggestions);
+        feedbackData.put("userEngagement", userEngagement);
+        if (!contactInfo.isEmpty()) {
+            feedbackData.put("contactInfo", contactInfo);
         }
+
+        // Send the data to Firebase or your backend
+        DatabaseReference feedbackRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("FeedbackCollection");
+        feedbackRef.push().setValue(feedbackData)
+                .addOnSuccessListener(aVoid -> Toast.makeText(getActivity(), "Feedback submitted successfully", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to submit feedback", Toast.LENGTH_SHORT).show());
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_send_feedback, container, false);
-    }
+
+    // Add other methods as needed
 }

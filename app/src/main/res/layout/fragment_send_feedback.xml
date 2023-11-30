@@ -1,14 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.sidebarFragments.SendFeedback">
+    android:padding="16dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Send Feedback" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <!-- User Satisfaction Rating -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="How satisfied are you with our app?"
+            android:layout_marginTop="16dp"/>
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1.0"/>
+
+        <!-- Usability Feedback -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="How would you rate the usability of our app?"
+            android:layout_marginTop="16dp"/>
+
+        <Spinner
+            android:id="@+id/spinner_usability"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Feature Satisfaction -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Which features do you find most useful?"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Checkbox list for features (add or remove as necessary) -->
+        <CheckBox
+            android:id="@+id/checkbox_feature1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Feature 1"/>
+
+        <CheckBox
+            android:id="@+id/checkbox_feature2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Feature 2"/>
+
+        <CheckBox
+            android:id="@+id/checkbox_feature3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Feature 3"/>
+
+        <CheckBox
+            android:id="@+id/checkbox_feature4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Feature 4"/>
+        <!-- Add more CheckBoxes for other features -->
+
+        <!-- Feature Request -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Any features you'd like to see in future updates?"
+            android:layout_marginTop="16dp"/>
+
+        <EditText
+            android:id="@+id/et_feature_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Your feature request"/>
+
+        <!-- General Feedback -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="What do you like the most about our app?"
+            android:layout_marginTop="16dp"/>
+
+        <EditText
+            android:id="@+id/et_general_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:inputType="textMultiLine"
+            android:hint="Your feedback"/>
+
+        <!-- Improvement Suggestions -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="What improvements would you suggest?"
+            android:layout_marginTop="16dp"/>
+
+        <EditText
+            android:id="@+id/et_improvement_suggestions"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:inputType="textMultiLine"
+            android:hint="Your suggestions"/>
+
+        <!-- User Engagement -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="How frequently do you use our app?"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Replace this with a spinner or similar component for options -->
+        <Spinner
+            android:id="@+id/spinner_user_engagement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Contact Information -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Would you like to provide your email for follow-up questions? (Optional)"
+            android:layout_marginTop="16dp"/>
+
+        <EditText
+            android:id="@+id/et_contact_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:hint="Your email"/>
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/btn_submit_feedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit Feedback"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"/>
+
+    </LinearLayout>
+</ScrollView>

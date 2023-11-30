@@ -31,4 +31,18 @@
         <item>Minute</item>
         <item>Hour</item>
     </string-array>
+    <string-array name="usability_array">
+        <item>Very Hard</item>
+        <item>Hard</item>
+        <item>Okay</item>
+        <item>Easy</item>
+        <item>Very Easy</item>
+    </string-array>
+    <string-array name="user_engagement_array">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Rarely</item>
+    </string-array>
+    <string name="default_web_client_id">606717311294-95dosncopnu17k5sosoil3reef2ivha7.apps.googleusercontent.com</string>
 </resources>

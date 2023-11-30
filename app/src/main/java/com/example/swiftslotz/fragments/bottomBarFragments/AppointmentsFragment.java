@@ -145,7 +145,7 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
 //        if (appointments != null) {
 //            appointments.clear();
 //        }
-        appointmentManager.fetchAppointmentsFromDatabase();
+        appointmentManager.fetchAppointmentsFromDatabase(1);
     }
 
     @Override
@@ -154,7 +154,7 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
         SharedPreferences prefs = getActivity().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         boolean refreshNeeded = prefs.getBoolean("refreshNeeded", false);
         if (refreshNeeded) {
-            appointmentManager.fetchAppointmentsFromDatabase();
+            appointmentManager.fetchAppointmentsFromDatabase(1);
             prefs.edit().remove("refreshNeeded").apply();
         }
 
@@ -355,7 +355,7 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
 
     public void refreshAppointmentsList() {
         if (appointmentManager != null) {
-            appointmentManager.fetchAppointmentsFromDatabase();
+            appointmentManager.fetchAppointmentsFromDatabase(1);
             appointmentsAdapter.notifyDataSetChanged();
 
             Log.e("AppointmentsFragment", "Appointments list refreshed");
