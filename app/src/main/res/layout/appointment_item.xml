@@ -170,11 +170,11 @@
             android:text="20h 30min"
             android:textColor="@color/black"
             app:layout_constraintBottom_toTopOf="@+id/circular_progress_bar"
-            app:layout_constraintEnd_toEndOf="@+id/circular_progress_bar"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@id/circular_progress_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.943"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.903"
+            app:layout_constraintVertical_bias="0.867"
             android:visibility="gone"/>
 
 
