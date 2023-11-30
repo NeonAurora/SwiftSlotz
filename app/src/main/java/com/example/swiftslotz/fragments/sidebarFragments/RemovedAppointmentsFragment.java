@@ -1,4 +1,4 @@
-package com.example.swiftslotz.fragments.pageFragments;
+package com.example.swiftslotz.fragments.sidebarFragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

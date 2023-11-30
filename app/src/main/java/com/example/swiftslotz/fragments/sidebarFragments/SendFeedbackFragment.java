@@ -12,10 +12,10 @@ import com.example.swiftslotz.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Item4Fragment#newInstance} factory method to
+ * Use the {@link SendFeedbackFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Item4Fragment extends Fragment {
+public class SendFeedbackFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class Item4Fragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public Item4Fragment() {
+    public SendFeedbackFragment() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class Item4Fragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Item4Fragment.
+     * @return A new instance of fragment SendFeedback.
      */
     // TODO: Rename and change types and number of parameters
-    public static Item4Fragment newInstance(String param1, String param2) {
-        Item4Fragment fragment = new Item4Fragment();
+    public static SendFeedbackFragment newInstance(String param1, String param2) {
+        SendFeedbackFragment fragment = new SendFeedbackFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class Item4Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_item4, container, false);
+        return inflater.inflate(R.layout.fragment_send_feedback, container, false);
     }
 }

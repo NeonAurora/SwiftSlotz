@@ -410,7 +410,7 @@ public class AppointmentManager {
         startAngle -= 90;
 
         // Use a default color for now. You can change this to use different colors for different appointments.
-        int colorAM = Color.RED;
+        int colorAM = Color.parseColor("#80FF6A1F");
         int colorPM = Color.CYAN;
 
         String title = appointment.getTitle();
