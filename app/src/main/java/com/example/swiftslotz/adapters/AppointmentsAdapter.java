@@ -311,6 +311,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         if(appointment.isCircularProgressVisible()) {
             holder.circularProgressBar.setVisibility(View.VISIBLE);
             holder.circularProgressIndicator2.setVisibility(View.VISIBLE);
+            holder.durationTextView.setVisibility(View.VISIBLE);
+            holder.durationTextView.setText(appointment.getRemainingTime() + " min");
             holder.circularProgressBar.setProgress(appointment.getCircularProgressPercentage());
         } else {
             holder.circularProgressBar.setVisibility(View.GONE);
@@ -370,13 +372,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView appointmentTitle;
-        TextView appointmentDate;
-        TextView appointmentTime;
-        TextView acceptedClientName;
+        TextView appointmentTitle, appointmentDate, appointmentTime, appointmentDetails, acceptedClientName, durationTextView;
         ConstraintLayout     constraintLayout;
-
-        TextView appointmentDetails;
         LinearProgressIndicator linearProgressBar;
         CircularProgressIndicator circularProgressBar, circularProgressIndicator2;
 
@@ -395,6 +392,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             circularProgressBar = itemView.findViewById(R.id.circular_progress_bar);
             circularProgressIndicator2 = itemView.findViewById(R.id.circular_progress_bar2);
             constraintLayout = itemView.findViewById(R.id.appointmentItemContainer);
+            durationTextView = itemView.findViewById(R.id.durationTextView);
         }
     }
 }

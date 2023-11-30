@@ -35,6 +35,11 @@ public class SearchExistingAppointmentFragment extends Fragment {
         findAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(appointmentKeyInput.getText().toString().isEmpty()) {
+                    appointmentKeyInput.setError("Please enter an appointment key");
+                    appointmentKeyInput.requestFocus();
+                    return;
+                }
                 String appointmentKey = appointmentKeyInput.getText().toString();
                 // Navigate to JoinAppointmentFragment and pass the appointmentKey
                 JoinAppointmentFragment joinAppointmentFragment = JoinAppointmentFragment.newInstance(appointmentKey);

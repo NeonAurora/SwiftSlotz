@@ -208,7 +208,10 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
 
                 if ((totalDurationInSeconds - elapsedTimeSinceStart) == 0) {
                     playSound(R.raw.interface_hint);
+                } else {
+                    appointment.setRemainingTime(totalDurationInSeconds - elapsedTimeSinceStart);
                 }
+
                 int circularProgressPercentage = (int) ((elapsedTimeSinceStart * 100) / totalDurationInSeconds);
                 appointment.setCircularProgressPercentage(circularProgressPercentage);
                 appointment.setCircularProgressVisible(true);

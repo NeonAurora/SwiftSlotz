@@ -1,7 +1,5 @@
 package com.example.swiftslotz.utilities;
 
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +28,7 @@ public class Appointment implements Serializable {
     public int linearProgressPercentage;
     public int circularProgressPercentage;
     private long creationTimestamp;
+    private float remainingTime;
     private boolean linearProgressVisible;
     private boolean circularProgressVisible;
     private boolean animated = false;
@@ -191,5 +190,11 @@ public class Appointment implements Serializable {
     }
     public void setAnimated(boolean animated) {
         this.animated = animated;
+    }
+    public float getRemainingTime() {
+        return remainingTime;
+    }
+    public void setRemainingTime(float remainingTime) {
+        this.remainingTime = remainingTime;
     }
 }
