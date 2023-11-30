@@ -1,6 +1,7 @@
 package com.example.swiftslotz.fragments.pageFragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
 import com.example.swiftslotz.R;
@@ -21,26 +24,38 @@ import com.example.swiftslotz.utilities.User;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class AddAppointmentFragment extends Fragment {
 
     CompactCalendarView calendarView;
-    EditText appointmentTitleEditText;
-    EditText appointmentEditText;
-    Button addAppointmentButton;
-    Button selectTimeButton;
+    EditText appointmentTitleEditText, appointmentEditText, appointmentDurationEditText;
+    Button addAppointmentButton, selectTimeButton;
+    ImageButton scrollLeftButton, scrollRightButton;
     TextView monthTextView, yearTextView;
-    EditText appointmentDurationEditText;
     Spinner unitSpinner;
     String firebaseKey;
-    ImageButton scrollLeftButton, scrollRightButton;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    private boolean isUserAvailable;
+
+    private List<String> userActiveDays;
+    private String userActiveHoursStart;
+    private String userActiveHoursEnd;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_appointment, container, false);
@@ -107,6 +122,8 @@ public class AddAppointmentFragment extends Fragment {
 
             // Use selectedUser and firebaseKey as needed
         }
+
+        fetchUserActiveInfo(firebaseKey);
         addAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,11 +170,16 @@ public class AddAppointmentFragment extends Fragment {
                 appointment.setDetails(appointmentText);
                 appointment.setDuration(durationInMinutes);
 
-                // Initialize the AppointmentManager
-                AppointmentManager appointmentManager = new AppointmentManager(getActivity());
+                isUserAvailable = isUserAvailable(selectedDateString, selectedTimeString);
 
-                // Call addAppointment() method of the AppointmentManager
-                appointmentManager.addAppointmentRequest(appointment,firebaseKey);
+                // Initialize the AppointmentManager
+                if(isUserAvailable){
+                    Toast.makeText(getActivity(), "User is available", Toast.LENGTH_SHORT).show();
+                    AppointmentManager appointmentManager = new AppointmentManager(getActivity());
+                    appointmentManager.addAppointmentRequest(appointment,firebaseKey);
+                } else {
+                    Toast.makeText(getActivity(), "User is not available. Would like to initiate a force Request?", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -197,5 +219,76 @@ public class AddAppointmentFragment extends Fragment {
         });
 
         materialTimePicker.show(getParentFragmentManager(), "MATERIAL_TIME_PICKER");
+    }
+
+    private void fetchUserActiveInfo(String userId) {
+        DatabaseReference userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
+
+        userDb.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Fetch and store active days
+                    List<String> activeDaysList = dataSnapshot.child("activeDays").getValue(new GenericTypeIndicator<List<String>>() {});
+                    userActiveDays = new ArrayList<>(activeDaysList);
+                    if(userActiveDays == null){
+                        Log.d("AddAppointmentFragment", "Active days: " + "null");
+                        userActiveDays = new ArrayList<>();
+                    } else {
+                        userActiveDays = new ArrayList<>(activeDaysList);
+                        Log.d("AddAppointmentFragment", "Active days: " + userActiveDays.toString());
+                    }
+                    // Fetch and store active hours start and end
+                    userActiveHoursStart = dataSnapshot.child("activeHoursStart").getValue(String.class);
+                    userActiveHoursEnd = dataSnapshot.child("activeHoursEnd").getValue(String.class);
+                } else {
+                    // Handle the case where user data doesn't exist
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle potential errors
+            }
+        });
+    }
+
+    private boolean isUserAvailable(String selectedDateString, String selectedTimeString) {
+        try {
+            // Parse the selected date and time
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            Log.d("AddAppointmentFragment", "Selected date: " + selectedDateString + ", Selected time: " + selectedTimeString);
+            Date selectedDate = dateFormat.parse(selectedDateString);
+            Date selectedTime = timeFormat.parse(selectedTimeString);
+
+            Calendar calendar = Calendar.getInstance();
+            if (selectedDate != null) {
+                calendar.setTime(selectedDate);
+            }
+
+            // Get the day of week
+            String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(calendar.getTime());
+            Log.d("AddAppointmentFragment", "Day of week: " + dayOfWeek);
+
+            // Check if the day is in user's active days
+            if (!userActiveDays.contains(dayOfWeek)) {
+                return false; // User is not active on this day
+            }
+
+            // Compare the times
+            if (selectedTime != null) {
+                Date activeStart = timeFormat.parse(userActiveHoursStart);
+                Date activeEnd = timeFormat.parse(userActiveHoursEnd);
+
+                if (activeStart != null && activeEnd != null) {
+                    return selectedTime.after(activeStart) && selectedTime.before(activeEnd);
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }
