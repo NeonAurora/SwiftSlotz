@@ -189,8 +189,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    appointments.remove(position);
-                    notifyItemRemoved(position);
+                    if (appointments != null) {
+                        Log.d("AppointmentsAdapter", "removeItemWithAnimation: appointments != null");
+                        appointments.remove(position);
+                        notifyItemRemoved(position);
+                    } else {
+                        Log.d("AppointmentsAdapter", "removeItemWithAnimation: appointments == null");
+                    }
                 }
 
                 @Override
@@ -311,12 +316,22 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         if(appointment.isCircularProgressVisible()) {
             holder.circularProgressBar.setVisibility(View.VISIBLE);
             holder.circularProgressIndicator2.setVisibility(View.VISIBLE);
-            holder.durationTextView.setVisibility(View.VISIBLE);
             holder.durationTextView.setText(appointment.getRemainingTime());
             holder.circularProgressBar.setProgress(appointment.getCircularProgressPercentage());
         } else {
             holder.circularProgressBar.setVisibility(View.GONE);
             holder.circularProgressIndicator2.setVisibility(View.GONE);
+            String formattedTime;
+            if (appointment.getTimeToStart() >= 3600) { // More than or equal to an hour
+                float hours = appointment.getTimeToStart() / 3600.0f;
+                formattedTime = String.format("%.1f H", hours);
+            } else if (appointment.getTimeToStart() >= 60) { // Less than an hour but more than a minute
+                long minutes = appointment.getTimeToStart() / 60;
+                formattedTime = minutes + " M";
+            } else { // Less than a minute
+                formattedTime = appointment.getTimeToStart() + " S";
+            }
+            holder.durationTextView.setText(formattedTime);
         }
 
         if (appointment.getTimeToStart() <= 0) {

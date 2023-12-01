@@ -1,11 +1,14 @@
 package com.example.swiftslotz.activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -40,7 +43,7 @@ public class LoginActivity extends BaseActivity {
     private EditText emailEditText;
     private EditText passwordEditText;
     private Button loginButton;
-    private TextView signUpTextView;
+    private TextView signUpTextView, forgotPasswordTextView;
     private ProgressDialog progressDialog;
     private Button defaultLoginButton1, defaultLoginButton2, defaultLoginButton3;
     private CheckBox rememberMeCheckbox;
@@ -79,6 +82,14 @@ public class LoginActivity extends BaseActivity {
         progressDialog.setMessage("Loading...");
         rememberMeCheckbox = findViewById(R.id.rememberMeCheckBox);
         sharedPreferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        forgotPasswordTextView = findViewById(R.id.tvForgotPassword);
+
+        forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resetPassword();
+            }
+        });
 
         if (sharedPreferences.getBoolean("rememberMe", false)) {
             startActivity(new Intent(LoginActivity.this, BaseActivity.class));
@@ -260,4 +271,44 @@ public class LoginActivity extends BaseActivity {
                     }
                 });
     }
+
+    private void resetPassword() {
+        EditText inputEmail = new EditText(this);
+        inputEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        inputEmail.setHint("Enter your email");
+
+        new AlertDialog.Builder(this)
+                .setTitle("Reset Password")
+                .setMessage("Enter your email to receive reset link")
+                .setView(inputEmail)
+                .setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String email = inputEmail.getText().toString().trim();
+                        sendPasswordResetEmail(email);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create().show();
+    }
+
+    private void sendPasswordResetEmail(String email) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(LoginActivity.this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Reset link sent to your email", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Unable to send reset email", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
 }

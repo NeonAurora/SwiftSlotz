@@ -177,6 +177,7 @@ public class AllAppointmentsFragment extends Fragment implements AppointmentsAda
     private void updateAppointmentProgress(List<Appointment> appointments) {
         for (Appointment appointment : appointments) {
             long timeToStart = calculateTimeToStart(appointment);
+            Log.d("AllAppointmentsFragment", "Time to start: " + timeToStart);
             appointment.setTimeToStart(timeToStart);
 
             if (timeToStart <= 0) {

@@ -26,7 +26,7 @@ public class AppointmentStatusManager {
                         initializeAppointmentManager();
                     }
 //                    appointmentManager.checkListener();
-                    appointmentManager.fetchAppointmentsFromDatabase(1);
+                    appointmentManager.fetchAppointmentsFromDatabase(0);
                     appointmentManager.checkAndUpdateAppointmentStatuses();
                     handler.postDelayed(this, 1000);
                 }
