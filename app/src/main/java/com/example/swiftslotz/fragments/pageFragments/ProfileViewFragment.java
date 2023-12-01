@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bumptech.glide.Glide;
 import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.R;
+import com.example.swiftslotz.utilities.BaseActivity;
 import com.example.swiftslotz.utilities.User;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -67,6 +68,9 @@ public class ProfileViewFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             userKey = getArguments().getString("userKey");
+        }
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).updateBottomNavigationForFragment("FragmentX");
         }
     }
 

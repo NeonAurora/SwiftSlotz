@@ -3,6 +3,7 @@ package com.example.swiftslotz.utilities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -271,4 +272,30 @@ public class BaseActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void updateBottomNavigationForFragment(String fragmentTag) {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        int selectedItemId = -1;
+
+        switch (fragmentTag) {
+            case "FragmentA":
+                selectedItemId = R.id.action_page1;
+                break;
+            case "FragmentB":
+                selectedItemId = R.id.action_page2;
+                break;
+            case "FragmentC":
+                selectedItemId = R.id.action_page3;
+                break;
+            // Add cases for other fragments associated with BottomNavigationView items
+            default:
+                // Fragments not associated with BottomNavigationView items
+                selectedItemId = -1;
+                Log.e("BaseActivity", "Fragment not associated with BottomNavigationView items");
+                break;
+        }
+
+        bottomNavigationView.setSelectedItemId(selectedItemId);
+    }
+
 }
