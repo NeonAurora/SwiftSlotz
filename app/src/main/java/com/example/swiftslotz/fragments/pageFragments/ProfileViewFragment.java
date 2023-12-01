@@ -24,6 +24,8 @@ import com.bumptech.glide.Glide;
 import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.utilities.User;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,7 +48,7 @@ public class ProfileViewFragment extends Fragment {
     ImageButton facebookViewButton, instagramViewButton, linkedinViewButton;
     List<String> activeDays;
 
-    private RadioButton sunday, monday, tuesday, wednesday, thursday, friday, saturday;
+    ChipGroup chipGroup;
 
     public ProfileViewFragment() {
         // Required empty public constructor
@@ -102,13 +104,7 @@ public class ProfileViewFragment extends Fragment {
         fromActiveHour = view.findViewById(R.id.fromAH);
         toActiveHour = view.findViewById(R.id.toAH);
 
-        sunday = view.findViewById(R.id.sun);
-        monday = view.findViewById(R.id.mon);
-        tuesday = view.findViewById(R.id.tue);
-        wednesday = view.findViewById(R.id.wed);
-        thursday = view.findViewById(R.id.thu);
-        friday = view.findViewById(R.id.fri);
-        saturday = view.findViewById(R.id.sat);
+        chipGroup = view.findViewById(R.id.chipGroupActiveDays);
 
     }
 
@@ -202,36 +198,10 @@ public class ProfileViewFragment extends Fragment {
         activeDays = user.getActiveDays();
         if(activeDays != null) {
             for (String day : activeDays) {
-                switch (day) {
-                    case "Sunday":
-                        sunday.setVisibility(View.VISIBLE);
-                        sunday.setChecked(true);
-                        break;
-                    case "Monday":
-                        monday.setVisibility(View.VISIBLE);
-                        monday.setChecked(true);
-                        break;
-                    case "Tuesday":
-                        tuesday.setVisibility(View.VISIBLE);
-                        tuesday.setChecked(true);
-                        break;
-                    case "Wednesday":
-                        wednesday.setVisibility(View.VISIBLE);
-                        wednesday.setChecked(true);
-                        break;
-                    case "Thursday":
-                        thursday.setVisibility(View.VISIBLE);
-                        thursday.setChecked(true);
-                        break;
-                    case "Friday":
-                        friday.setVisibility(View.VISIBLE);
-                        friday.setChecked(true);
-                        break;
-                    case "Saturday":
-                        saturday.setVisibility(View.VISIBLE);
-                        saturday.setChecked(true);
-                        break;
-                }
+                Chip chip = new Chip(this.getActivity());
+                chip.setText(day);
+                chip.setClickable(false);
+                chipGroup.addView(chip);
             }
         }
 
