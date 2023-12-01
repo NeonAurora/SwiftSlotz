@@ -53,7 +53,7 @@ public class SendFeedbackFragment extends Fragment {
         generalFeedbackEditText = view.findViewById(R.id.et_general_feedback);
         improvementSuggestionsEditText = view.findViewById(R.id.et_improvement_suggestions);
         userEngagementSpinner = view.findViewById(R.id.spinner_user_engagement);
-        contactInfoEditText = view.findViewById(R.id.et_contact_info);
+//        contactInfoEditText = view.findViewById(R.id.et_contact_info);
         submitButton = view.findViewById(R.id.btn_submit_feedback);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.usability_array, android.R.layout.simple_spinner_item);
@@ -83,7 +83,7 @@ public class SendFeedbackFragment extends Fragment {
         String generalFeedback = generalFeedbackEditText.getText().toString().trim();
         String improvementSuggestions = improvementSuggestionsEditText.getText().toString().trim();
         String userEngagement = userEngagementSpinner.getSelectedItem().toString();
-        String contactInfo = contactInfoEditText.getText().toString().trim();
+//        String contactInfo = contactInfoEditText.getText().toString().trim();
 
         // Collecting which features are found useful
         List<String> usefulFeatures = new ArrayList<>();
@@ -101,9 +101,9 @@ public class SendFeedbackFragment extends Fragment {
         feedbackData.put("generalFeedback", generalFeedback);
         feedbackData.put("improvementSuggestions", improvementSuggestions);
         feedbackData.put("userEngagement", userEngagement);
-        if (!contactInfo.isEmpty()) {
-            feedbackData.put("contactInfo", contactInfo);
-        }
+//        if (!contactInfo.isEmpty()) {
+//            feedbackData.put("contactInfo", contactInfo);
+//        }
 
         // Send the data to Firebase or your backend
         DatabaseReference feedbackRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("FeedbackCollection");

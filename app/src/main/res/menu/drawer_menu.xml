@@ -2,24 +2,24 @@
 
 
     <item
-        android:id="@+id/search"
-        android:icon="@drawable/icon_search"
-        android:title="@string/drawer_item1" />
-
-    <item
-        android:id="@+id/history"
-        android:icon="@drawable/icon_history"
-        android:title="@string/drawer_item2" />
-
+        android:id="@+id/allAppointments"
+        android:icon="@drawable/icon_select_all"
+        android:title="All Appointments" />
     <item
         android:id="@+id/deletedAppointments"
         android:icon="@drawable/icon_delete_document"
         android:title="Deleted Appointments" />
 
     <item
-        android:id="@+id/allAppointments"
-        android:icon="@drawable/icon_select_all"
-        android:title="All Appointments" />
+        android:id="@+id/search"
+        android:icon="@drawable/icon_search"
+        android:title= "Search Appointments" />
+
+    <item
+        android:id="@+id/history"
+        android:icon="@drawable/icon_history"
+        android:title="@string/drawer_item2" />
+
 
     <item
         android:id="@+id/editPassword"
