@@ -354,11 +354,22 @@ public class AppointmentManager {
                                         .addOnSuccessListener(aVoid -> Log.d("DeleteAppointment", "Appointment removed from user's list successfully"))
                                         .addOnFailureListener(e -> Log.e("DeleteAppointment", "Failed to remove appointment from user's list: " + e.getMessage()));
                             }
+                            //move the appointment to hostuser's removed appointment list
+                            DatabaseReference removedAppointmentsRef = rootRef.child("RemovedAppointments");   // Reference to the user's RemovedAppointments node
+                            removedAppointmentsRef.child(appointmentKey).setValue(globalAppointment)
+                                    .addOnSuccessListener(aVoid -> {
+                                        // Delete the appointment from the global appointment collection
+                                        globalAppointmentDb.child(appointmentKey).removeValue()
+                                                .addOnSuccessListener(aVoid2 -> Toast.makeText(context, "Appointment moved to history successfully", Toast.LENGTH_SHORT).show())
+                                                .addOnFailureListener(e -> Toast.makeText(context, "Failed to move appointment to history: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                                    })
+                                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to move appointment to history: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+
 
                             // Delete the appointment from the global appointment collection
-                            globalAppointmentDb.child(appointmentKey).removeValue()
-                                    .addOnSuccessListener(aVoid -> Toast.makeText(context, "Appointment deleted successfully", Toast.LENGTH_SHORT).show())
-                                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+//                            globalAppointmentDb.child(appointmentKey).removeValue()
+//                                    .addOnSuccessListener(aVoid -> Toast.makeText(context, "Appointment deleted successfully", Toast.LENGTH_SHORT).show())
+//                                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                         } else {
                             Toast.makeText(context, "No involved users found for the appointment", Toast.LENGTH_SHORT).show();
                         }

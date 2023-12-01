@@ -126,14 +126,28 @@ public class AddAppointmentFragment extends Fragment {
         addAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int appointmentDuration;
                 String appointmentTitle = appointmentTitleEditText.getText().toString();
                 String appointmentText = appointmentEditText.getText().toString();
                 String selectedTimeString = selectTimeButton.getText().toString().replace("Selected Time: ", "");
                 String selectedDateString = sdf.format(selectedDate.getTime());
-                int appointmentDuration = Integer.parseInt(appointmentDurationEditText.getText().toString());
                 String unit = unitSpinner.getSelectedItem().toString();
 
-                if (appointmentTitle.isEmpty() || appointmentText.isEmpty() || selectedTimeString.isEmpty()) {
+                if(appointmentDurationEditText.getText().toString().isEmpty()){
+                    Toast.makeText(getActivity(), "Please enter appointment duration", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (Integer.parseInt(appointmentDurationEditText.getText().toString()) <= 0) {
+                    Toast.makeText(getActivity(), "Appointment duration must be greater than 0", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (Integer.parseInt(appointmentDurationEditText.getText().toString()) > 24 && unit.equals("Hour")) {
+                    Toast.makeText(getActivity(), "Appointment duration must be less than 24 hours", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    Toast.makeText(getActivity(), "Appointment duration: " + appointmentDurationEditText.getText().toString(), Toast.LENGTH_SHORT).show();
+                    appointmentDuration = Integer.parseInt(appointmentDurationEditText.getText().toString());
+                }
+
+                if (appointmentTitle.isEmpty() || appointmentText.isEmpty() || selectedTimeString.isEmpty() || selectedTimeString.equals("Select Time") || appointmentDurationEditText.getText().toString().isEmpty()) {
                     Toast.makeText(getActivity(), "Please enter appointment title, details, and time", Toast.LENGTH_SHORT).show();
                     return;
                 }
