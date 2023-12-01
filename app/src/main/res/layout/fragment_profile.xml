@@ -17,6 +17,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
             android:drawableLeft="@drawable/add_call_24"
+            android:drawablePadding="10dp"
             android:ems="10"
             android:hint="  Phone Number"
             android:inputType="text"
@@ -32,6 +33,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
             android:drawableLeft="@drawable/attach_email"
+            android:drawablePadding="10dp"
             android:ems="10"
             android:hint="  Email"
             android:inputType="text"
@@ -50,6 +52,7 @@
 
             android:layout_marginRight="20dp"
             android:drawableLeft="@drawable/add_location_alt"
+            android:drawablePadding="10dp"
             android:ems="10"
             android:hint="  Address"
             android:inputType="text"
@@ -137,7 +140,7 @@
             android:ems="10"
             android:hint="Company"
             android:inputType="text"
-            android:paddingLeft="24dp"
+            android:paddingLeft="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profileEditAddress" />
@@ -407,6 +410,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Active Hours"
+                android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -428,7 +432,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="From" />
+                    android:text="From"
+                    android:textColor="@color/black" />
 
                 <Button
                     android:id="@+id/fromAH"
@@ -443,7 +448,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="To" />
+                    android:text="To"
+                    android:textColor="@color/black" />
 
                 <Button
                     android:id="@+id/toAH"
@@ -459,6 +465,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="Active Days"
+                android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
 
@@ -483,7 +490,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Su" />
+                        android:text="Su"
+                        android:textColor="@color/black" />
 
                     <CheckBox
                         android:id="@+id/sun"
@@ -502,7 +510,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Mo" />
+                        android:text="Mo"
+                        android:textColor="@color/black" />
 
                     <CheckBox
                         android:id="@+id/mon"
@@ -521,7 +530,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Tu" />
+                        android:text="Tu"
+                        android:textColor="@color/black" />
 
                     <CheckBox
                         android:id="@+id/tue"
@@ -540,7 +550,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="We" />
+                        android:text="We"
+                        android:textColor="@color/black" />
 
                     <CheckBox
                         android:id="@+id/wed"
@@ -559,7 +570,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Th" />
+                        android:text="Th"
+                        android:textColor="@color/black" />
 
                     <CheckBox
                         android:id="@+id/thu"
@@ -578,7 +590,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Fr" />
+                        android:text="Fr"
+                        android:textColor="@color/black" />
 
                     <CheckBox
                         android:id="@+id/fri"

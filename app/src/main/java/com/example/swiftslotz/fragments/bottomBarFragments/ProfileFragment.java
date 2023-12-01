@@ -84,6 +84,8 @@ public class ProfileFragment extends Fragment {
     private DatabaseReference userDb;
     private StorageReference storageReference;
 
+    List<String> updatedActiveDaysList = new ArrayList<>();
+
     private final long TEXT_WATCHER_DELAY = 500;
 
     private ImageButton facebookButton, linkedinButton, instagramButton, editFacebookButton, cancelFacebookButton, editLinkedinButton, cancelLinkedinButton, editInstagramButton, cancelInstagramButton;
@@ -353,15 +355,17 @@ public class ProfileFragment extends Fragment {
         String updatedInstagram = instagramLink.getText().toString().trim();
         String updatedActiveHoursStart = convertTo24HourFormat(fromActiveHour.getText().toString().trim());
         String updatedActiveHoursEnd = convertTo24HourFormat(toActiveHour.getText().toString().trim());
-        Set<String> updatedActiveDays = new HashSet<>();
-        if (sunday.isChecked()) { updatedActiveDays.add("Sunday"); }
-        if (monday.isChecked()) { updatedActiveDays.add("Monday"); }
-        if (tuesday.isChecked()) { updatedActiveDays.add("Tuesday"); }
-        if (wednesday.isChecked()) { updatedActiveDays.add("Wednesday"); }
-        if (thursday.isChecked()) { updatedActiveDays.add("Thursday"); }
-        if (friday.isChecked()) { updatedActiveDays.add("Friday"); }
-        if (saturday.isChecked()) { updatedActiveDays.add("Saturday"); }
-        List<String> updatedActiveDaysList = new ArrayList<>(updatedActiveDays);
+
+
+        if(!updatedActiveDaysList.isEmpty())updatedActiveDaysList.clear();
+
+        if (sunday.isChecked()) { updatedActiveDaysList.add("Sunday"); }
+        if (monday.isChecked()) { updatedActiveDaysList.add("Monday"); }
+        if (tuesday.isChecked()) { updatedActiveDaysList.add("Tuesday"); }
+        if (wednesday.isChecked()) { updatedActiveDaysList.add("Wednesday"); }
+        if (thursday.isChecked()) { updatedActiveDaysList.add("Thursday"); }
+        if (friday.isChecked()) { updatedActiveDaysList.add("Friday"); }
+        if (saturday.isChecked()) { updatedActiveDaysList.add("Saturday"); }
 
 
         // Check if first name or last name is empty

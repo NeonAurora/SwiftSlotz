@@ -201,6 +201,8 @@ public class ProfileViewFragment extends Fragment {
 
         activeDays = user.getActiveDays();
         if(activeDays != null) {
+            chipGroup.removeAllViews();
+
             for (String day : activeDays) {
                 Chip chip = new Chip(this.getActivity());
                 chip.setText(day);
