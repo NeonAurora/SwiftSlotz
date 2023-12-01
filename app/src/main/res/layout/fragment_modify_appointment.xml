@@ -1,59 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/modify_appointment_title"
-        android:layout_width="0dp"
+<!--    <EditText-->
+<!--        android:id="@+id/modify_appointment_date"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="@string/appointment_date"-->
+<!--        android:padding="10dp"-->
+<!--        tools:layout_editor_absoluteX="204dp"-->
+<!--        tools:layout_editor_absoluteY="98dp" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/modify_appointment_time"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="@string/appointment_time"-->
+<!--        android:padding="10dp"-->
+<!--        tools:layout_editor_absoluteY="134dp" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/appointment_title"
-        android:padding="10dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/modify_appointment_details"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/appointment_details"
-        android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modify_appointment_title" />
+        <TextView
+            android:id="@+id/textView62"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="30dp"
+            android:text="Edit Your Appointment"
+            android:textColor="@color/tomato"
+            android:textSize="25dp"
+            android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/modify_appointment_date"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/appointment_date"
-        android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modify_appointment_details" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/modify_appointment_time"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/appointment_time"
-        android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modify_appointment_date" />
+            <ImageButton
+                android:id="@+id/scrollLeftButtonEdit"
+                android:layout_width="81dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:contentDescription="left button"
+                android:src="@drawable/arrow_circle_left"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/update_appointment_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/update_appointment"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modify_appointment_time" />
+            <TextView
+                android:id="@+id/yearTextViewEdit"
+                android:layout_width="107dp"
+                android:layout_height="23dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Year"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toStartOf="@+id/scrollRightButton"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/monthTextViewEdit"
+                android:layout_width="132dp"
+                android:layout_height="23dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Month"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@+id/scrollLeftButton"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/scrollRightButtonEdit"
+                android:layout_width="81dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:src="@drawable/arrow_circle_right_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
+
+        <com.github.sundeepk.compactcalendarview.CompactCalendarView
+            android:id="@+id/calendarViewEdit"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            app:compactCalendarCurrentDayBackgroundColor="#FF6A1F"
+            app:compactCalendarCurrentDayTextColor="#fff"
+            app:compactCalendarTextSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />
+
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:paddingLeft="20dp"
+            android:text="Title"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/modify_appointment_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"
+            android:paddingLeft="20dp" />
+
+        <TextView
+            android:id="@+id/textView23"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:paddingLeft="20dp"
+            android:text="Appointment Details"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/modify_appointment_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"
+            android:paddingLeft="20dp" />
+
+        <Button
+            android:id="@+id/selectTimeButtonEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="25dp"
+            android:backgroundTint="#cc5519"
+            android:elevation="6dp"
+            android:paddingStart="24dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="12dp"
+            android:text="Update Time"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/update_appointment_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/update_appointment" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
