@@ -290,7 +290,7 @@ public class BaseActivity extends AppCompatActivity {
             // Add cases for other fragments associated with BottomNavigationView items
             default:
                 // Fragments not associated with BottomNavigationView items
-                selectedItemId = -1;
+                selectedItemId = R.id.action_none;
                 Log.e("BaseActivity", "Fragment not associated with BottomNavigationView items");
                 break;
         }

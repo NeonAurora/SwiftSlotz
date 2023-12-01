@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.fragments.pageFragments.JoinAppointmentFragment;
+import com.example.swiftslotz.utilities.BaseActivity;
 
 public class SearchExistingAppointmentFragment extends Fragment {
 
@@ -26,6 +27,10 @@ public class SearchExistingAppointmentFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_existing_appointment, container, false);
+
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).updateBottomNavigationForFragment("FragmentX");
+        }
 
         // Initialize UI elements
         final EditText appointmentKeyInput = view.findViewById(R.id.appointment_key_input);

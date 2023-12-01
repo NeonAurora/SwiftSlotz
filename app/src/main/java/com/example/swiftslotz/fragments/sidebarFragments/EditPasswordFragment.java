@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.fragments.bottomBarFragments.AppointmentsFragment;
+import com.example.swiftslotz.utilities.BaseActivity;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +36,10 @@ public class EditPasswordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_password, container, false);
+
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).updateBottomNavigationForFragment("FragmentX");
+        }
 
         oldPasswordEditText = view.findViewById(R.id.et_old_password);
         newPasswordEditText = view.findViewById(R.id.et_new_password);

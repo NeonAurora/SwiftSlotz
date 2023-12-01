@@ -20,6 +20,7 @@ import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
 import com.example.swiftslotz.R;
+import com.example.swiftslotz.utilities.BaseActivity;
 import com.example.swiftslotz.utilities.User;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.google.android.material.timepicker.MaterialTimePicker;
@@ -59,6 +60,9 @@ public class AddAppointmentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_appointment, container, false);
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).updateBottomNavigationForFragment("FragmentX");
+        }
 
 
         calendarView = view.findViewById(R.id.calendarView);

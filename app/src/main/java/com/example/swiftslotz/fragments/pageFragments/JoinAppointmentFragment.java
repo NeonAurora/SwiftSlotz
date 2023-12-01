@@ -19,6 +19,7 @@ import com.example.swiftslotz.fragments.sidebarFragments.SearchExistingAppointme
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
 import com.example.swiftslotz.adapters.InvolvedUsersAdapter;
+import com.example.swiftslotz.utilities.BaseActivity;
 
 import java.util.ArrayList;
 
@@ -42,6 +43,9 @@ public class JoinAppointmentFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             appointmentKey = getArguments().getString("appointmentKey");
+        }
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).updateBottomNavigationForFragment("FragmentX");
         }
     }
 

@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.R;
+import com.example.swiftslotz.utilities.BaseActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -36,6 +37,10 @@ public class SendFeedbackFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_send_feedback, container, false);
+
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).updateBottomNavigationForFragment("FragmentX");
+        }
 
         // Initialize UI components
         ratingBar = view.findViewById(R.id.ratingBar);

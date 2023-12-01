@@ -12,6 +12,11 @@
         android:id="@+id/action_page3"
         android:icon="@drawable/icon_today"
         android:title="Today" />
+    <item
+        android:id="@+id/action_none"
+        android:title=""
+        android:icon="@android:color/transparent"
+        android:visible="false" />
 <!--    <item-->
 <!--        android:id="@+id/action_page4"-->
 <!--        android:icon="@drawable/ic_page2"-->

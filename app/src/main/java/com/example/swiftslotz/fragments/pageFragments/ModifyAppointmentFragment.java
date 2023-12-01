@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
 import com.example.swiftslotz.R;
+import com.example.swiftslotz.utilities.BaseActivity;
 
 public class ModifyAppointmentFragment extends Fragment {
 
@@ -31,6 +32,10 @@ public class ModifyAppointmentFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_modify_appointment, container, false);
+
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).updateBottomNavigationForFragment("FragmentX");
+        }
 
         appointmentTitleEditText = view.findViewById(R.id.modify_appointment_title);
         appointmentDateEditText = view.findViewById(R.id.modify_appointment_date);

@@ -18,6 +18,7 @@ import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.adapters.InvolvedUsersAdapter;
 import com.example.swiftslotz.adapters.ImageAdapter;
 import com.example.swiftslotz.utilities.AppointmentManager;
+import com.example.swiftslotz.utilities.BaseActivity;
 
 public class PastAppointmentDetailsFragment extends Fragment {
 
@@ -45,6 +46,9 @@ public class PastAppointmentDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             appointment = (Appointment) getArguments().getSerializable("appointment");
+        }
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).updateBottomNavigationForFragment("FragmentX");
         }
     }
 

@@ -21,6 +21,7 @@ import com.example.swiftslotz.fragments.bottomBarFragments.AppointmentsFragment;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
 import com.example.swiftslotz.adapters.RequestedAppointmentsAdapter;
+import com.example.swiftslotz.utilities.BaseActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -63,13 +64,17 @@ public class RequestedAppointmentsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_requested_appointments, container, false);
 
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).updateBottomNavigationForFragment("FragmentX");
+        }
+
         requestedAppointmentsRecyclerView = view.findViewById(R.id.requestedAppointmentsRecyclerView);
         tvNoRequestedAppointments = view.findViewById(R.id.tvNoRequestedAppointments);
         goBackButton = view.findViewById(R.id.goBackButton);
         requestedAppointments = new ArrayList<>();
         AppointmentManager appointmentManager1 = new AppointmentManager(getActivity());
         requestedAppointmentsAdapter = new RequestedAppointmentsAdapter(getActivity(), requestedAppointments,appointmentManager1);
-        appointmentManager=new AppointmentManager(getActivity(), requestedAppointments, requestedAppointmentsAdapter);
+        appointmentManager = new AppointmentManager(getActivity(), requestedAppointments, requestedAppointmentsAdapter);
 
 //        appointmentManager.fetchRequestedAppointmentsFromDatabase();
             userDb.addValueEventListener(new ValueEventListener() {

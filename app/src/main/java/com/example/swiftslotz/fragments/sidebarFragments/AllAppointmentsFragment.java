@@ -29,6 +29,7 @@ import com.example.swiftslotz.fragments.pageFragments.RequestedAppointmentsFragm
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
 import com.example.swiftslotz.utilities.AppointmentStatusManager;
+import com.example.swiftslotz.utilities.BaseActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import java.text.ParseException;
@@ -66,6 +67,10 @@ public class AllAppointmentsFragment extends Fragment implements AppointmentsAda
             appointmentStatusManager.setAppointmentUpdateListener(this);
         } else {
             Log.e("AppointmentsFragment", "Context is null");
+        }
+
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).updateBottomNavigationForFragment("FragmentX");
         }
 
 

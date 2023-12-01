@@ -20,6 +20,7 @@ import com.example.swiftslotz.fragments.pageFragments.PastAppointmentDetailsFrag
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
 import com.example.swiftslotz.adapters.PastAppointmentsAdapter;
+import com.example.swiftslotz.utilities.BaseActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -54,6 +55,9 @@ public class PastAppointmentsFragment extends Fragment {
         if (getArguments() != null) {
             String mParam1 = getArguments().getString("ARG_PARAM1");
             String mParam2 = getArguments().getString("ARG_PARAM2");
+        }
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).updateBottomNavigationForFragment("FragmentX");
         }
     }
 

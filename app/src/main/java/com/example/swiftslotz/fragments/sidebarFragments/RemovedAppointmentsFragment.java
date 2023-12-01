@@ -14,6 +14,7 @@ import com.example.swiftslotz.R;
 import com.example.swiftslotz.adapters.RemovedAppointmentsAdapter;
 import com.example.swiftslotz.utilities.Appointment;
 import com.example.swiftslotz.utilities.AppointmentManager;
+import com.example.swiftslotz.utilities.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,10 @@ public class RemovedAppointmentsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_removed_appointments, container, false);
+
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).updateBottomNavigationForFragment("FragmentX");
+        }
 
         removedAppointmentsRecyclerView = view.findViewById(R.id.removedAppointmentsRecyclerView);
         removedAppointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
