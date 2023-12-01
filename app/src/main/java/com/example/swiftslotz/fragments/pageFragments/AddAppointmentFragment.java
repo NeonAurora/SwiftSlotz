@@ -292,10 +292,12 @@ public class AddAppointmentFragment extends Fragment {
             // Compare the times
             if (selectedTime != null) {
                 Date activeStart = timeFormat.parse(userActiveHoursStart);
+                Log.d("AddAppointmentFragment", "Active start: " + activeStart);
                 Date activeEnd = timeFormat.parse(userActiveHoursEnd);
+                Log.d("AddAppointmentFragment", "Active end: " + activeEnd);
 
                 if (activeStart != null && activeEnd != null) {
-                    return selectedTime.after(activeStart) && selectedTime.before(activeEnd);
+                    return (selectedTime.after(activeStart) || selectedTime.equals(activeStart)) && selectedTime.before(activeEnd);
                 }
             }
         } catch (ParseException e) {

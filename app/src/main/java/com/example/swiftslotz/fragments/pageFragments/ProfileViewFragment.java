@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,14 +30,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 public class ProfileViewFragment extends Fragment {
 
     private String userKey, facebook, instagram, linkedin;
     private DatabaseReference userDb;
-    private TextView usernameTextView, firstNameTextView, lastNameTextView, emailTextView, phoneTextView, occupationTextView, addressTextView;
+    private TextView usernameTextView, firstNameTextView, lastNameTextView, emailTextView, phoneTextView, occupationTextView, addressTextView, fromActiveHour, toActiveHour;
     private ImageView profileImageView;
     Button seekAppointmentButton;
     ImageButton facebookViewButton, instagramViewButton, linkedinViewButton;
+    List<String> activeDays;
+
+    private RadioButton sunday, monday, tuesday, wednesday, thursday, friday, saturday;
 
     public ProfileViewFragment() {
         // Required empty public constructor
@@ -88,6 +99,29 @@ public class ProfileViewFragment extends Fragment {
         instagramViewButton = view.findViewById(R.id.instagramViewButton);
         linkedinViewButton = view.findViewById(R.id.linkedinViewButton);
 
+        fromActiveHour = view.findViewById(R.id.fromAH);
+        toActiveHour = view.findViewById(R.id.toAH);
+
+        sunday = view.findViewById(R.id.sun);
+        monday = view.findViewById(R.id.mon);
+        tuesday = view.findViewById(R.id.tue);
+        wednesday = view.findViewById(R.id.wed);
+        thursday = view.findViewById(R.id.thu);
+        friday = view.findViewById(R.id.fri);
+        saturday = view.findViewById(R.id.sat);
+
+    }
+
+    private String convertTo12HourFormat(String time24h) {
+        try {
+            SimpleDateFormat sdf24 = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            SimpleDateFormat sdf12 = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+            Date date = sdf24.parse(time24h);
+            return sdf12.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null; // Handle this appropriately
+        }
     }
 
     public void buttonOnClick(ImageButton button, String url) {
@@ -161,6 +195,45 @@ public class ProfileViewFragment extends Fragment {
         buttonOnClick(facebookViewButton, facebook);
         buttonOnClick(instagramViewButton, instagram);
         buttonOnClick(linkedinViewButton, linkedin);
+
+        fromActiveHour.setText(convertTo12HourFormat(user.getActiveHoursStart()));
+        toActiveHour.setText(convertTo12HourFormat(user.getActiveHoursEnd()));
+
+        activeDays = user.getActiveDays();
+        if(activeDays != null) {
+            for (String day : activeDays) {
+                switch (day) {
+                    case "Sunday":
+                        sunday.setVisibility(View.VISIBLE);
+                        sunday.setChecked(true);
+                        break;
+                    case "Monday":
+                        monday.setVisibility(View.VISIBLE);
+                        monday.setChecked(true);
+                        break;
+                    case "Tuesday":
+                        tuesday.setVisibility(View.VISIBLE);
+                        tuesday.setChecked(true);
+                        break;
+                    case "Wednesday":
+                        wednesday.setVisibility(View.VISIBLE);
+                        wednesday.setChecked(true);
+                        break;
+                    case "Thursday":
+                        thursday.setVisibility(View.VISIBLE);
+                        thursday.setChecked(true);
+                        break;
+                    case "Friday":
+                        friday.setVisibility(View.VISIBLE);
+                        friday.setChecked(true);
+                        break;
+                    case "Saturday":
+                        saturday.setVisibility(View.VISIBLE);
+                        saturday.setChecked(true);
+                        break;
+                }
+            }
+        }
 
         if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
             Glide.with(this).load(user.getProfileImageUrl()).into(profileImageView);
