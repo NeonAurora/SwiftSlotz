@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,6 +23,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.bumptech.glide.Glide;
+import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.R;
 import com.example.swiftslotz.activities.LogoutActivity;
 import com.example.swiftslotz.fragments.bottomBarFragments.ProfileFragment;
@@ -47,16 +52,28 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 
 import android.content.Intent;
+import android.widget.Toast;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import java.util.List;
+
 public class BaseActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private FirebaseAuth mAuth;
+    private DatabaseReference userDb;
     private GoogleSignInClient mGoogleSignInClient;
 
     @Override
@@ -77,6 +94,7 @@ public class BaseActivity extends AppCompatActivity {
 
         // Set up the navigation view.
         NavigationView navigationView = findViewById(R.id.nav_view);
+
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -129,6 +147,8 @@ public class BaseActivity extends AppCompatActivity {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+
                 View myView = LayoutInflater.from(view.getContext()).inflate(R.layout.logout_alert, null);
                 final AlertDialog.Builder alertDialog = new AlertDialog.Builder(view.getContext()).setView(myView);
                 alertDialog.setCancelable(false);
@@ -186,6 +206,48 @@ public class BaseActivity extends AppCompatActivity {
 
             bottomNavigationView.setSelectedItemId(R.id.action_page1);
         }
+
+
+//        header of drawer
+
+        View headerView = LayoutInflater.from(this).inflate(R.layout.drawer_header, navigationView, false);
+        navigationView.addHeaderView(headerView);
+
+        TextView username=headerView.findViewById(R.id.drawerUsername);
+        TextView email=headerView.findViewById(R.id.drawerEmail);
+        ImageView profileImage=headerView.findViewById(R.id.drawerImg);
+//
+
+        // problem occuring while fetching data from db .
+
+//        String userId = mAuth.getCurrentUser().getUid();
+//        userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
+//        userDb.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    // Set user details from the database to the TextViews
+//                    username.setText(String.format("@_%s", dataSnapshot.child("username").getValue(String.class)));
+//                    email.setText(dataSnapshot.child("email").getValue(String.class));
+//
+//
+//                    //Load profile image if it exists in the database
+//                    if (dataSnapshot.hasChild("profileImageUrl")) {
+//                        String imageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
+//                        Glide.with(BaseActivity.this).load(imageUrl).into(profileImage);
+//
+//                    }
+//                } else {
+//                    Toast.makeText(BaseActivity.this, "Failed to load user details", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Toast.makeText(BaseActivity.this, "Failed to load user details: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
