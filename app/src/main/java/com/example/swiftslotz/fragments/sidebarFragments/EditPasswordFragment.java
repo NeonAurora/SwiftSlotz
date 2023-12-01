@@ -66,13 +66,13 @@ public class EditPasswordFragment extends Fragment {
         // Validations
         if (!newPassword.equals(confirmNewPassword)) {
             Toast.makeText(getActivity(), "New passwords do not match", Toast.LENGTH_SHORT).show();
-            return;
+            confirmNewPasswordEditText.setError("New passwords do not match");
         }else if (TextUtils.isEmpty(oldPassword)) {
             oldPasswordEditText.setError("Old Password Required");
         } else if (TextUtils.isEmpty(newPassword)) {
             newPasswordEditText.setError("New Password Required");
         }else if((TextUtils.isEmpty(confirmNewPassword))) {
-            confirmNewPasswordEditText.setError("Please Confirm New Passeord");
+            confirmNewPasswordEditText.setError("Please Confirm New Password");
         }else{
             FirebaseUser user = firebaseAuth.getCurrentUser();
             if (user != null && user.getEmail() != null) {
@@ -85,14 +85,14 @@ public class EditPasswordFragment extends Fragment {
                         user.updatePassword(newPassword).addOnCompleteListener(updateTask -> {
                             if (updateTask.isSuccessful()) {
                                 Toast.makeText(getActivity(), "Password updated successfully", Toast.LENGTH_SHORT).show();
-                                loader.dismiss();
+
 
                                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                                 transaction.replace(R.id.content_frame, new AppointmentsFragment());
                                 transaction.commit();
 
                             } else {
-                                loader.dismiss();
+
                                 Toast.makeText(getActivity(), "Failed to update password", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -104,6 +104,7 @@ public class EditPasswordFragment extends Fragment {
                 Toast.makeText(getActivity(), "User not found", Toast.LENGTH_SHORT).show();
             }
         }
+            loader.dismiss();
 
 
 
