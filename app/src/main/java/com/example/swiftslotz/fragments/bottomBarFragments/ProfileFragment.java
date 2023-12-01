@@ -35,11 +35,25 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bumptech.glide.Glide;
 import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.R;
+import com.example.swiftslotz.activities.LoginActivity;
 import com.example.swiftslotz.activities.LogoutActivity;
+import com.example.swiftslotz.utilities.BaseActivity;
 import com.example.swiftslotz.utilities.User;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,6 +80,7 @@ public class ProfileFragment extends Fragment {
     private Button uploadPhotoButton, logoutButton, updateInfoButton;
 
     private FirebaseAuth mAuth;
+    private GoogleSignInClient mGoogleSignInClient;
     private DatabaseReference userDb;
     private StorageReference storageReference;
 
@@ -117,12 +132,24 @@ public class ProfileFragment extends Fragment {
         });
 
         logoutButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), LogoutActivity.class);
-            startActivity(intent);
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-            fragmentTransaction.remove(this).commit();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                for (UserInfo userInfo : user.getProviderData()) {
+                    String providerId = userInfo.getProviderId();
+                    if (providerId.equals(GoogleAuthProvider.PROVIDER_ID)) {
+                        googleSignout();
+                        break;
+                    } else if (providerId.equals(EmailAuthProvider.PROVIDER_ID)) {
+                        mAuth.signOut();
+                        break;
+                    }
+                }
+                Intent login_intent = new Intent(getActivity(), LogoutActivity.class);
+                startActivity(login_intent);
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.remove(this).commit();
+            }
 
         });
 
@@ -152,6 +179,25 @@ public class ProfileFragment extends Fragment {
         setupTextWatchers();
         return view;
     }
+
+    private void googleSignout(){
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("606717311294-95dosncopnu17k5sosoil3reef2ivha7.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
+
+        GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(getActivity(),gso); ;
+        googleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    FirebaseAuth.getInstance().signOut(); // very important if you are using firebase.
+
+                }
+            }
+        });
+    }
+
 
     private void enableUpdateButton() {
         updateInfoButton.setEnabled(true);
