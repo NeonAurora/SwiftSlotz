@@ -15,7 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "606717311294-95dosncopnu17k5sosoil3reef2ivha7.apps.googleusercontent.com",
+          "client_id": "606717311294-np5iulg3bigrp8vr09jpkgl2cacciri2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.swiftslotz",
+            "certificate_hash": "df08e442e7501abd074fbccf0cd9445b1daef256"
+          }
+        },
+        {
+          "client_id": "606717311294-q9jgsrt92qajd00kms1hpko9riapidfd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

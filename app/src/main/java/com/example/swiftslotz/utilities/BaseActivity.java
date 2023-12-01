@@ -33,9 +33,20 @@ import com.example.swiftslotz.fragments.sidebarFragments.RemovedAppointmentsFrag
 import com.example.swiftslotz.fragments.sidebarFragments.PastAppointmentsFragment;
 import com.example.swiftslotz.fragments.sidebarFragments.SearchExistingAppointmentFragment;
 import com.example.swiftslotz.fragments.sidebarFragments.SendFeedbackFragment;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
+
 import android.content.Intent;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -44,6 +55,8 @@ public class BaseActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
+    private FirebaseAuth mAuth;
+    private GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,10 +140,23 @@ public class BaseActivity extends AppCompatActivity {
                 posLogout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(BaseActivity.this, LogoutActivity.class);
-                        startActivity(intent);
-                        dialog.dismiss();
-                        finish();
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            for (UserInfo userInfo : user.getProviderData()) {
+                                String providerId = userInfo.getProviderId();
+                                if (providerId.equals(GoogleAuthProvider.PROVIDER_ID)) {
+                                    googleSignout();
+                                    break;
+                                } else if (providerId.equals(EmailAuthProvider.PROVIDER_ID)) {
+                                    FirebaseAuth.getInstance().signOut();
+                                    break;
+                                }
+                            }
+                            Intent login_intent = new Intent(BaseActivity.this, LogoutActivity.class);
+                            startActivity(login_intent);
+                            dialog.dismiss();
+                            finish();
+                        }
                     }
                 });
 
@@ -194,6 +220,24 @@ public class BaseActivity extends AppCompatActivity {
 //        if (getSupportActionBar() != null) {
 //            getSupportActionBar().setDisplayShowTitleEnabled(false);
 //        }
+    }
+
+    private void googleSignout() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("606717311294-95dosncopnu17k5sosoil3reef2ivha7.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
+
+        GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(BaseActivity.this,gso); ;
+        googleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    FirebaseAuth.getInstance().signOut(); // very important if you are using firebase.
+
+                }
+            }
+        });
     }
 
     @Override
