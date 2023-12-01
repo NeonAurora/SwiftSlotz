@@ -60,10 +60,10 @@ import java.util.Set;
 
 public class ProfileFragment extends Fragment {
 
-    private EditText firstName, lastName, email, phone, occupation, address;
+    private EditText firstName, lastName, email, phone, occupation, address, facebookLink, linkedinLink, instagramLink;
     private TextView username;
     private ImageView profileImage;
-    private Button uploadPhotoButton, logoutButton, updateInfoButton;
+    private Button uploadPhotoButton, logoutButton, updateInfoButton, fromActiveHour, toActiveHour;
 
     private FirebaseAuth mAuth;
     private DatabaseReference userDb;
@@ -71,15 +71,8 @@ public class ProfileFragment extends Fragment {
 
     private final long TEXT_WATCHER_DELAY = 500;
 
-    private ImageButton facebookButton, linkedinButton, instagramButton;
+    private ImageButton facebookButton, linkedinButton, instagramButton, editFacebookButton, cancelFacebookButton, editLinkedinButton, cancelLinkedinButton, editInstagramButton, cancelInstagramButton;
 
-    private ImageButton editFacebookButton, cancelFacebookButton;
-    private EditText facebookLink;
-    private ImageButton editLinkedinButton, cancelLinkedinButton;
-    private EditText linkedinLink;
-    private ImageButton editInstagramButton, cancelInstagramButton;
-    private EditText instagramLink;
-    private Button fromActiveHour, toActiveHour;
     private CheckBox sunday, monday, tuesday, wednesday, thursday, friday, saturday;
 
     @Nullable
@@ -179,8 +172,13 @@ public class ProfileFragment extends Fragment {
 
                     String activeHoursStart = dataSnapshot.child("activeHoursStart").getValue(String.class);
                     String activeHoursEnd = dataSnapshot.child("activeHoursEnd").getValue(String.class);
-                    if (activeHoursStart != null) { fromActiveHour.setText(activeHoursStart); }
-                    if (activeHoursEnd != null) { toActiveHour.setText(activeHoursEnd); }
+                    if (activeHoursStart != null && activeHoursEnd != null) {
+                        fromActiveHour.setText(convertTo12HourFormat(activeHoursStart));
+                        toActiveHour.setText(convertTo12HourFormat(activeHoursEnd));
+                    } else {
+                        fromActiveHour.setText("12:00 AM");
+                        toActiveHour.setText("12:00 AM");
+                    }
 
                     List<String> activeDays = dataSnapshot.child("activeDays").getValue(new GenericTypeIndicator<List<String>>() {});
                     if(activeDays != null) {
@@ -303,8 +301,8 @@ public class ProfileFragment extends Fragment {
         String updatedFacebook = facebookLink.getText().toString().trim();
         String updatedLinkedin = linkedinLink.getText().toString().trim();
         String updatedInstagram = instagramLink.getText().toString().trim();
-        String updatedActiveHoursStart = fromActiveHour.getText().toString().trim();
-        String updatedActiveHoursEnd = toActiveHour.getText().toString().trim();
+        String updatedActiveHoursStart = convertTo24HourFormat(fromActiveHour.getText().toString().trim());
+        String updatedActiveHoursEnd = convertTo24HourFormat(toActiveHour.getText().toString().trim());
         Set<String> updatedActiveDays = new HashSet<>();
         if (sunday.isChecked()) { updatedActiveDays.add("Sunday"); }
         if (monday.isChecked()) { updatedActiveDays.add("Monday"); }
@@ -322,7 +320,7 @@ public class ProfileFragment extends Fragment {
             return;
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         try {
             Date startTime = sdf.parse(updatedActiveHoursStart);
             Date endTime = sdf.parse(updatedActiveHoursEnd);
@@ -451,15 +449,39 @@ public class ProfileFragment extends Fragment {
                 int hour = materialTimePicker.getHour();
                 int minute = materialTimePicker.getMinute();
                 String amPm = hour < 12 ? "AM" : "PM";
-                if (hour > 12) hour -= 12;
-                else if (hour == 0) hour = 12;
-                String formattedTime = String.format(Locale.getDefault(), "%02d:%02d %s", hour, minute, amPm);
-                timeButton.setText(formattedTime);
+                int displayHour = (hour == 0 || hour == 12) ? 12 : hour % 12; // Adjust for 12-hour format display
+                String formattedTime = String.format(Locale.getDefault(), "%02d:%02d %s", displayHour, minute, amPm);
+                timeButton.setText(formattedTime); // Display in 12-hour format
                 enableUpdateButton(); // Call this to enable the update button
             }
         });
 
+
         materialTimePicker.show(getParentFragmentManager(), "MATERIAL_TIME_PICKER");
+    }
+
+    private String convertTo24HourFormat(String time12h) {
+        try {
+            SimpleDateFormat sdf12 = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+            SimpleDateFormat sdf24 = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            Date date = sdf12.parse(time12h);
+            return sdf24.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null; // Handle this appropriately
+        }
+    }
+
+    private String convertTo12HourFormat(String time24h) {
+        try {
+            SimpleDateFormat sdf24 = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            SimpleDateFormat sdf12 = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+            Date date = sdf24.parse(time24h);
+            return sdf12.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null; // Handle this appropriately
+        }
     }
 
 }

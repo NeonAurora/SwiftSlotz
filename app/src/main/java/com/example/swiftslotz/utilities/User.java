@@ -1,6 +1,7 @@
 package com.example.swiftslotz.utilities;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 public class User implements Serializable {
@@ -8,7 +9,7 @@ public class User implements Serializable {
     private String firstName, lastName, username, email, phone, occupation, address, facebook, instagram, linkedin;
     private UserAppointments appointments;
     private String profileImageUrl;
-    private Set<String> activeDays;
+    private List<String> activeDays;
     private String activeHoursStart;
     private String activeHoursEnd;
 
@@ -37,7 +38,7 @@ public class User implements Serializable {
         this.appointments = appointments;  // Include this line to initialize the appointments field
     }
 
-    public User(String firstName, String lastName, String username, String email, String phone, String occupation, String address, UserAppointments appointments, Set<String> activeDays, String activeHoursStart, String activeHoursEnd) {
+    public User(String firstName, String lastName, String username, String email, String phone, String occupation, String address, UserAppointments appointments, List<String> activeDays, String activeHoursStart, String activeHoursEnd) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -147,8 +148,8 @@ public class User implements Serializable {
     public void setLinkedin(String linkedin) {
         this.linkedin = linkedin;
     }
-    public Set<String> getActiveDays() { return activeDays; }
-    public void setActiveDays(Set<String> activeDays) { this.activeDays = activeDays; }
+    public List<String> getActiveDays() { return activeDays; }
+    public void setActiveDays(List<String> activeDays) { this.activeDays = activeDays; }
 
     public String getActiveHoursStart() { return activeHoursStart; }
     public void setActiveHoursStart(String activeHoursStart) { this.activeHoursStart = activeHoursStart; }
