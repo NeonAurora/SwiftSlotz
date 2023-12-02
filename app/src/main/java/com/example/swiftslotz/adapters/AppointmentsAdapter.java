@@ -92,8 +92,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         appointmentKey = appointment.getKey();
         Log.d("isCurrentUserHost", isCurrentUserHost(appointment) + "" );
         if (isCurrentUserHost(appointment)) {
-            popupMenu.getMenu().add(Menu.NONE, R.id.action_set_constraints, Menu.NONE, "Set Constraints");
+            popupMenu.getMenu().add(Menu.NONE, R.id.action_edit, Menu.NONE, "Edit");
             popupMenu.getMenu().add(Menu.NONE, R.id.action_delete, Menu.NONE, "Delete");
+            popupMenu.getMenu().add(Menu.NONE, R.id.action_set_constraints, Menu.NONE, "Set Constraints");
             popupMenu.getMenu().removeItem(R.id.action_leave);
         }
 
@@ -254,7 +255,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     return;
                 }
 
-                int durationInMinutes = unit.equals("H") ? duration * 60 : duration;
+                int durationInMinutes = unit.equals("Hour") ? duration * 60 : duration;
 
                 // Assuming you have the appointmentKey and AppointmentManager instance
                 appointmentManager.setAppointmentTimeConstraint(appointmentKey, durationInMinutes);
