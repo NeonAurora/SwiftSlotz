@@ -12,13 +12,22 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.example.swiftslotz.BuildConfig;
 import com.example.swiftslotz.R;
+import com.example.swiftslotz.fragments.bottomBarFragments.AppointmentsFragment;
 import com.example.swiftslotz.utilities.BaseActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +40,7 @@ public class SendFeedbackFragment extends Fragment {
     private EditText featureRequestEditText, generalFeedbackEditText, improvementSuggestionsEditText, contactInfoEditText;
     private Button submitButton;
     Spinner usabilitySpinner, userEngagementSpinner;
-    CheckBox checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7, checkBox8, checkBox9, checkBox10;
+    CheckBox checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7, checkBox8, checkBox9, checkBox10,email;
     // Add other UI components as needed
 
     @Override
@@ -53,6 +62,8 @@ public class SendFeedbackFragment extends Fragment {
         generalFeedbackEditText = view.findViewById(R.id.et_general_feedback);
         improvementSuggestionsEditText = view.findViewById(R.id.et_improvement_suggestions);
         userEngagementSpinner = view.findViewById(R.id.spinner_user_engagement);
+        email=view.findViewById(R.id.shareEmail);
+
 //        contactInfoEditText = view.findViewById(R.id.et_contact_info);
         submitButton = view.findViewById(R.id.btn_submit_feedback);
 
@@ -101,14 +112,42 @@ public class SendFeedbackFragment extends Fragment {
         feedbackData.put("generalFeedback", generalFeedback);
         feedbackData.put("improvementSuggestions", improvementSuggestions);
         feedbackData.put("userEngagement", userEngagement);
-//        if (!contactInfo.isEmpty()) {
-//            feedbackData.put("contactInfo", contactInfo);
-//        }
+
+        if(email.isChecked()){
+            FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
+            if(user != null){
+                String userId = user.getUid();
+                DatabaseReference userDb    = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
+                userDb.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+
+                            if (dataSnapshot.hasChild("email")) {
+                                feedbackData.put("contactInfo", dataSnapshot.child("email").getValue(String.class));
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), "Failed to load user details", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(getActivity(), "Failed to load user details: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }
 
         // Send the data to Firebase or your backend
         DatabaseReference feedbackRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("FeedbackCollection");
         feedbackRef.push().setValue(feedbackData)
-                .addOnSuccessListener(aVoid -> Toast.makeText(getActivity(), "Feedback submitted successfully", Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getActivity(), "Feedback submitted successfully", Toast.LENGTH_SHORT).show();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.content_frame, new AppointmentsFragment());
+                    transaction.commit();
+                })
                 .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to submit feedback", Toast.LENGTH_SHORT).show());
     }
 

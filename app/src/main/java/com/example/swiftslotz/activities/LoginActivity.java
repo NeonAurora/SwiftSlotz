@@ -124,6 +124,11 @@ public class LoginActivity extends BaseActivity {
                                     Toast.makeText(LoginActivity.this, mAuth.getUid(),
                                             Toast.LENGTH_SHORT).show();
                                     progressDialog.dismiss();
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putBoolean("rememberMe", rememberMeCheckbox.isChecked());
+                                    editor.putString("fragmentToLoad", "AppointmentsFragment");
+                                    editor.apply();
+                                    finish();
                                     startActivity(new Intent(LoginActivity.this, BaseActivity.class));
                                     Log.d(TAG , "successfull");
                                 }

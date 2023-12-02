@@ -61,6 +61,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
             android:numStars="5"
+            android:progressTint="@color/tomato"
             android:stepSize="1.0" />
 
         <!-- Usability Feedback -->
@@ -83,7 +84,9 @@
             <Spinner
                 android:id="@+id/spinner_usability"
                 android:layout_width="50dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2" />
 
         </LinearLayout>
 
@@ -103,33 +106,35 @@
             android:id="@+id/checkbox_feature1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_marginLeft="70dp"
             android:gravity="center"
-            android:text="Feature 1" />
+            android:text="Realtime Synchronization" />
 
         <CheckBox
             android:id="@+id/checkbox_feature2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+
+            android:layout_marginLeft="70dp"
             android:gravity="center"
-            android:text="Feature 2" />
+            android:text="Past Appointments View" />
 
         <CheckBox
             android:id="@+id/checkbox_feature3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+
+            android:layout_marginLeft="70dp"
             android:gravity="center"
-            android:text="Feature 3" />
+            android:text="Dynamic User Join" />
 
         <CheckBox
             android:id="@+id/checkbox_feature4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_marginLeft="70dp"
             android:gravity="center"
-            android:text="Feature 4" />
+            android:text="Slotting The Day" />
         <!-- Add more CheckBoxes for other features -->
 
         <!-- Feature Request -->
@@ -215,6 +220,7 @@
 
         <!-- Contact Information -->
         <CheckBox
+            android:id="@+id/shareEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"

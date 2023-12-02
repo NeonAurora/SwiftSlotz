@@ -221,36 +221,41 @@ public class BaseActivity extends AppCompatActivity {
 
 
         // data fetching
-
-        String userId = mAuth.getCurrentUser().getUid();
-        userDb    = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
-        userDb.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    if (dataSnapshot.hasChild("username")) {
-                        username.setText(String.format("@_%s", dataSnapshot.child("username").getValue(String.class)));
-                    }
-                    if (dataSnapshot.hasChild("email")) {
-                        email.setText(dataSnapshot.child("email").getValue(String.class));
-                    }
-                    if (dataSnapshot.hasChild("profileImageUrl")) {
-                        String imageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
-                        if (imageUrl != null && !imageUrl.isEmpty()) {
-                            Glide.with(BaseActivity.this).load(imageUrl).into(profileImage);
+        FirebaseUser user= mAuth.getCurrentUser();
+        if(user != null){
+            String userId = user.getUid();
+            userDb    = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
+            userDb.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        if (dataSnapshot.hasChild("username")) {
+                            username.setText(String.format("@_%s", dataSnapshot.child("username").getValue(String.class)));
                         }
+                        if (dataSnapshot.hasChild("email")) {
+                            email.setText(dataSnapshot.child("email").getValue(String.class));
+                        }
+                        if (dataSnapshot.hasChild("profileImageUrl")) {
+                            String imageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
+                            if (imageUrl != null && !imageUrl.isEmpty()) {
+                                if (!isFinishing() && !isDestroyed()) {
+                                    Glide.with(BaseActivity.this).load(imageUrl).into(profileImage);
+                                }
+                            }
+                        }
+                    } else {
+                        Toast.makeText(BaseActivity.this, "Failed to load user details", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(BaseActivity.this, "Failed to load user details", Toast.LENGTH_SHORT).show();
+
                 }
 
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(BaseActivity.this, "Failed to load user details: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(BaseActivity.this, "Failed to load user details: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
 
 
 //        changing the fragment while clicking the data
