@@ -38,8 +38,8 @@ public class ModifyAppointmentFragment extends Fragment {
         }
 
         appointmentTitleEditText = view.findViewById(R.id.modify_appointment_title);
-        appointmentDateEditText = view.findViewById(R.id.modify_appointment_date);
-        appointmentTimeEditText = view.findViewById(R.id.modify_appointment_time);
+//        appointmentDateEditText = view.findViewById(R.id.modify_appointment_date);
+//        appointmentTimeEditText = view.findViewById(R.id.modify_appointment_time);
         appointmentDetailsEditText = view.findViewById(R.id.modify_appointment_details);
         updateAppointmentButton = view.findViewById(R.id.update_appointment_button);
 
@@ -54,8 +54,8 @@ public class ModifyAppointmentFragment extends Fragment {
             String details = getArguments().getString("appointment_details");
 
             appointmentTitleEditText.setText(title);
-            appointmentDateEditText.setText(date);
-            appointmentTimeEditText.setText(time);
+//            appointmentDateEditText.setText(date);
+//            appointmentTimeEditText.setText(time);
             appointmentDetailsEditText.setText(details);
         }
 

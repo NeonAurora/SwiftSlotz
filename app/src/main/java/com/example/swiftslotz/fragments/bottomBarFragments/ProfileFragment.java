@@ -213,7 +213,7 @@ public class ProfileFragment extends Fragment {
                     // Set user details from the database to the TextViews
                     firstName.setText(dataSnapshot.child("firstName").getValue(String.class));
                     lastName.setText(dataSnapshot.child("lastName").getValue(String.class));
-                    username.setText(dataSnapshot.child("username").getValue(String.class));
+                    username.setText(String.format("@_%s", dataSnapshot.child("username").getValue(String.class)));
                     email.setText(dataSnapshot.child("email").getValue(String.class));
                     phone.setText(dataSnapshot.child("phone").getValue(String.class));
                     occupation.setText(dataSnapshot.child("occupation").getValue(String.class));

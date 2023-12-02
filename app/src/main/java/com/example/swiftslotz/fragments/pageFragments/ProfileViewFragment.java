@@ -179,7 +179,7 @@ public class ProfileViewFragment extends Fragment {
     }
 
     private void displayUserData(User user) {
-        usernameTextView.setText(user.getUsername());
+        usernameTextView.setText(String.format("@_%s", user.getUsername()));
         firstNameTextView.setText(user.getFirstName());
         lastNameTextView.setText(user.getLastName());
         emailTextView.setText(user.getEmail());
