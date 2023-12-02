@@ -326,26 +326,26 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+//        int id = item.getItemId();
 
         // Handle action bar item clicks here.
 
-        if (id == R.id.user_profile) {
-            Fragment selectedFragment = new ProfileFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_frame, selectedFragment);
-            transaction.commit();
-//            Intent intent = new Intent(this, LogoutActivity.class);
-//            startActivity(intent);
-//            return true;
-
-        }
+//        if (id == R.id.user_profile) {
+//            Fragment selectedFragment = new ProfileFragment();
+//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//            transaction.replace(R.id.content_frame, selectedFragment);
+//            transaction.commit();
+////            Intent intent = new Intent(this, LogoutActivity.class);
+////            startActivity(intent);
+////            return true;
+//
+//        }
 
         // Pass the event to ActionBarDrawerToggle, if it returns true, then it has handled the app icon touch event.
         if (toggle.onOptionsItemSelected(item)) {
