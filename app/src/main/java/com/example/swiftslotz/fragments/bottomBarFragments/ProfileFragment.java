@@ -1,6 +1,7 @@
 package com.example.swiftslotz.fragments.bottomBarFragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -92,10 +93,16 @@ public class ProfileFragment extends Fragment {
 
     private CheckBox sunday, monday, tuesday, wednesday, thursday, friday, saturday;
 
+    private ProgressDialog progressDialog;
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading...");
 
         if (getActivity() != null) {
             ((BaseActivity) getActivity()).updateBottomNavigationForFragment("FragmentX");
@@ -114,6 +121,7 @@ public class ProfileFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
+
 
         if (mAuth.getCurrentUser() != null) {
             String userId = mAuth.getCurrentUser().getUid();
@@ -202,6 +210,10 @@ public class ProfileFragment extends Fragment {
         updateInfoButton.setEnabled(true);
         int tomatoColor = ContextCompat.getColor(getContext(), R.color.tomato);
         updateInfoButton.setBackgroundColor(tomatoColor); // Or any other color indicating it's enabled
+    }
+    private void disableUpdateButton(){
+        updateInfoButton.setEnabled(false);
+        updateInfoButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.fadedButton));
     }
 
 
@@ -328,6 +340,8 @@ public class ProfileFragment extends Fragment {
     }
 
     private void uploadImageToFirebase(Uri imageUri) {
+
+        progressDialog.show();
         if (mAuth.getCurrentUser() != null) {
             String userId = mAuth.getCurrentUser().getUid();
             StorageReference fileRef = storageReference.child("profileImages/" + userId + ".jpg");
@@ -337,6 +351,7 @@ public class ProfileFragment extends Fragment {
                         .addOnSuccessListener(aVoid -> {
                             Glide.with(ProfileFragment.this).load(imageUrl).into(profileImage);
                             Toast.makeText(getActivity(), "Profile image updated", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                         })
                         .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to update image URL", Toast.LENGTH_SHORT).show());
             })).addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
@@ -344,6 +359,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void updateUserInfo() {
+        progressDialog.show();
         String updatedFirstName = firstName.getText().toString().trim();
         String updatedLastName = lastName.getText().toString().trim();
         String updatedEmail = email.getText().toString().trim();
@@ -406,9 +422,16 @@ public class ProfileFragment extends Fragment {
             userDb.child("activeHoursEnd").setValue(updatedActiveHoursEnd);
 
             Toast.makeText(getActivity(), "Profile updated", Toast.LENGTH_SHORT).show();
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    disableUpdateButton();
+                    progressDialog.dismiss();
+            }, TEXT_WATCHER_DELAY);
+
         } else {
             Toast.makeText(getActivity(), "Failed to update profile", Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
         }
+
     }
 
     public void initializeViews(View view) {
