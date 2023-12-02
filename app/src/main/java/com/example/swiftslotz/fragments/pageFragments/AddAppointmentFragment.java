@@ -147,7 +147,6 @@ public class AddAppointmentFragment extends Fragment {
                     Toast.makeText(getActivity(), "Appointment duration must be less than 24 hours", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    Toast.makeText(getActivity(), "Appointment duration: " + appointmentDurationEditText.getText().toString(), Toast.LENGTH_SHORT).show();
                     appointmentDuration = Integer.parseInt(appointmentDurationEditText.getText().toString());
                 }
 
@@ -191,7 +190,6 @@ public class AddAppointmentFragment extends Fragment {
 
                 // Initialize the AppointmentManager
                 if(isUserAvailable){
-                    Toast.makeText(getActivity(), "User is available", Toast.LENGTH_SHORT).show();
                     AppointmentManager appointmentManager = new AppointmentManager(getActivity());
                     appointmentManager.addAppointmentRequest(appointment,firebaseKey);
                 } else {

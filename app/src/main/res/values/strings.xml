@@ -27,6 +27,7 @@
     <string name="reject_appointment">Reject_Appointment\n</string>
     <item name="action_set_constraints" type="id" />
     <item name="action_delete" type="id" />
+    <item name="action_edit" type="id" />
     <string-array name="units_array">
         <item>Minute</item>
         <item>Hour</item>

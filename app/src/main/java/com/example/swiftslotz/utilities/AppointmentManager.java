@@ -295,8 +295,9 @@ public class AppointmentManager {
     }
 
     public void leaveAppointment(Appointment appointment, int position) {
+        String leavingUserId = mAuth.getCurrentUser().getUid();
+
         if (appointment.getKey() != null) {
-            // Step 1: Fetch the appointment details from the global collection
             globalAppointmentDb.child(appointment.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -313,9 +314,12 @@ public class AppointmentManager {
                                                     // Step 4: Remove the user's ID from the involvedUsers list in the global appointment collection
                                                     List<String> involvedUsers = globalAppointment.getInvolvedUsers();
                                                     if (involvedUsers != null) {
-                                                        involvedUsers.remove(mAuth.getCurrentUser().getUid());
+                                                        involvedUsers.remove(leavingUserId);
                                                         globalAppointmentDb.child(appointment.getKey()).child("involvedUsers").setValue(involvedUsers)
-                                                                .addOnSuccessListener(aVoid3 -> Toast.makeText(context, "Appointment moved to history and user removed from involved users successfully", Toast.LENGTH_SHORT).show())
+                                                                .addOnSuccessListener(aVoid3 -> {
+                                                                    Toast.makeText(context, "Appointment moved to history and user removed from involved users successfully", Toast.LENGTH_SHORT).show();
+                                                                    notifyUsersAboutLeavingAppointment(involvedUsers, globalAppointment.getTitle(), leavingUserId);
+                                                                })
                                                                 .addOnFailureListener(e -> Toast.makeText(context, "Failed to remove user from involved users: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                                                     }
                                                 })
@@ -323,7 +327,7 @@ public class AppointmentManager {
                                     })
                                     .addOnFailureListener(e -> Toast.makeText(context, "Failed to move appointment to history: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                         } else {
-                            Toast.makeText(context, "Cannot delete the appointment due to time constraint", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Cannot leave the appointment due to time constraint", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toast.makeText(context, "Failed to fetch appointment details from global collection", Toast.LENGTH_SHORT).show();
@@ -337,6 +341,41 @@ public class AppointmentManager {
             });
         }
     }
+
+
+    private void notifyUsersAboutLeavingAppointment(List<String> userIds, String appointmentTitle, String leavingUserId) {
+        getUserNameFromFirebaseKey(leavingUserId, userName -> {
+            for (String userId : userIds) {
+                DatabaseReference userDeviceRef = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
+                        .getReference("users")
+                        .child(userId)
+                        .child("device_token");
+
+                userDeviceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String userFcmToken = dataSnapshot.getValue(String.class);
+                        if (userFcmToken != null) {
+                            JSONObject additionalData = new JSONObject();
+                            try {
+                                additionalData.put("username", userName);
+                                additionalData.put("appointmentDetails", userName + " has left the appointment: " + appointmentTitle);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            NotificationManager.sendFCMNotification(userFcmToken, "User Left Appointment", userName + " has left the appointment: " + appointmentTitle, additionalData);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.e("AppointmentManager", "Failed to fetch user's FCM token: " + databaseError.getMessage());
+                    }
+                });
+            }
+        });
+    }
+
 
     public void deleteAppointment(String appointmentKey) {
         if (appointmentKey != null) {
@@ -682,8 +721,8 @@ public class AppointmentManager {
     }
 
     public void getRemovedAppointments(FetchRemovedAppointmentsCallback callback) {
-        DatabaseReference pastAppointmentsRef = rootRef.child("RemovedAppointments");
-        pastAppointmentsRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference removedAppointmentsRef = rootRef.child("RemovedAppointments");
+        removedAppointmentsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<Appointment> pastAppointments = new ArrayList<>();
