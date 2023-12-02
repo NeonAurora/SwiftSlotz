@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -36,6 +37,8 @@ public class PastAppointmentsFragment extends Fragment {
     private ActivityResultLauncher<String> mGetContent;
     private String currentAppointmentKey;
 
+    private TextView noAppText;
+
     public PastAppointmentsFragment() {
         // Required empty public constructor
     }
@@ -65,6 +68,8 @@ public class PastAppointmentsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_past_appointments, container, false);
+
+        noAppText = view.findViewById(R.id.passAppointmentNoApp);
 
         pastAppointmentsRecyclerView = view.findViewById(R.id.pastAppointmentsRecyclerView);
 //        fabRemovedAppointments = view.findViewById(R.id.fab_removed_appointments);
@@ -119,6 +124,11 @@ public class PastAppointmentsFragment extends Fragment {
             @Override
             public void onFetched(List<Appointment> expiredAppointments) {
                 pastAppointmentsList.clear();
+                if(expiredAppointments.size() == 0 ){
+                    noAppText.setVisibility(View.VISIBLE);
+                }else{
+                    noAppText.setVisibility(View.INVISIBLE);
+                }
                 pastAppointmentsList.addAll(expiredAppointments);
                 adapter.notifyDataSetChanged();
 

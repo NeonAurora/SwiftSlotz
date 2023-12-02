@@ -47,7 +47,7 @@ public class AllAppointmentsFragment extends Fragment implements AppointmentsAda
     private AppointmentsAdapter appointmentsAdapter;
     private RecyclerView allAppointmentsRecyclerView;
     private AppointmentManager appointmentManager;
-    private TextView badgeTextView, tvCountdownTimer;
+    private TextView badgeTextView, tvCountdownTimer,noAppText;
     private CountDownTimer countDownTimer;
     private Handler progressUpdateHandler = new Handler(Looper.getMainLooper());
     private Runnable progressUpdateRunnable;
@@ -91,6 +91,9 @@ public class AllAppointmentsFragment extends Fragment implements AppointmentsAda
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_appointments, container, false);
         mAuth = FirebaseAuth.getInstance();
+
+        noAppText=view.findViewById(R.id.allAppointmentsNoButton);
+
         setupRecyclerView(view);
         setupAppointmentFetching();
         return view;
@@ -175,6 +178,11 @@ public class AllAppointmentsFragment extends Fragment implements AppointmentsAda
     public void onAppointmentsFetched(List<Appointment> fetchedAppointments) {
         appointments.clear();
         appointments.addAll(fetchedAppointments);
+        if(fetchedAppointments.size() ==0 ){
+            noAppText.setVisibility(View.VISIBLE);
+        }else{
+            noAppText.setVisibility(View.INVISIBLE);
+        }
         sortAndDisplayAppointments(fetchedAppointments);
         appointmentsAdapter.notifyDataSetChanged();
     }

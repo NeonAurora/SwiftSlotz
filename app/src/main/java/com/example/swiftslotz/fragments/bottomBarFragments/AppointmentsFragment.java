@@ -46,7 +46,7 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
     private AppointmentsAdapter appointmentsAdapter;
     private RecyclerView appointmentsRecyclerView;
     private AppointmentManager appointmentManager;
-    private TextView badgeTextView, tvCountdownTimer;
+    private TextView badgeTextView, tvCountdownTimer,noAppText;
     private CountDownTimer countDownTimer;
     private Handler progressUpdateHandler = new Handler(Looper.getMainLooper());
     private Runnable progressUpdateRunnable;
@@ -56,6 +56,8 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         if (getContext() != null) {
             appointmentManager = new AppointmentManager(getContext(), appointments, appointmentsAdapter);
             appointmentManager.setOnAppointmentsFetchedListener(this);
@@ -84,8 +86,12 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_appointments, container, false);
         mAuth = FirebaseAuth.getInstance();
+        noAppText= view.findViewById(R.id.noAppointmentText);
+//        noAppText.setVisibility(View.INVISIBLE);
+
         setupViews(view);
         setupRecyclerView(view);
         setupAppointmentButton(view);
@@ -187,6 +193,10 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
     public void onAppointmentsFetched(List<Appointment> fetchedAppointments) {
         appointments.clear();
         appointments.addAll(fetchedAppointments);
+        if(fetchedAppointments.size() == 0 ) noAppText.setVisibility(View.VISIBLE);
+        else{
+            noAppText.setVisibility(View.INVISIBLE);
+        }
         sortAndDisplayAppointments(fetchedAppointments);
         appointmentsAdapter.notifyDataSetChanged();
     }
