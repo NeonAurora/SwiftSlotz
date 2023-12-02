@@ -72,7 +72,7 @@ public class BaseActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
-    private FirebaseAuth mAuth;
+    private FirebaseAuth mAuth=FirebaseAuth.getInstance() ;
     private DatabaseReference userDb;
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -213,42 +213,62 @@ public class BaseActivity extends AppCompatActivity {
         View headerView = LayoutInflater.from(this).inflate(R.layout.drawer_header, navigationView, false);
         navigationView.addHeaderView(headerView);
 
+//          Updating the header content
         TextView username=headerView.findViewById(R.id.drawerUsername);
         TextView email=headerView.findViewById(R.id.drawerEmail);
         ImageView profileImage=headerView.findViewById(R.id.drawerImg);
-//
-
-        // problem occuring while fetching data from db .
-
-//        String userId = mAuth.getCurrentUser().getUid();
-//        userDb = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
-//        userDb.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//                    // Set user details from the database to the TextViews
-//                    username.setText(String.format("@_%s", dataSnapshot.child("username").getValue(String.class)));
-//                    email.setText(dataSnapshot.child("email").getValue(String.class));
-//
-//
-//                    //Load profile image if it exists in the database
-//                    if (dataSnapshot.hasChild("profileImageUrl")) {
-//                        String imageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
-//                        Glide.with(BaseActivity.this).load(imageUrl).into(profileImage);
-//
-//                    }
-//                } else {
-//                    Toast.makeText(BaseActivity.this, "Failed to load user details", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Toast.makeText(BaseActivity.this, "Failed to load user details: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
 
 
+
+        // data fetching
+
+        String userId = mAuth.getCurrentUser().getUid();
+        userDb    = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL).getReference("users").child(userId);
+        userDb.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    if (dataSnapshot.hasChild("username")) {
+                        username.setText(String.format("@_%s", dataSnapshot.child("username").getValue(String.class)));
+                    }
+                    if (dataSnapshot.hasChild("email")) {
+                        email.setText(dataSnapshot.child("email").getValue(String.class));
+                    }
+                    if (dataSnapshot.hasChild("profileImageUrl")) {
+                        String imageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
+                        if (imageUrl != null && !imageUrl.isEmpty()) {
+                            Glide.with(BaseActivity.this).load(imageUrl).into(profileImage);
+                        }
+                    }
+                } else {
+                    Toast.makeText(BaseActivity.this, "Failed to load user details", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(BaseActivity.this, "Failed to load user details: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+//        changing the fragment while clicking the data
+        headerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.content_frame, new ProfileFragment());
+                transaction.commit();
+                drawerLayout.closeDrawer(GravityCompat.START);
+            }
+        });
+
+
+
+
+
+        // bottom navigation
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
