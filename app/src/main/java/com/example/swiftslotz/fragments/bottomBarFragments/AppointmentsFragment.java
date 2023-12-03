@@ -349,6 +349,7 @@ public class AppointmentsFragment extends Fragment implements AppointmentsAdapte
     }
     @Override
     public void onAppointmentExpired(Appointment appointment) {
+        Log.d("AppointmentsFragment","called on appointments expired");
         removeExpiredAppointment(appointment.getKey());
     }
 

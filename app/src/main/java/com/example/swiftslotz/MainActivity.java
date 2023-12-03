@@ -62,7 +62,7 @@ public class MainActivity extends BaseActivity {
 
                 finish();
             }
-        }, 100);
+        }, 3000);
 
 
     }

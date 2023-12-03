@@ -63,6 +63,7 @@
         android:backgroundTint="@color/btnBack"
         android:text="Default Login 1"
         android:textColor="@color/btnText"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/googleSignInButton" />
 
@@ -76,6 +77,7 @@
         android:backgroundTint="@color/btnBack"
         android:text="Default Login 2"
         android:textColor="@color/btnText"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/defaultLoginButton1" />
 
@@ -89,6 +91,7 @@
         android:backgroundTint="@color/btnBack"
         android:text="Default Login 3"
         android:textColor="@color/btnText"
+        android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/defaultLoginButton2"
         app:layout_constraintTop_toBottomOf="@+id/defaultLoginButton1" />
 

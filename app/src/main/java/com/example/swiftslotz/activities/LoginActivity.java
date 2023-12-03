@@ -121,8 +121,6 @@ public class LoginActivity extends BaseActivity {
                     mAuth.signInWithCredential(credential)
                             .addOnCompleteListener(this, entering -> {
                                 if (entering.isSuccessful()) {
-                                    Toast.makeText(LoginActivity.this, mAuth.getUid(),
-                                            Toast.LENGTH_SHORT).show();
                                     progressDialog.dismiss();
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putBoolean("rememberMe", rememberMeCheckbox.isChecked());
