@@ -40,8 +40,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -285,14 +287,29 @@ public class AppointmentManager {
 
 
     public void updateAppointment(Appointment appointment) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("AppointmentCollection");
         if (appointment.getKey() != null) {
-            userDb.child(appointment.getKey()).setValue(appointment)
+            // Prepare a map containing only the fields you want to update
+            Map<String, Object> updates = new HashMap<>();
+
+            // Add fields from the appointment object that you want to update
+            updates.put("title", appointment.getTitle());
+            updates.put("details", appointment.getDetails());
+            updates.put("time", appointment.getTime());
+            updates.put("date", appointment.getDate());
+
+
+            // ... add other fields as needed
+
+            // Update only the specified fields in the database
+            ref.child(appointment.getKey()).updateChildren(updates)
                     .addOnSuccessListener(aVoid -> Toast.makeText(context, "Appointment updated successfully", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> Toast.makeText(context, "Failed to update appointment: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         } else {
             Toast.makeText(context, "Failed to update appointment: Appointment key not found", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     public void leaveAppointment(Appointment appointment, int position) {
         String leavingUserId = mAuth.getCurrentUser().getUid();
