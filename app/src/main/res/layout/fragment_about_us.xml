@@ -24,8 +24,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:text="Welcome to SwiftSlotz, the ultimate solution for managing your appointments with ease and efficiency. Designed with user convenience in mind, SwiftSlotz offers a seamless experience for booking, tracking, and organizing your appointments across various domains. Whether you're scheduling a business meeting, a medical consultation, or a personal engagement, our app simplifies your planning process with intuitive features and a user-friendly interface. Enjoy the flexibility of customizing your schedules, receiving timely reminders, and accessing your appointments on the go. With SwiftSlotz, stay on top of your commitments and make the most of your time!"
+        android:text="Welcome to SwiftSlotz, Enjoy the flexibility of customizing your schedules, receiving timely reminders, and accessing your appointments on the go. With SwiftSlotz, stay on top of your commitments and make the most of your time!"
         app:layout_constraintEnd_toEndOf="parent"
+        android:justificationMode="inter_word"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgAppLogo" />
@@ -71,11 +72,10 @@
         android:id="@+id/txtFooter"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="This app is proudly developed by Pantho Haque and Arnob Bhowmik, who are dedicated to providing a top-notch user experience and continuously enhancing the app's features. We value your feedback and suggestions, which are crucial for our ongoing improvements. Stay tuned for exciting updates and new features that will further enrich your experience with SwiftSlotz. Thank you for choosing our app to streamline your appointment management needs."
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/txtDeveloper2"
-        app:layout_constraintStart_toStartOf="parent"
+        android:justificationMode="inter_word"
+        android:text="We are dedicated to providing a top-notch user experience and continuously enhancing the app's features. We value your feedback and suggestions, which are crucial for our ongoing improvements. Stay tuned for exciting updates and new features that will further enrich your experience with SwiftSlotz. Thank you for choosing our app to streamline your appointment management needs."
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
