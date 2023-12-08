@@ -51,9 +51,10 @@ public class ModifyAppointmentFragment extends Fragment {
         updateAppointmentButton = view.findViewById(R.id.update_appointment_button);
         calendarView = view.findViewById(R.id.calendarViewEdit);
         setCalendarDateDisplay(calendarView.getFirstDayOfCurrentMonth());
-        scrollLeftButton = view.findViewById(R.id.scrollLeftButtonEdit);git p
-        yearTextView = view.findViewById(R.id.yearTextViewEdit);
-        monthTextView = view.findViewById(R.id.monthTextViewEdit);
+        scrollLeftButton = view.findViewById(R.id.scrollLeftButtonEdit1);
+        scrollRightButton = view.findViewById(R.id.scrollRightButtonEdit1);
+        yearTextView = view.findViewById(R.id.yearTextViewEdit1);
+        monthTextView = view.findViewById(R.id.monthTextViewEdit1);
 
         appointmentManager = new AppointmentManager(getActivity());
 
@@ -192,10 +193,11 @@ public class ModifyAppointmentFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int year = calendar.get(Calendar.YEAR);
-        // SimpleDateFormat to get month name
         SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM", Locale.getDefault());
 
-        yearTextView.setText(String.valueOf(year));
-        monthTextView.setText(monthFormat.format(date));
+        if (yearTextView != null && monthTextView != null) {
+            yearTextView.setText(String.valueOf(year));
+            monthTextView.setText(monthFormat.format(date));
+        }
     }
 }

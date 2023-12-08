@@ -66,7 +66,7 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/googleSignInButton"
-        android:visibility="invisible"/>
+       />
 
     <Button
         android:id="@+id/defaultLoginButton2"
@@ -81,7 +81,7 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/defaultLoginButton1"
-        android:visibility="invisible"/>
+        />
 
     <Button
         android:id="@+id/defaultLoginButton3"
@@ -96,7 +96,7 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/defaultLoginButton2"
         app:layout_constraintTop_toBottomOf="@+id/defaultLoginButton1"
-        android:visibility="invisible"/>
+       />
 
     <EditText
         android:id="@+id/passwordEditText"

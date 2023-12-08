@@ -53,7 +53,7 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/scrollLeftButtonEdit"
+                    android:id="@+id/scrollLeftButtonEdit1"
                     android:layout_width="81dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
@@ -64,7 +64,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/yearTextViewEdit"
+                    android:id="@+id/yearTextViewEdit1"
                     android:layout_width="107dp"
                     android:layout_height="23dp"
                     android:layout_marginTop="16dp"
@@ -73,11 +73,12 @@
                     android:gravity="center"
                     android:text="Year"
                     android:textSize="18sp"
+                    android:visibility="invisible"
                     app:layout_constraintEnd_toStartOf="@+id/scrollRightButton"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/monthTextViewEdit"
+                    android:id="@+id/monthTextViewEdit1"
                     android:layout_width="132dp"
                     android:layout_height="23dp"
                     android:layout_marginStart="4dp"
@@ -86,11 +87,12 @@
                     android:gravity="center"
                     android:text="Month"
                     android:textSize="18sp"
+                    android:visibility="invisible"
                     app:layout_constraintStart_toEndOf="@+id/scrollLeftButton"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
-                    android:id="@+id/scrollRightButtonEdit"
+                    android:id="@+id/scrollRightButtonEdit1"
                     android:layout_width="81dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
